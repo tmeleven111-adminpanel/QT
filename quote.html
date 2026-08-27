@@ -107,7 +107,7 @@ button {
 
 .workspace {
     display: grid;
-    grid-template-columns: minmax(400px, 0.85fr) minmax(500px, 1.15fr);
+    grid-template-columns: minmax(380px, 0.72fr) minmax(500px, 1.28fr);
     gap: 25px;
     align-items: start;
 }
@@ -211,8 +211,12 @@ select:focus {
 }
 
 textarea {
-    min-height: 75px;
+    min-height: 60px;
     resize: vertical;
+}
+
+textarea#customerAddress {
+    min-height: 75px;
 }
 
 /* =========================================================
@@ -255,9 +259,20 @@ textarea {
     color: #ffb0b0;
 }
 
+.btn-danger:hover {
+    border-color: #a35050;
+    color: #fff;
+}
+
 .btn-small {
     padding: 7px 10px;
     font-size: 11px;
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 /* =========================================================
@@ -276,6 +291,19 @@ textarea {
     background: #28191a;
     color: #ff9d9d;
     border-radius: 8px;
+    transition: .2s;
+}
+
+.remove-field:hover {
+    border-color: #a35050;
+    color: #fff;
+}
+
+.empty-hint {
+    font-size: 11px;
+    color: #666;
+    padding: 4px 2px 2px;
+    font-style: italic;
 }
 
 /* =========================================================
@@ -311,6 +339,7 @@ textarea {
 
 .item-row {
     margin-bottom: 9px;
+    align-items: start;
 }
 
 .item-row input {
@@ -328,15 +357,22 @@ textarea {
     font-size: 12px;
     color: #fff;
     overflow: hidden;
+    white-space: nowrap;
+}
+
+.unit-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .gst-box {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 5px;
     font-size: 10px;
     color: #d9a441;
+    white-space: nowrap;
 }
 
 .gst-box input {
@@ -504,6 +540,13 @@ textarea {
     margin-top: 5px;
 }
 
+.company-details .acn {
+    font-size: 8px;
+    color: #999;
+    margin-top: 3px;
+    letter-spacing: .3px;
+}
+
 .quote-heading {
     text-align: right;
 }
@@ -530,6 +573,7 @@ textarea {
     border-left: 4px solid #d49b35;
     padding: 14px 16px;
     min-height: 100px;
+    border-radius: 4px;
 }
 
 .to-title {
@@ -553,6 +597,12 @@ textarea {
 
 .to-line strong {
     color: #171717;
+}
+
+.to-empty {
+    font-size: 10px;
+    color: #bbb;
+    font-style: italic;
 }
 
 .quote-table {
@@ -622,6 +672,7 @@ textarea {
     justify-content: space-between;
     font-size: 12px;
     font-weight: bold;
+    border-radius: 4px;
 }
 
 .grand-total .gold {
@@ -641,12 +692,18 @@ textarea {
 }
 
 .quote-footer div {
-    font-size: 7px;
+    font-size: 8px;
     color: #777;
+    line-height: 1.6;
 }
 
 .quote-footer strong {
     color: #333;
+    font-size: 9px;
+}
+
+.quote-footer .footer-right {
+    text-align: right;
 }
 
 /* =========================================================
@@ -725,11 +782,60 @@ textarea {
     transform: translateY(-10px);
     pointer-events: none;
     transition: .3s;
+    max-width: 280px;
 }
 
 .toast.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* =========================================================
+   CONFIRM MODAL
+========================================================= */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 6000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    background: #191b1d;
+    border: 1px solid #35393d;
+    border-radius: 14px;
+    padding: 22px;
+    max-width: 340px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+.modal-box h3 {
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.modal-box p {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 /* =========================================================
@@ -797,6 +903,7 @@ textarea {
     .preview-scroll {
         padding: 10px;
         border-radius: 12px;
+        overflow-x: auto;
     }
 
     .quote-page {
@@ -848,7 +955,9 @@ textarea {
     .top-header,
     .editor,
     .preview-header,
-    .action-bar {
+    .action-bar,
+    .modal-overlay,
+    .toast {
         display: none !important;
     }
 
@@ -868,6 +977,7 @@ textarea {
         margin: 0;
         width: 794px;
         min-height: 1123px;
+        transform: none !important;
     }
 }
 </style>
@@ -948,10 +1058,10 @@ textarea {
 
             <div class="form-group">
                 <label>Email</label>
-                <input
+                <textarea
                     id="customerEmail"
-                    type="email"
-                    placeholder="customer@email.com">
+                    placeholder="customer@email.com (one per line)"
+                    style="min-height:46px;"></textarea>
             </div>
 
 
@@ -1081,7 +1191,7 @@ textarea {
                 <strong>+ GST on All Total</strong>
 
                 <span>
-                    Add GST to the overall total.
+                    Add GST (10%) to the overall total.
                 </span>
 
             </div>
@@ -1116,7 +1226,7 @@ textarea {
                 <strong>Show Watermark</strong>
 
                 <span>
-                    Add TM ELEVEN watermark to the quote.
+                    Add a subtle TM ELEVEN watermark to the quote.
                 </span>
 
             </div>
@@ -1233,6 +1343,10 @@ textarea {
 
                         <div class="location">
                             Melbourne | VIC
+                        </div>
+
+                        <div class="acn">
+                            ACN : 692 149 045
                         </div>
 
                     </div>
@@ -1372,12 +1486,13 @@ textarea {
 
                 <div>
                     <strong>TM ELEVEN PTY LTD</strong><br>
-                    Melbourne | VIC
+                    CONCRETING | LANDSCAPING | FENCING
                 </div>
 
-                <div style="text-align:right;">
-                    Concreting | Landscaping | Fencing<br>
-                    Professional & Reliable Services
+                <div class="footer-right">
+                    +61 451 160 058<br>
+                    tmeleven111@gmail.com<br>
+                    tmeleven.com.au
                 </div>
 
             </div>
@@ -1417,6 +1532,13 @@ textarea {
 
 
         <button
+            class="btn btn-danger action-btn"
+            onclick="confirmClearDraft()">
+            🗑 Clear Draft
+        </button>
+
+
+        <button
             class="btn btn-gold action-btn"
             onclick="convertToPDF()">
             📄 Convert to PDF
@@ -1435,6 +1557,42 @@ textarea {
 </div>
 
 
+<!-- CLEAR DRAFT CONFIRM MODAL -->
+
+<div
+    class="modal-overlay"
+    id="clearModal">
+
+    <div class="modal-box">
+
+        <h3>Clear saved draft?</h3>
+
+        <p>
+            This will permanently delete the draft saved in this browser.
+            This action cannot be undone.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-dark btn-small"
+                onclick="closeClearModal()">
+                Cancel
+            </button>
+
+            <button
+                class="btn btn-danger btn-small"
+                onclick="clearDraft()">
+                Clear Draft
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
 /* =========================================================
@@ -1443,6 +1601,8 @@ textarea {
 
 let customFields = [];
 let items = [];
+
+const DRAFT_KEY = "tmElevenQuoteDraft";
 
 
 /* =========================================================
@@ -1530,6 +1690,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updatePreview();
 
+
+    /* Auto-detect existing draft on load */
+
+    if (localStorage.getItem(DRAFT_KEY)) {
+
+        showToast("A saved draft was found. Tap Restore Draft to load it.");
+
+    }
+
 });
 
 
@@ -1589,7 +1758,8 @@ function renderCustomFields() {
 
             <button
                 class="remove-field"
-                onclick="removeCustomField(${index})">
+                onclick="removeCustomField(${index})"
+                title="Remove field">
                 ×
             </button>
 
@@ -1673,6 +1843,15 @@ function renderItems() {
     container.innerHTML = "";
 
 
+    if (items.length === 0) {
+
+        container.innerHTML =
+            `<div class="empty-hint">No items yet. Click "+ Add Item" to start.</div>`;
+
+        return;
+    }
+
+
     items.forEach((item, index) => {
 
         const row =
@@ -1694,7 +1873,7 @@ function renderItems() {
             >
 
 
-            <div>
+            <div class="unit-cell">
 
                 <input
                     type="text"
@@ -1747,7 +1926,8 @@ function renderItems() {
 
             <button
                 class="btn btn-danger btn-small"
-                onclick="removeItem(${index})">
+                onclick="removeItem(${index})"
+                title="Remove item">
                 ×
             </button>
 
@@ -1886,11 +2066,16 @@ function updateCustomer() {
     });
 
 
+    let anyContent = false;
+
+
     fields.forEach(field => {
 
         if (!field[0] && !field[1]) {
             return;
         }
+
+        anyContent = true;
 
 
         const div =
@@ -1899,14 +2084,26 @@ function updateCustomer() {
         div.className = "to-line";
 
 
+        const valueHTML =
+            escapeHTML(field[1]).replace(/\n/g, "<br>");
+
+
         div.innerHTML =
             `<strong>${escapeHTML(field[0])}:</strong>
-             ${escapeHTML(field[1])}`;
+             ${valueHTML}`;
 
 
         container.appendChild(div);
 
     });
+
+
+    if (!anyContent) {
+
+        container.innerHTML =
+            `<div class="to-empty">No customer details entered yet.</div>`;
+
+    }
 
 }
 
@@ -2193,13 +2390,23 @@ function saveDraft() {
     };
 
 
-    localStorage.setItem(
-        "tmElevenQuoteDraft",
-        JSON.stringify(data)
-    );
+    try {
 
+        localStorage.setItem(
+            DRAFT_KEY,
+            JSON.stringify(data)
+        );
 
-    showToast("Draft saved successfully.");
+        showToast("Draft saved successfully.");
+
+    } catch (error) {
+
+        showToast("Unable to save draft.");
+
+        console.error(error);
+
+    }
+
 }
 
 
@@ -2211,7 +2418,7 @@ function restoreDraft() {
 
     const saved =
         localStorage.getItem(
-            "tmElevenQuoteDraft"
+            DRAFT_KEY
         );
 
 
@@ -2251,11 +2458,11 @@ function restoreDraft() {
 
 
         customFields =
-            data.customFields || [];
+            Array.isArray(data.customFields) ? data.customFields : [];
 
 
         items =
-            data.items || [];
+            Array.isArray(data.items) ? data.items : [];
 
 
         document.getElementById("showAllTotal").checked =
@@ -2310,6 +2517,43 @@ function restoreDraft() {
         console.error(error);
 
     }
+
+}
+
+
+/* =========================================================
+   CLEAR DRAFT
+========================================================= */
+
+function confirmClearDraft() {
+
+    if (!localStorage.getItem(DRAFT_KEY)) {
+
+        showToast("No saved draft to clear.");
+
+        return;
+
+    }
+
+    document.getElementById("clearModal").classList.add("show");
+
+}
+
+
+function closeClearModal() {
+
+    document.getElementById("clearModal").classList.remove("show");
+
+}
+
+
+function clearDraft() {
+
+    localStorage.removeItem(DRAFT_KEY);
+
+    closeClearModal();
+
+    showToast("Draft cleared.");
 
 }
 
@@ -2502,7 +2746,13 @@ function escapeHTML(value) {
 
 function escapeAttribute(value) {
 
-    return escapeHTML(value);
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/\n/g, "&#10;");
 
 }
 
@@ -2520,11 +2770,13 @@ function showToast(message) {
     toast.classList.add("show");
 
 
-    setTimeout(() => {
+    clearTimeout(window.__toastTimer);
+
+    window.__toastTimer = setTimeout(() => {
 
         toast.classList.remove("show");
 
-    }, 2500);
+    }, 2800);
 
 }
 
