@@ -3,147 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TM Eleven Business Hub</title>
+
+<title>TM Eleven | Document Studio</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f5f6f8;--card:#fff;--text:#15171b;--muted:#777c85;--line:#e4e6ea;--dark:#111318;--hover:#f0f1f3}
-body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button{font:inherit}
-.app{display:flex;min-height:100vh}
-.sidebar{width:250px;background:var(--dark);color:#fff;padding:24px 16px;display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0}
-.logo-area{display:flex;align-items:center;gap:12px;padding:4px 10px 30px}
-.logo-box{width:42px;height:42px;border-radius:10px;background:#fff;display:grid;place-items:center;overflow:hidden}
-.logo-box img{width:100%;height:100%;object-fit:contain}
-.logo-fallback{font:800 18px Manrope;color:#111}
-.logo-name{font:800 18px Manrope}.logo-name span{display:block;font:500 10px Inter;color:#9297a0;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
-.nav-title{font-size:10px;color:#707681;letter-spacing:.12em;font-weight:700;padding:0 12px 9px;text-transform:uppercase}
-nav{display:flex;flex-direction:column;gap:4px}
-.nav-item{border:0;background:transparent;color:#aeb3bc;padding:11px 12px;border-radius:9px;text-align:left;display:flex;align-items:center;gap:11px;font-size:13px;font-weight:600;cursor:pointer}
-.nav-item:hover,.nav-item.active{background:#24272e;color:#fff}
-.icon{width:20px;text-align:center;font-size:16px}
-.sidebar-bottom{margin-top:auto}.admin{border-top:1px solid #292c33;padding:16px 8px 4px;display:flex;align-items:center;gap:10px}
-.avatar{width:34px;height:34px;border-radius:50%;background:#343840;display:grid;place-items:center;font-size:12px;font-weight:700}.admin b{font-size:12px}.admin small{display:block;color:#777d87;font-size:10px;margin-top:2px}
-.main{margin-left:250px;flex:1;min-width:0}
-.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;padding:0 32px;gap:10px}
-.top-btn{border:1px solid var(--line);background:#fff;width:38px;height:38px;border-radius:9px;cursor:pointer}
-.top-btn:hover{background:var(--hover)}
-.content{padding:38px;max-width:1250px;margin:auto}
-.welcome{margin-bottom:28px}.welcome h1{font:800 29px Manrope;letter-spacing:-.03em}.welcome p{color:var(--muted);font-size:14px;margin-top:7px}
-.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:14px}.section-head h2{font:800 17px Manrope}.section-head p{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.doc-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;min-height:155px;text-align:left;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
-.doc-card:hover{transform:translateY(-3px);border-color:#c7cbd2;box-shadow:0 10px 28px rgba(15,18,24,.08)}
-.doc-icon{width:44px;height:44px;border-radius:11px;background:#f0f1f3;display:grid;place-items:center;font-size:21px;margin-bottom:18px}
-.doc-card h3{font:800 15px Manrope}.doc-card p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
-.plus{position:absolute;right:17px;top:17px;width:27px;height:27px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:#555}
-.tools{margin-top:34px}.tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.tool-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:17px;display:flex;align-items:center;gap:12px;cursor:pointer}.tool-card:hover{background:#fafafa}.tool-card .tool-icon{width:36px;height:36px;background:#f0f1f3;border-radius:9px;display:grid;place-items:center}.tool-card b{font-size:13px}.tool-card span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
-.overlay{display:none;position:fixed;inset:0;background:rgba(10,12,16,.48);z-index:50;align-items:center;justify-content:center;padding:20px}.modal{background:#fff;width:min(520px,100%);border-radius:18px;padding:26px;box-shadow:0 25px 70px rgba(0,0,0,.2)}.modal h2{font:800 21px Manrope}.modal p{color:var(--muted);font-size:13px;margin:7px 0 20px}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modal button{border:1px solid var(--line);background:#fff;padding:14px;border-radius:10px;cursor:pointer;text-align:left}.modal button:hover{background:#f5f6f8}.modal button b{display:block;font-size:13px}.modal button span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.close{float:right;border:0;background:#f0f1f3;width:32px;height:32px;border-radius:8px;cursor:pointer}
-@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.tool-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.sidebar{width:72px;padding:18px 9px}.logo-area{padding:4px 6px 25px}.logo-name,.nav-title,.nav-item span:not(.icon),.admin div{display:none}.nav-item{justify-content:center;padding:12px}.sidebar-bottom{display:none}.main{margin-left:72px}.content{padding:25px 16px}.topbar{height:60px;padding:0 16px}.welcome h1{font-size:24px}.grid{grid-template-columns:1fr}.tool-grid{grid-template-columns:1fr}.doc-card{min-height:135px}}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:#f4f5f7;
+    color:#15171c;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+    height:72px;
+    background:#111318;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    border-radius:8px;
+}
+
+.brand-name{
+    font-family:"Manrope";
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-name span{
+    color:#92959d;
+    font-weight:500;
+}
+
+/* MAIN */
+
+.main{
+    max-width:1150px;
+    margin:auto;
+    padding:55px 25px;
+}
+
+/* HERO */
+
+.hero{
+    margin-bottom:35px;
+}
+
+.hero h1{
+    font-family:"Manrope";
+    font-size:36px;
+    font-weight:800;
+    letter-spacing:-1px;
+    margin-bottom:9px;
+}
+
+.hero p{
+    color:#71757e;
+    font-size:15px;
+}
+
+/* DOCUMENT GRID */
+
+.documents{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.document{
+    background:white;
+    border:1px solid #e0e2e6;
+    border-radius:14px;
+    padding:25px;
+    cursor:pointer;
+    text-decoration:none;
+    color:#15171c;
+    transition:.2s;
+    position:relative;
+    overflow:hidden;
+}
+
+.document:hover{
+    transform:translateY(-3px);
+    border-color:#111318;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.icon{
+    width:48px;
+    height:48px;
+    border-radius:11px;
+    background:#f0f1f3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    margin-bottom:19px;
+}
+
+.document h2{
+    font-family:"Manrope";
+    font-size:17px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+.document p{
+    color:#777b83;
+    font-size:13px;
+    line-height:1.55;
+}
+
+.arrow{
+    position:absolute;
+    right:22px;
+    bottom:21px;
+    font-size:18px;
+    color:#999da5;
+    transition:.2s;
+}
+
+.document:hover .arrow{
+    color:#111318;
+    transform:translateX(3px);
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    color:#92959d;
+    font-size:12px;
+    padding:25px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .header{
+        padding:0 18px;
+    }
+
+    .brand-name{
+        font-size:17px;
+    }
+
+    .main{
+        padding:35px 18px;
+    }
+
+    .hero h1{
+        font-size:29px;
+    }
+
+    .documents{
+        grid-template-columns:1fr;
+        gap:13px;
+    }
+
+    .document{
+        padding:21px;
+    }
+
+}
+
 </style>
 </head>
-<body>
-<div class="app">
-<aside class="sidebar">
-  <div class="logo-area">
-    <div class="logo-box"><img src="logo.png" alt="TM Eleven logo" onerror="this.style.display='none';document.getElementById('fallback').style.display='block'"><span id="fallback" class="logo-fallback" style="display:none">TM</span></div>
-    <div class="logo-name">TM Eleven<span>Business Hub</span></div>
-  </div>
-  <div class="nav-title">Workspace</div>
-  <nav>
-    <button class="nav-item active"><span class="icon">⌂</span><span>Dashboard</span></button>
-    <button class="nav-item" onclick="showInfo('Documents')"><span class="icon">▣</span><span>Documents</span></button>
-    <button class="nav-item" onclick="openCreate('Quote')"><span class="icon">₿</span><span>Quotes</span></button>
-    <button class="nav-item" onclick="openCreate('Invoice')"><span class="icon">▤</span><span>Invoices</span></button>
-    <button class="nav-item" onclick="openCreate('Letter')"><span class="icon">✉</span><span>Letters</span></button>
-    <button class="nav-item" onclick="showInfo('Customers')"><span class="icon">♙</span><span>Customers</span></button>
-    <button class="nav-item" onclick="showInfo('Services')"><span class="icon">▦</span><span>Services</span></button>
-    <button class="nav-item" onclick="showInfo('Reports')"><span class="icon">◒</span><span>Reports</span></button>
-    <button class="nav-item" onclick="showInfo('Settings')"><span class="icon">⚙</span><span>Settings</span></button>
-  </nav>
-  <div class="sidebar-bottom"><div class="admin"><div class="avatar">TM</div><div><b>Administrator</b><small>Business account</small></div></div></div>
-</aside>
 
-<main class="main">
-<header class="topbar">
-  <button class="top-btn" onclick="showInfo('Notifications')" title="Notifications">♧</button>
-  <button class="top-btn" onclick="showInfo('Settings')" title="Settings">⚙</button>
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="brand">
+
+        <img
+            src="logo.png"
+            class="logo"
+            alt="TM Eleven Logo"
+            onerror="this.style.display='none'"
+        >
+
+        <div class="brand-name">
+            TM Eleven <span>Document Studio</span>
+        </div>
+
+    </div>
+
 </header>
 
-<section class="content">
-  <div class="welcome">
-    <h1>Good morning, TM Eleven 👋</h1>
-    <p>Create professional business documents in a few clicks.</p>
-  </div>
 
-  <div class="section-head">
-    <div><h2>Create a new document</h2><p>Choose what you want to create</p></div>
-  </div>
+<main class="main">
 
-  <div class="grid">
-    <button class="doc-card" onclick="openCreate('Quote')"><div class="doc-icon">💰</div><h3>Quote</h3><p>Create a professional quotation for your customer.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Invoice')"><div class="doc-icon">🧾</div><h3>Invoice</h3><p>Generate clean invoices and payment documents.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Letter')"><div class="doc-icon">✉️</div><h3>Letter</h3><p>Create formal business letters with templates.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Receipt')"><div class="doc-icon">🧾</div><h3>Receipt</h3><p>Create payment receipts for completed work.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Contract')"><div class="doc-icon">📑</div><h3>Contract</h3><p>Prepare professional customer agreements.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Work Order')"><div class="doc-icon">📋</div><h3>Work Order</h3><p>Organise job details and work instructions.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Report')"><div class="doc-icon">📄</div><h3>Report</h3><p>Build simple professional business reports.</p><span class="plus">+</span></button>
-    <button class="doc-card" onclick="openCreate('Statement')"><div class="doc-icon">📃</div><h3>Statement</h3><p>Create customer account statements.</p><span class="plus">+</span></button>
-  </div>
+    <section class="hero">
 
-  <div class="tools">
-    <div class="section-head"><div><h2>Business tools</h2><p>Manage your business setup</p></div></div>
-    <div class="tool-grid">
-      <button class="tool-card" onclick="showInfo('Customers')"><div class="tool-icon">♙</div><div><b>Customers</b><span>Customer details</span></div></button>
-      <button class="tool-card" onclick="showInfo('Services')"><div class="tool-icon">▦</div><div><b>Services</b><span>Services & pricing</span></div></button>
-      <button class="tool-card" onclick="showInfo('Templates')"><div class="tool-icon">▤</div><div><b>Templates</b><span>Document designs</span></div></button>
-      <button class="tool-card" onclick="showInfo('Settings')"><div class="tool-icon">⚙</div><div><b>Settings</b><span>Company settings</span></div></button>
-    </div>
-  </div>
-</section>
+        <h1>Document Studio</h1>
+
+        <p>
+            Create professional business documents quickly and easily.
+        </p>
+
+    </section>
+
+
+    <section class="documents">
+
+
+        <!-- LETTER -->
+
+        <a class="document" href="letter.html">
+
+            <div class="icon">✉</div>
+
+            <h2>Letter</h2>
+
+            <p>
+                Create professional business letters with your company branding.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+        <!-- QUOTE -->
+
+        <a class="document" href="quote.html">
+
+            <div class="icon">▤</div>
+
+            <h2>Quotation</h2>
+
+            <p>
+                Prepare professional quotes with items, quantities and pricing.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+        <!-- RECEIPT -->
+
+        <a class="document" href="receipt.html">
+
+            <div class="icon">▣</div>
+
+            <h2>Receipt</h2>
+
+            <p>
+                Create clean customer receipts and payment confirmations.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+        <!-- STATEMENT -->
+
+        <a class="document" href="statement.html">
+
+            <div class="icon">☷</div>
+
+            <h2>Statement</h2>
+
+            <p>
+                Generate customer account statements and transaction summaries.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+        <!-- WORK ORDER -->
+
+        <a class="document" href="workorder.html">
+
+            <div class="icon">⚒</div>
+
+            <h2>Work Order</h2>
+
+            <p>
+                Create detailed work orders for projects, jobs and services.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+        <!-- CONTRACT -->
+
+        <a class="document" href="contract.html">
+
+            <div class="icon">§</div>
+
+            <h2>Contract</h2>
+
+            <p>
+                Create professional agreements and project contracts.
+            </p>
+
+            <div class="arrow">→</div>
+
+        </a>
+
+
+    </section>
+
 </main>
+
+
+<footer class="footer">
+
+    TM Eleven · Document Studio
+
+</footer>
+
 </div>
 
-<div class="overlay" id="overlay" onclick="closeModal(event)">
-  <div class="modal">
-    <button class="close" onclick="closeModal()">×</button>
-    <h2 id="modalTitle">Create document</h2>
-    <p id="modalText">Choose an option to continue.</p>
-    <div class="modal-actions">
-      <button onclick="continueCreate()"><b>Open Generator</b><span>Continue to the document builder</span></button>
-      <button onclick="closeModal()"><b>Cancel</b><span>Return to dashboard</span></button>
-    </div>
-  </div>
-</div>
-
-<script>
-let selected='';
-function openCreate(type){
-  selected=type;
-  document.getElementById('modalTitle').textContent='Create '+type;
-  document.getElementById('modalText').textContent='Ready to create your professional '+type.toLowerCase()+'.';
-  document.getElementById('overlay').style.display='flex';
-}
-function continueCreate(){
-  // Change these filenames later when your generators are ready.
-  const pages={Quote:'quote.html',Invoice:'invoice.html',Letter:'letter.html',Receipt:'receipt.html',Contract:'contract.html','Work Order':'work-order.html',Report:'report.html',Statement:'statement.html'};
-  if(pages[selected]) window.location.href=pages[selected];
-}
-function showInfo(name){
-  selected='';
-  document.getElementById('modalTitle').textContent=name;
-  document.getElementById('modalText').textContent=name+' module is ready to connect to your next page.';
-  document.getElementById('overlay').style.display='flex';
-  document.querySelector('.modal-actions button:first-child b').textContent='Coming next';
-  document.querySelector('.modal-actions button:first-child span').textContent='We can connect this module to your data system.';
-}
-function closeModal(e){
-  if(!e || e.target===document.getElementById('overlay')) document.getElementById('overlay').style.display='none';
-}
-</script>
 </body>
 </html>
