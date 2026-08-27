@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Professional Work Order Generator</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:"Inter",sans-serif;
+background:#f4f5f7;
+color:#16181d;
+}
+
+.header{
+height:72px;
+background:#111318;
+color:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 28px;
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:40px;
+height:40px;
+object-fit:contain;
+border-radius:8px;
+}
+
+.brand-text{
+font-family:"Manrope";
+font-size:20px;
+font-weight:800;
+}
+
+.brand-text span{
+color:#aaa;
+font-weight:500;
+}
+
+.header-actions{
+display:flex;
+gap:10px;
+}
+
+.btn{
+border:0;
+border-radius:9px;
+padding:11px 17px;
+font-family:inherit;
+font-weight:600;
+cursor:pointer;
+}
+
+.btn-dark{
+background:#242832;
+color:white;
+}
+
+.btn-white{
+background:white;
+color:#111;
+}
+
+.btn-primary{
+background:#111318;
+color:white;
+}
+
+.main{
+display:grid;
+grid-template-columns:390px 1fr;
+min-height:calc(100vh - 72px);
+}
+
+.sidebar{
+background:white;
+border-right:1px solid #dddfe3;
+padding:24px;
+overflow:auto;
+height:calc(100vh - 72px);
+position:sticky;
+top:72px;
+}
+
+.section{
+margin-bottom:26px;
+}
+
+.section-title{
+font-size:12px;
+font-weight:800;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:#777b83;
+margin-bottom:13px;
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:600;
+margin-bottom:7px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+border:1px solid #d9dce1;
+background:#fafbfc;
+border-radius:8px;
+padding:11px 12px;
+font-family:inherit;
+font-size:14px;
+outline:none;
+}
+
+textarea{
+resize:vertical;
+min-height:90px;
+}
+
+.field{
+margin-bottom:13px;
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.logo-upload{
+border:1.5px dashed #c9ccd2;
+padding:16px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+background:#fafafa;
+}
+
+.logo-preview{
+width:80px;
+height:55px;
+object-fit:contain;
+display:block;
+margin:auto;
+}
+
+.logo-toggle{
+display:flex;
+align-items:center;
+gap:9px;
+margin-top:10px;
+padding:10px 12px;
+background:#f7f7f8;
+border:1px solid #e1e2e5;
+border-radius:8px;
+}
+
+.logo-toggle input{
+width:17px;
+height:17px;
+}
+
+.editor{
+min-height:150px;
+border:1px solid #ddd;
+padding:13px;
+border-radius:8px;
+outline:none;
+font-size:14px;
+line-height:1.7;
+background:white;
+}
+
+.toolbar{
+display:flex;
+gap:5px;
+padding:7px;
+border:1px solid #ddd;
+border-bottom:0;
+border-radius:9px 9px 0 0;
+background:#f7f7f8;
+}
+
+.tool{
+border:1px solid #ddd;
+background:white;
+border-radius:6px;
+min-width:32px;
+height:30px;
+cursor:pointer;
+font-weight:700;
+}
+
+.items-box{
+border:1px solid #dddfe3;
+border-radius:9px;
+overflow:hidden;
+}
+
+.item{
+padding:12px;
+border-bottom:1px solid #e5e6e9;
+}
+
+.item:last-child{
+border-bottom:0;
+}
+
+.item-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+}
+
+.remove-item{
+border:0;
+background:#eee;
+width:25px;
+height:25px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.add-item{
+width:100%;
+margin-top:10px;
+padding:11px;
+border:1px dashed #bbbfc6;
+background:white;
+border-radius:8px;
+cursor:pointer;
+font-weight:700;
+}
+
+.preview-area{
+padding:35px;
+overflow:auto;
+}
+
+.preview-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.preview-title{
+font-family:"Manrope";
+font-weight:800;
+font-size:19px;
+}
+
+.a4{
+width:210mm;
+min-height:297mm;
+background:white;
+margin:auto;
+padding:20mm;
+box-shadow:0 8px 35px rgba(0,0,0,.12);
+position:relative;
+}
+
+.work-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding-bottom:20px;
+border-bottom:3px solid #111;
+}
+
+.company{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.company-logo{
+width:72px;
+height:58px;
+object-fit:contain;
+}
+
+.company-name{
+font-family:"Manrope";
+font-size:23px;
+font-weight:800;
+}
+
+.company-details{
+font-size:10px;
+color:#666;
+line-height:1.7;
+max-width:340px;
+}
+
+.work-title{
+text-align:right;
+}
+
+.work-title h1{
+font-family:"Manrope";
+font-size:29px;
+font-weight:800;
+}
+
+.meta{
+font-size:10px;
+color:#666;
+margin-top:5px;
+}
+
+.client-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:28px;
+}
+
+.info-label{
+font-size:9px;
+text-transform:uppercase;
+letter-spacing:.1em;
+font-weight:800;
+color:#888;
+margin-bottom:5px;
+}
+
+.info-value{
+font-size:11px;
+line-height:1.7;
+}
+
+.status{
+margin-top:25px;
+padding:11px 14px;
+background:#f2f3f4;
+border-radius:8px;
+font-size:10px;
+font-weight:700;
+}
+
+.work-section{
+margin-top:25px;
+}
+
+.work-section h3{
+font-family:"Manrope";
+font-size:12px;
+margin-bottom:9px;
+}
+
+.work-section p{
+font-size:11px;
+line-height:1.7;
+}
+
+.work-table{
+margin-top:10px;
+border:1px solid #dddfe3;
+border-radius:8px;
+overflow:hidden;
+}
+
+.work-row{
+display:grid;
+grid-template-columns:1fr 70px 100px;
+gap:10px;
+padding:11px 13px;
+border-bottom:1px solid #e5e6e8;
+font-size:10px;
+}
+
+.work-row.header{
+background:#111318;
+color:white;
+font-size:9px;
+font-weight:800;
+text-transform:uppercase;
+}
+
+.work-row:last-child{
+border-bottom:0;
+}
+
+.work-row span:nth-child(2),
+.work-row span:nth-child(3){
+text-align:right;
+}
+
+.signatures{
+margin-top:50px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:50px;
+}
+
+.signature-line{
+border-top:1px solid #222;
+padding-top:7px;
+margin-top:45px;
+font-size:10px;
+}
+
+.footer{
+position:absolute;
+left:20mm;
+right:20mm;
+bottom:20mm;
+border-top:1px solid #ddd;
+padding-top:11px;
+font-size:9px;
+color:#777;
+text-align:center;
+}
+
+@media(max-width:1000px){
+
+.main{
+grid-template-columns:1fr;
+}
+
+.sidebar{
+position:relative;
+top:0;
+height:auto;
+border-right:0;
+border-bottom:1px solid #ddd;
+}
+
+.preview-area{
+padding:20px 10px;
+}
+
+}
+
+@media print{
+
+.header,
+.sidebar,
+.preview-top{
+display:none!important;
+}
+
+.main{
+display:block;
+}
+
+.preview-area{
+padding:0;
+}
+
+.a4{
+box-shadow:none;
+margin:0;
+}
+
+@page{
+size:A4;
+margin:0;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<header class="header">
+
+<div class="brand">
+
+<img src="logo.png"
+id="headerLogo"
+onerror="this.style.display='none'">
+
+<div class="brand-text">
+
+TM Eleven <span>Work Order Studio</span>
+
+</div>
+
+</div>
+
+
+<div class="header-actions">
+
+<button class="btn btn-dark"
+onclick="saveDraft()">
+Save Draft
+</button>
+
+<button class="btn btn-white"
+onclick="window.print()">
+Print / PDF
+</button>
+
+</div>
+
+</header>
+
+
+<div class="main">
+
+
+<aside class="sidebar">
+
+
+<div class="section">
+
+<div class="section-title">
+Company Details
+</div>
+
+
+<div class="field">
+
+<label>
+Company Logo
+</label>
+
+<label class="logo-upload">
+
+<input type="file"
+id="logoInput"
+accept="image/*"
+hidden>
+
+<img src="logo.png"
+id="logoPreview"
+class="logo-preview"
+onerror="this.style.display='none'">
+
+</label>
+
+
+<label class="logo-toggle">
+
+<input type="checkbox"
+id="showLogo"
+checked
+onchange="toggleLogo()">
+
+<span>
+Show logo on work order
+</span>
+
+</label>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Company Name
+</label>
+
+<input id="companyName"
+value="TM Eleven"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Company Address
+</label>
+
+<input id="companyAddress"
+placeholder="Melbourne, Victoria, Australia"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+Email
+</label>
+
+<input id="companyEmail"
+placeholder="info@example.com"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Phone
+</label>
+
+<input id="companyPhone"
+placeholder="+61 xxx xxx xxx"
+oninput="updatePreview()">
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Work Order Details
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+Work Order No.
+</label>
+
+<input id="workNumber"
+value="WO-001"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Date
+</label>
+
+<input type="date"
+id="workDate"
+onchange="updatePreview()">
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+Start Date
+</label>
+
+<input type="date"
+id="startDate"
+onchange="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Due Date
+</label>
+
+<input type="date"
+id="dueDate"
+onchange="updatePreview()">
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Status
+</label>
+
+<select id="status"
+onchange="updatePreview()">
+
+<option>Pending</option>
+<option>Approved</option>
+<option>In Progress</option>
+<option>Completed</option>
+<option>On Hold</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Customer / Job
+</div>
+
+
+<div class="field">
+
+<label>
+Customer Name
+</label>
+
+<input id="customerName"
+placeholder="John Smith"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Customer Phone
+</label>
+
+<input id="customerPhone"
+placeholder="+61 xxx xxx xxx"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Job Address
+</label>
+
+<textarea id="jobAddress"
+placeholder="Job site address"
+oninput="updatePreview()"></textarea>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Work Description
+</div>
+
+
+<div class="toolbar">
+
+<button class="tool"
+onclick="format('bold')">
+B
+</button>
+
+<button class="tool"
+onclick="format('italic')">
+I
+</button>
+
+<button class="tool"
+onclick="format('underline')">
+U
+</button>
+
+<button class="tool"
+onclick="format('insertUnorderedList')">
+•
+</button>
+
+</div>
+
+
+<div id="editor"
+class="editor"
+contenteditable="true"
+oninput="updatePreview()">
+
+Complete the agreed works at the job site in accordance with the approved quotation and instructions.
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Materials / Tasks
+</div>
+
+
+<div class="items-box"
+id="items">
+</div>
+
+
+<button class="add-item"
+onclick="addItem()">
++ Add Task
+</button>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Special Instructions
+</div>
+
+<textarea id="instructions"
+placeholder="Access instructions, site requirements, special notes..."
+oninput="updatePreview()"></textarea>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Authorisation
+</div>
+
+<div class="row">
+
+<div class="field">
+
+<label>
+Prepared By
+</label>
+
+<input id="preparedBy"
+value="TM Eleven"
+oninput="updatePreview()">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Approved By
+</label>
+
+<input id="approvedBy"
+placeholder="Customer Name"
+oninput="updatePreview()">
+
+</div>
+
+</div>
+
+</div>
+
+</aside>
+
+
+<main class="preview-area">
+
+
+<div class="preview-top">
+
+<div class="preview-title">
+Live Work Order Preview
+</div>
+
+<button class="btn btn-primary"
+onclick="window.print()">
+Generate PDF
+</button>
+
+</div>
+
+
+<div class="a4">
+
+
+<div class="work-header">
+
+
+<div class="company">
+
+<img src="logo.png"
+id="previewLogo"
+class="company-logo"
+onerror="this.style.display='none'">
+
+<div>
+
+<div class="company-name"
+id="previewCompany">
+TM Eleven
+</div>
+
+<div class="company-details"
+id="previewCompanyDetails">
+Melbourne, Victoria, Australia
+</div>
+
+</div>
+
+</div>
+
+
+<div class="work-title">
+
+<h1>
+WORK ORDER
+</h1>
+
+<div class="meta"
+id="previewWorkNumber">
+Work Order No. WO-001
+</div>
+
+<div class="meta"
+id="previewDate">
+27 August 2026
+</div>
+
+</div>
+
+</div>
+
+
+<div class="client-grid">
+
+
+<div>
+
+<div class="info-label">
+Customer
+</div>
+
+<div class="info-value">
+
+<strong id="previewCustomer">
+Customer Name
+</strong>
+
+<br>
+
+<span id="previewCustomerPhone">
+</span>
+
+</div>
+
+</div>
+
+
+<div>
+
+<div class="info-label">
+Job Address
+</div>
+
+<div class="info-value"
+id="previewJobAddress">
+Job site address
+</div>
+
+</div>
+
+
+<div>
+
+<div class="info-label">
+Start Date
+</div>
+
+<div class="info-value"
+id="previewStartDate">
+Not specified
+</div>
+
+</div>
+
+
+<div>
+
+<div class="info-label">
+Due Date
+</div>
+
+<div class="info-value"
+id="previewDueDate">
+Not specified
+</div>
+
+</div>
+
+</div>
+
+
+<div class="status">
+
+STATUS:
+<span id="previewStatus">
+Pending
+</span>
+
+</div>
+
+
+<div class="work-section">
+
+<h3>
+WORK DESCRIPTION
+</h3>
+
+<div id="previewDescription">
+</div>
+
+</div>
+
+
+<div class="work-section">
+
+<h3>
+MATERIALS / TASKS
+</h3>
+
+
+<div class="work-table">
+
+
+<div class="work-row header">
+
+<span>Description</span>
+<span>Qty</span>
+<span>Notes</span>
+
+</div>
+
+
+<div id="previewItems">
+</div>
+
+
+</div>
+
+</div>
+
+
+<div class="work-section">
+
+<h3>
+SPECIAL INSTRUCTIONS
+</h3>
+
+<p id="previewInstructions">
+No special instructions.
+</p>
+
+</div>
+
+
+<div class="signatures">
+
+
+<div>
+
+<div class="signature-line">
+
+<strong id="previewPreparedBy">
+TM Eleven
+</strong>
+
+<br>
+
+Prepared By
+
+</div>
+
+</div>
+
+
+<div>
+
+<div class="signature-line">
+
+<strong id="previewApprovedBy">
+Customer Name
+</strong>
+
+<br>
+
+Customer Approval
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+TM Eleven • Work Order Document
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+const today=new Date();
+
+document.getElementById("workDate").value=
+today.toISOString().split("T")[0];
+
+
+let items=[
+{
+description:"",
+quantity:1,
+notes:""
+}
+];
+
+
+function format(command){
+
+document.execCommand(
+command,
+false,
+null
+);
+
+document.getElementById("editor").focus();
+
+updatePreview();
+
+}
+
+
+function addItem(){
+
+items.push({
+description:"",
+quantity:1,
+notes:""
+});
+
+renderItems();
+
+}
+
+
+function removeItem(index){
+
+if(items.length===1){
+
+items[0]={
+description:"",
+quantity:1,
+notes:""
+};
+
+}else{
+
+items.splice(index,1);
+
+}
+
+renderItems();
+
+}
+
+
+function renderItems(){
+
+const container=
+document.getElementById("items");
+
+container.innerHTML="";
+
+
+items.forEach((item,index)=>{
+
+const div=
+document.createElement("div");
+
+div.className="item";
+
+
+div.innerHTML=`
+
+<div class="item-head">
+
+<strong style="font-size:11px">
+Task ${index+1}
+</strong>
+
+<button
+class="remove-item"
+onclick="removeItem(${index})">
+×
+</button>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Description
+</label>
+
+<input
+value="${escapeHtml(item.description)}"
+placeholder="Concrete work / fencing / materials"
+oninput="updateItem(${index},'description',this.value)">
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+Quantity
+</label>
+
+<input
+type="number"
+min="0"
+step="1"
+value="${item.quantity}"
+oninput="updateItem(${index},'quantity',this.value)">
+
+</div>
+
+
+<div class="field">
+
+<label>
+Notes
+</label>
+
+<input
+value="${escapeHtml(item.notes)}"
+placeholder="Optional"
+oninput="updateItem(${index},'notes',this.value)">
+
+</div>
+
+</div>
+
+`;
+
+
+container.appendChild(div);
+
+});
+
+
+updatePreview();
+
+}
+
+
+function updateItem(index,key,value){
+
+if(key==="quantity"){
+
+value=parseFloat(value)||0;
+
+}
+
+items[index][key]=value;
+
+updatePreview();
+
+}
+
+
+document.getElementById("logoInput")
+.addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(!file)return;
+
+
+const reader=
+new FileReader();
+
+
+reader.onload=function(e){
+
+localStorage.setItem(
+"workorderLogo",
+e.target.result
+);
+
+
+document.getElementById("logoPreview").src=
+e.target.result;
+
+
+document.getElementById("previewLogo").src=
+e.target.result;
+
+
+toggleLogo();
+
+};
+
+
+reader.readAsDataURL(file);
+
+});
+
+
+function toggleLogo(){
+
+const show=
+document.getElementById("showLogo").checked;
+
+
+document.getElementById("previewLogo").style.display=
+show?"block":"none";
+
+}
+
+
+function formatDate(value){
+
+if(!value)return"Not specified";
+
+
+const d=
+new Date(value+"T00:00:00");
+
+
+return d.toLocaleDateString(
+"en-AU",
+{
+day:"numeric",
+month:"long",
+year:"numeric"
+}
+);
+
+}
+
+
+function updatePreview(){
+
+const company=
+document.getElementById("companyName").value;
+
+const address=
+document.getElementById("companyAddress").value;
+
+const email=
+document.getElementById("companyEmail").value;
+
+const phone=
+document.getElementById("companyPhone").value;
+
+
+document.getElementById("previewCompany").textContent=
+company||"Company Name";
+
+
+let details="";
+
+if(address)details+=address;
+
+if(email)
+details+=(details?" • ":"")+email;
+
+if(phone)
+details+=(details?" • ":"")+phone;
+
+
+document.getElementById("previewCompanyDetails").textContent=
+details;
+
+
+document.getElementById("previewWorkNumber").textContent=
+"Work Order No. "+
+(
+document.getElementById("workNumber").value||
+"WO-001"
+);
+
+
+document.getElementById("previewDate").textContent=
+formatDate(
+document.getElementById("workDate").value
+);
+
+
+document.getElementById("previewCustomer").textContent=
+document.getElementById("customerName").value||
+"Customer Name";
+
+
+document.getElementById("previewCustomerPhone").textContent=
+document.getElementById("customerPhone").value;
+
+
+document.getElementById("previewJobAddress").innerHTML=
+(
+document.getElementById("jobAddress").value||
+"Job site address"
+)
+.replace(/\n/g,"<br>");
+
+
+document.getElementById("previewStartDate").textContent=
+formatDate(
+document.getElementById("startDate").value
+);
+
+
+document.getElementById("previewDueDate").textContent=
+formatDate(
+document.getElementById("dueDate").value
+);
+
+
+document.getElementById("previewStatus").textContent=
+document.getElementById("status").value;
+
+
+document.getElementById("previewDescription").innerHTML=
+document.getElementById("editor").innerHTML;
+
+
+const previewItems=
+document.getElementById("previewItems");
+
+previewItems.innerHTML="";
+
+
+items.forEach(item=>{
+
+const row=
+document.createElement("div");
+
+row.className="work-row";
+
+
+row.innerHTML=`
+
+<span>
+${escapeHtml(
+item.description||"Work / Material"
+)}
+</span>
+
+<span>
+${item.quantity}
+</span>
+
+<span>
+${escapeHtml(item.notes||"—")}
+</span>
+
+`;
+
+
+previewItems.appendChild(row);
+
+});
+
+
+document.getElementById("previewInstructions").textContent=
+document.getElementById("instructions").value||
+"No special instructions.";
+
+
+document.getElementById("previewPreparedBy").textContent=
+document.getElementById("preparedBy").value;
+
+
+document.getElementById("previewApprovedBy").textContent=
+document.getElementById("approvedBy").value||
+"Customer Name";
+
+
+toggleLogo();
+
+}
+
+
+function escapeHtml(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+function saveDraft(){
+
+const data={};
+
+
+document.querySelectorAll(
+"input,textarea,select"
+)
+.forEach(el=>{
+
+if(el.id){
+
+data[el.id]=
+el.type==="checkbox"
+?el.checked
+:el.value;
+
+}
+
+});
+
+
+data.editor=
+document.getElementById("editor").innerHTML;
+
+
+data.items=items;
+
+
+localStorage.setItem(
+"tmElevenWorkOrderDraft",
+JSON.stringify(data)
+);
+
+
+alert(
+"Work order draft saved successfully."
+);
+
+}
+
+
+function loadDraft(){
+
+const saved=
+localStorage.getItem(
+"tmElevenWorkOrderDraft"
+);
+
+
+if(!saved)return;
+
+
+const data=
+JSON.parse(saved);
+
+
+Object.keys(data).forEach(key=>{
+
+if(key==="items"){
+
+items=data.items||items;
+
+return;
+
+}
+
+
+const el=
+document.getElementById(key);
+
+
+if(!el)return;
+
+
+if(key==="editor"){
+
+el.innerHTML=data[key];
+
+}else if(el.type==="checkbox"){
+
+el.checked=data[key];
+
+}else{
+
+el.value=data[key];
+
+}
+
+});
+
+}
+
+
+window.addEventListener(
+"load",
+function(){
+
+const savedLogo=
+localStorage.getItem(
+"workorderLogo"
+);
+
+
+if(savedLogo){
+
+document.getElementById(
+"logoPreview"
+).src=savedLogo;
+
+document.getElementById(
+"previewLogo"
+).src=savedLogo;
+
+}
+
+
+loadDraft();
+
+renderItems();
+
+updatePreview();
+
+}
+);
+
+</script>
+
+</body>
+</html>
