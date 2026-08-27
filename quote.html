@@ -1,2786 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TM ELEVEN - Quote Generator</title>
+    <title>TM Eleven Quote Generator</title>
 
-<!-- PDF Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 
-<style>
-/* =========================================================
-   GLOBAL
-========================================================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #111315;
-    color: #f4f4f4;
-    min-height: 100vh;
-    padding-bottom: 100px;
-}
-
-button,
-input,
-textarea,
-select {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.top-header {
-    background: #0b0c0d;
-    border-bottom: 1px solid #292b2d;
-    padding: 18px 30px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-inner {
-    max-width: 1500px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-}
-
-.brand img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-}
-
-.brand-text h1 {
-    font-size: 20px;
-    letter-spacing: 2px;
-    color: #d9a441;
-}
-
-.brand-text span {
-    font-size: 11px;
-    color: #999;
-    letter-spacing: 1px;
-}
-
-.header-label {
-    font-size: 13px;
-    color: #aaa;
-}
-
-/* =========================================================
-   MAIN LAYOUT
-========================================================= */
-
-.app {
-    max-width: 1500px;
-    margin: auto;
-    padding: 25px;
-}
-
-.workspace {
-    display: grid;
-    grid-template-columns: minmax(380px, 0.72fr) minmax(500px, 1.28fr);
-    gap: 25px;
-    align-items: start;
-}
-
-/* =========================================================
-   EDITOR
-========================================================= */
-
-.editor {
-    background: #191b1d;
-    border: 1px solid #2b2e31;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 15px 45px rgba(0,0,0,.3);
-}
-
-.editor-title {
-    margin-bottom: 22px;
-}
-
-.editor-title h2 {
-    font-size: 24px;
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.editor-title p {
-    font-size: 13px;
-    color: #888;
-}
-
-.section {
-    background: #121416;
-    border: 1px solid #292c2f;
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 18px;
-}
-
-.section-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 16px;
-}
-
-.section-title h3 {
-    font-size: 15px;
-    color: #d9a441;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 13px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.form-group.full {
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-    font-size: 11px;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: .7px;
-}
-
-input,
-textarea,
-select {
-    width: 100%;
-    background: #1d2023;
-    color: #fff;
-    border: 1px solid #35393d;
-    border-radius: 8px;
-    padding: 11px 12px;
-    outline: none;
-    transition: .2s;
-    font-size: 13px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #d9a441;
-    box-shadow: 0 0 0 2px rgba(217,164,65,.08);
-}
-
-textarea {
-    min-height: 60px;
-    resize: vertical;
-}
-
-textarea#customerAddress {
-    min-height: 75px;
-}
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn {
-    border: 0;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 12px;
-    font-weight: 700;
-    transition: .2s;
-}
-
-.btn-gold {
-    background: linear-gradient(135deg, #d9a441, #b77c20);
-    color: #111;
-}
-
-.btn-gold:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 18px rgba(217,164,65,.2);
-}
-
-.btn-dark {
-    background: #272a2d;
-    border: 1px solid #393d40;
-    color: #ddd;
-}
-
-.btn-dark:hover {
-    border-color: #d9a441;
-    color: #fff;
-}
-
-.btn-danger {
-    background: #3a2020;
-    border: 1px solid #643333;
-    color: #ffb0b0;
-}
-
-.btn-danger:hover {
-    border-color: #a35050;
-    color: #fff;
-}
-
-.btn-small {
-    padding: 7px 10px;
-    font-size: 11px;
-}
-
-.btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-/* =========================================================
-   CUSTOM FIELDS
-========================================================= */
-
-.custom-field {
-    display: grid;
-    grid-template-columns: 140px 1fr 36px;
-    gap: 8px;
-    margin-bottom: 9px;
-}
-
-.remove-field {
-    border: 1px solid #493333;
-    background: #28191a;
-    color: #ff9d9d;
-    border-radius: 8px;
-    transition: .2s;
-}
-
-.remove-field:hover {
-    border-color: #a35050;
-    color: #fff;
-}
-
-.empty-hint {
-    font-size: 11px;
-    color: #666;
-    padding: 4px 2px 2px;
-    font-style: italic;
-}
-
-/* =========================================================
-   ITEMS
-========================================================= */
-
-.items-wrapper {
-    overflow-x: auto;
-}
-
-.item-editor {
-    min-width: 720px;
-}
-
-.item-head,
-.item-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr .8fr 1.15fr 38px;
-    gap: 7px;
-    align-items: center;
-}
-
-.item-head {
-    padding: 0 3px 8px;
-}
-
-.item-head div {
-    color: #777;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-}
-
-.item-row {
-    margin-bottom: 9px;
-    align-items: start;
-}
-
-.item-row input {
-    min-width: 0;
-}
-
-.item-total-editor {
-    background: #1d2023;
-    border: 1px solid #35393d;
-    min-height: 39px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    padding: 0 9px;
-    font-size: 12px;
-    color: #fff;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.unit-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.gst-box {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    color: #d9a441;
-    white-space: nowrap;
-}
-
-.gst-box input {
-    width: 14px;
-    height: 14px;
-    accent-color: #d9a441;
-}
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-.option-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 11px 0;
-    border-bottom: 1px solid #282b2d;
-}
-
-.option-row:last-child {
-    border-bottom: 0;
-}
-
-.option-info strong {
-    display: block;
-    font-size: 13px;
-    color: #eee;
-}
-
-.option-info span {
-    display: block;
-    font-size: 10px;
-    color: #777;
-    margin-top: 3px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.checkbox-label input {
-    width: 17px;
-    height: 17px;
-    accent-color: #d9a441;
-}
-
-.watermark-controls {
-    display: none;
-    margin-top: 12px;
-    padding: 12px;
-    border: 1px solid #35393d;
-    border-radius: 9px;
-    background: #1b1e20;
-}
-
-.watermark-controls.active {
-    display: block;
-}
-
-.range-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.range-row input[type="range"] {
-    padding: 0;
-    accent-color: #d9a441;
-}
-
-/* =========================================================
-   PREVIEW AREA
-========================================================= */
-
-.preview-area {
-    position: sticky;
-    top: 95px;
-}
-
-.preview-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.preview-header h2 {
-    font-size: 15px;
-    color: #ddd;
-}
-
-.preview-header span {
-    font-size: 10px;
-    color: #777;
-}
-
-.preview-scroll {
-    background: #27292b;
-    border-radius: 18px;
-    padding: 25px;
-    overflow: auto;
-    max-height: calc(100vh - 140px);
-}
-
-/* =========================================================
-   QUOTE DOCUMENT
-========================================================= */
-
-.quote-page {
-    width: 794px;
-    min-height: 1123px;
-    background: #fff;
-    color: #222;
-    margin: auto;
-    position: relative;
-    padding: 50px 48px 70px;
-    box-shadow: 0 15px 50px rgba(0,0,0,.35);
-    overflow: hidden;
-}
-
-.quote-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 3px solid #d49b35;
-    padding-bottom: 22px;
-}
-
-.company-left {
-    display: flex;
-    gap: 13px;
-    align-items: flex-start;
-}
-
-.company-logo {
-    width: 74px;
-    height: 74px;
-    object-fit: contain;
-}
-
-.company-details h2 {
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #171717;
-    margin-top: 3px;
-}
-
-.company-details .services {
-    font-size: 8px;
-    color: #a06e16;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-top: 6px;
-}
-
-.company-details .location {
-    font-size: 9px;
-    color: #777;
-    margin-top: 5px;
-}
-
-.company-details .acn {
-    font-size: 8px;
-    color: #999;
-    margin-top: 3px;
-    letter-spacing: .3px;
-}
-
-.quote-heading {
-    text-align: right;
-}
-
-.quote-heading h1 {
-    font-size: 34px;
-    letter-spacing: 3px;
-    color: #1b1b1b;
-    font-weight: 800;
-}
-
-.quote-heading .quote-date {
-    font-size: 10px;
-    color: #777;
-    margin-top: 8px;
-}
-
-.quote-body {
-    padding-top: 28px;
-}
-
-.to-box {
-    border: 1px solid #ddd;
-    border-left: 4px solid #d49b35;
-    padding: 14px 16px;
-    min-height: 100px;
-    border-radius: 4px;
-}
-
-.to-title {
-    font-size: 9px;
-    color: #a06e16;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-}
-
-.to-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 7px 20px;
-}
-
-.to-line {
-    font-size: 10px;
-    color: #444;
-}
-
-.to-line strong {
-    color: #171717;
-}
-
-.to-empty {
-    font-size: 10px;
-    color: #bbb;
-    font-style: italic;
-}
-
-.quote-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 27px;
-    font-size: 9px;
-}
-
-.quote-table thead th {
-    background: #1d1d1d;
-    color: #fff;
-    padding: 10px 7px;
-    text-align: left;
-    font-size: 8px;
-    letter-spacing: .4px;
-}
-
-.quote-table thead th:last-child,
-.quote-table tbody td:last-child {
-    text-align: right;
-}
-
-.quote-table tbody td {
-    padding: 10px 7px;
-    border-bottom: 1px solid #e4e4e4;
-    vertical-align: top;
-}
-
-.quote-table tbody tr:nth-child(even) {
-    background: #fafafa;
-}
-
-.gst-tag {
-    display: inline-block;
-    margin-top: 3px;
-    font-size: 7px;
-    color: #a06e16;
-    font-weight: bold;
-}
-
-.totals-area {
-    width: 310px;
-    margin-left: auto;
-    margin-top: 20px;
-}
-
-.total-line {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 7px 0;
-    border-bottom: 1px solid #ddd;
-    font-size: 10px;
-}
-
-.total-line strong {
-    color: #111;
-}
-
-.grand-total {
-    background: #1d1d1d;
-    color: #fff;
-    padding: 12px;
-    margin-top: 6px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 4px;
-}
-
-.grand-total .gold {
-    color: #e1ad4c;
-}
-
-.quote-footer {
-    position: absolute;
-    bottom: 24px;
-    left: 48px;
-    right: 48px;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.quote-footer div {
-    font-size: 8px;
-    color: #777;
-    line-height: 1.6;
-}
-
-.quote-footer strong {
-    color: #333;
-    font-size: 9px;
-}
-
-.quote-footer .footer-right {
-    text-align: right;
-}
-
-/* =========================================================
-   WATERMARK
-========================================================= */
-
-.quote-watermark {
-    display: none;
-    position: absolute;
-    left: 50%;
-    top: 54%;
-    transform: translate(-50%, -50%) rotate(-32deg);
-    font-size: 85px;
-    font-weight: 900;
-    letter-spacing: 8px;
-    color: #d49b35;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.quote-page.watermark-active .quote-watermark {
-    display: block;
-}
-
-.quote-page > *:not(.quote-watermark) {
-    position: relative;
-    z-index: 1;
-}
-
-/* =========================================================
-   FIXED ACTION BAR
-========================================================= */
-
-.action-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(10,11,12,.96);
-    border-top: 1px solid #343638;
-    backdrop-filter: blur(10px);
-    padding: 13px 20px;
-}
-
-.action-inner {
-    max-width: 1500px;
-    margin: auto;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.action-btn {
-    min-width: 145px;
-    padding: 12px 18px;
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-    position: fixed;
-    top: 80px;
-    right: 25px;
-    background: #242729;
-    border: 1px solid #d49b35;
-    color: #fff;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 12px;
-    z-index: 5000;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: .3s;
-    max-width: 280px;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* =========================================================
-   CONFIRM MODAL
-========================================================= */
-
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.6);
-    z-index: 6000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.modal-overlay.show {
-    display: flex;
-}
-
-.modal-box {
-    background: #191b1d;
-    border: 1px solid #35393d;
-    border-radius: 14px;
-    padding: 22px;
-    max-width: 340px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
-}
-
-.modal-box h3 {
-    font-size: 15px;
-    color: #fff;
-    margin-bottom: 8px;
-}
-
-.modal-box p {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 18px;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 1100px) {
-
-    .workspace {
-        grid-template-columns: 1fr;
-    }
-
-    .preview-area {
-        position: static;
-    }
-
-    .preview-scroll {
-        max-height: none;
-    }
-
-    .quote-page {
-        transform-origin: top center;
-    }
-}
-
-@media (max-width: 700px) {
-
-    body {
-        padding-bottom: 85px;
-    }
-
-    .top-header {
-        padding: 14px 16px;
-    }
-
-    .header-label {
-        display: none;
-    }
-
-    .app {
-        padding: 12px;
-    }
-
-    .editor {
-        padding: 14px;
-        border-radius: 13px;
-    }
-
-    .section {
-        padding: 13px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full {
-        grid-column: auto;
-    }
-
-    .custom-field {
-        grid-template-columns: 1fr 1fr 36px;
-    }
-
-    .preview-scroll {
-        padding: 10px;
-        border-radius: 12px;
-        overflow-x: auto;
-    }
-
-    .quote-page {
-        width: 794px;
-        transform: scale(.76);
-        transform-origin: top left;
-        margin-bottom: -270px;
-    }
-
-    .action-inner {
-        justify-content: center;
-    }
-
-    .action-btn {
-        min-width: 0;
-        flex: 1;
-        padding: 11px 8px;
-        font-size: 11px;
-    }
-}
-
-@media (max-width: 450px) {
-
-    .quote-page {
-        transform: scale(.58);
-        margin-bottom: -470px;
-    }
-
-    .brand-text h1 {
-        font-size: 17px;
-    }
-
-    .action-bar {
-        padding: 10px;
-    }
-}
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-@media print {
-
-    body {
-        background: #fff;
-        padding: 0;
-    }
-
-    .top-header,
-    .editor,
-    .preview-header,
-    .action-bar,
-    .modal-overlay,
-    .toast {
-        display: none !important;
-    }
-
-    .app,
-    .workspace,
-    .preview-area,
-    .preview-scroll {
-        display: block;
-        padding: 0;
-        margin: 0;
-        background: #fff;
-        max-height: none;
-    }
-
-    .quote-page {
-        box-shadow: none;
-        margin: 0;
-        width: 794px;
-        min-height: 1123px;
-        transform: none !important;
-    }
-}
-</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
 
-<!-- =====================================================
-     HEADER
-====================================================== -->
+    <!-- =========================
+         FIXED ACTION BAR
+    ========================== -->
+    <div class="top-actions">
 
-<header class="top-header">
-
-    <div class="header-inner">
-
-        <div class="brand">
-
-            <img src="logo.png" alt="TM Eleven Logo">
-
-            <div class="brand-text">
-                <h1>TM ELEVEN</h1>
-                <span>QUOTE GENERATOR</span>
-            </div>
-
+        <div class="action-brand">
+            TM11 QUOTE BUILDER
         </div>
 
-        <div class="header-label">
-            Professional Quote Management
-        </div>
+        <div class="action-buttons">
 
-    </div>
+            <button class="btn btn-outline" id="watermarkBtn">
+                Watermark
+            </button>
 
-</header>
+            <button class="btn btn-save" id="saveDraftBtn">
+                Save Draft
+            </button>
 
-
-<main class="app">
-
-<div class="workspace">
-
-<!-- =====================================================
-     LEFT EDITOR
-====================================================== -->
-
-<div class="editor">
-
-    <div class="editor-title">
-        <h2>Create Quote</h2>
-        <p>Enter your quote information below.</p>
-    </div>
-
-
-    <!-- CUSTOMER -->
-    <div class="section">
-
-        <div class="section-title">
-
-            <h3>Customer / To</h3>
-
-            <button
-                class="btn btn-gold btn-small"
-                onclick="addCustomField()">
-                + Add More
+            <button class="btn btn-pdf" id="downloadPdfBtn">
+                Convert PDF
             </button>
 
         </div>
 
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Name</label>
-                <input
-                    id="customerName"
-                    type="text"
-                    placeholder="Customer name">
-            </div>
-
-
-            <div class="form-group">
-                <label>Email</label>
-                <textarea
-                    id="customerEmail"
-                    placeholder="customer@email.com (one per line)"
-                    style="min-height:46px;"></textarea>
-            </div>
-
-
-            <div class="form-group full">
-                <label>Address</label>
-                <textarea
-                    id="customerAddress"
-                    placeholder="Customer address"></textarea>
-            </div>
-
-
-            <div class="form-group full">
-                <label>Project</label>
-                <input
-                    id="project"
-                    type="text"
-                    placeholder="Project name / description">
-            </div>
-
-        </div>
-
-
-        <div id="customFields"></div>
-
     </div>
 
 
-    <!-- DATE -->
-    <div class="section">
+    <!-- =========================
+         EDITOR
+    ========================== -->
 
-        <div class="section-title">
-            <h3>Quote Details</h3>
-        </div>
+    <main class="editor-wrapper">
 
-        <div class="form-grid">
+        <section class="editor-settings">
 
-            <div class="form-group">
-                <label>Quote Date</label>
-                <input id="quoteDate" type="date">
-            </div>
+            <!-- HEADER SETTINGS -->
 
-        </div>
+            <div class="settings-card">
 
-    </div>
+                <h3>Quote Details</h3>
 
+                <div class="input-grid">
 
-    <!-- ITEMS -->
-    <div class="section">
+                    <div class="input-group">
+                        <label>Quote Date</label>
 
-        <div class="section-title">
+                        <input
+                            type="date"
+                            id="quoteDate"
+                        >
+                    </div>
 
-            <h3>Quote Items</h3>
+                    <div class="input-group">
+                        <label>Quote Number</label>
 
-            <button
-                class="btn btn-gold btn-small"
-                onclick="addItem()">
-                + Add Item
-            </button>
-
-        </div>
-
-
-        <div class="items-wrapper">
-
-            <div class="item-editor">
-
-                <div class="item-head">
-
-                    <div>Description</div>
-                    <div>Unit</div>
-                    <div>Unit Price</div>
-                    <div>Quantity</div>
-                    <div>Item Total</div>
-                    <div></div>
+                        <input
+                            type="text"
+                            id="quoteNumber"
+                            placeholder="Optional"
+                        >
+                    </div>
 
                 </div>
 
-                <div id="items"></div>
-
             </div>
 
-        </div>
 
-    </div>
+            <!-- CLIENT DETAILS -->
 
+            <div class="settings-card">
 
-    <!-- TOTAL SETTINGS -->
-    <div class="section">
+                <div class="section-heading">
 
-        <div class="section-title">
-            <h3>Total Settings</h3>
-        </div>
+                    <h3>Client Details</h3>
 
+                    <button
+                        type="button"
+                        class="small-btn"
+                        id="addClientField"
+                    >
+                        + Add More
+                    </button>
 
-        <div class="option-row">
-
-            <div class="option-info">
-
-                <strong>Show All Total</strong>
-
-                <span>
-                    Show the overall quote total on the final quote.
-                </span>
-
-            </div>
-
-            <label class="checkbox-label">
-
-                <input
-                    type="checkbox"
-                    id="showAllTotal">
-
-                Show All Total
-
-            </label>
-
-        </div>
+                </div>
 
 
-        <div
-            class="option-row"
-            id="allGstOption"
-            style="display:none;">
+                <div id="clientFields">
 
-            <div class="option-info">
+                    <div class="client-field">
 
-                <strong>+ GST on All Total</strong>
+                        <input
+                            type="text"
+                            class="client-label"
+                            value="Name"
+                            placeholder="Field"
+                        >
 
-                <span>
-                    Add GST (10%) to the overall total.
-                </span>
+                        <input
+                            type="text"
+                            class="client-value"
+                            value=""
+                            placeholder="Enter name"
+                        >
 
-            </div>
-
-            <label class="checkbox-label">
-
-                <input
-                    type="checkbox"
-                    id="allTotalGST">
-
-                + GST
-
-            </label>
-
-        </div>
-
-    </div>
+                    </div>
 
 
-    <!-- WATERMARK -->
-    <div class="section">
+                    <div class="client-field">
 
-        <div class="section-title">
-            <h3>Watermark</h3>
-        </div>
+                        <input
+                            type="text"
+                            class="client-label"
+                            value="Email"
+                            placeholder="Field"
+                        >
 
+                        <input
+                            type="text"
+                            class="client-value"
+                            value=""
+                            placeholder="Enter email"
+                        >
 
-        <div class="option-row">
-
-            <div class="option-info">
-
-                <strong>Show Watermark</strong>
-
-                <span>
-                    Add a subtle TM ELEVEN watermark to the quote.
-                </span>
-
-            </div>
-
-            <label class="checkbox-label">
-
-                <input
-                    type="checkbox"
-                    id="showWatermark">
-
-                TM ELEVEN
-
-            </label>
-
-        </div>
+                    </div>
 
 
-        <div
-            class="watermark-controls"
-            id="watermarkControls">
+                    <div class="client-field">
 
-            <div class="form-group">
+                        <input
+                            type="text"
+                            class="client-label"
+                            value="Project"
+                            placeholder="Field"
+                        >
 
-                <label>Watermark Text</label>
+                        <input
+                            type="text"
+                            class="client-value"
+                            value=""
+                            placeholder="Enter project"
+                        >
 
-                <input
-                    id="watermarkText"
-                    type="text"
-                    value="TM ELEVEN">
+                    </div>
+
+
+                    <div class="client-field">
+
+                        <input
+                            type="text"
+                            class="client-label"
+                            value="Address"
+                            placeholder="Field"
+                        >
+
+                        <input
+                            type="text"
+                            class="client-value"
+                            value=""
+                            placeholder="Enter address"
+                        >
+
+                    </div>
+
+                </div>
 
             </div>
 
 
-            <br>
+            <!-- TOTAL SETTINGS -->
 
+            <div class="settings-card total-options">
 
-            <div class="form-group">
+                <h3>Quote Options</h3>
 
-                <label>
-                    Watermark Opacity
-                    <span id="opacityValue">0.08</span>
-                </label>
-
-                <div class="range-row">
+                <label class="check-row">
 
                     <input
-                        id="watermarkOpacity"
-                        type="range"
-                        min="0.02"
-                        max="0.20"
-                        step="0.01"
-                        value="0.08">
+                        type="checkbox"
+                        id="showGrandTotal"
+                    >
+
+                    <span>Show All Total</span>
+
+                </label>
+
+
+                <div
+                    class="nested-option"
+                    id="grandTotalOptions"
+                >
+
+                    <label class="check-row">
+
+                        <input
+                            type="checkbox"
+                            id="grandTotalGST"
+                        >
+
+                        <span>Grand Total + GST</span>
+
+                    </label>
+
+
+                    <label
+                        class="check-row gst-calc-option"
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="grandGSTCalculation"
+                        >
+
+                        <span>Add 10% GST to Total</span>
+
+                    </label>
 
                 </div>
 
             </div>
 
-        </div>
 
-    </div>
+            <!-- WATERMARK SETTINGS -->
 
-</div>
+            <div class="settings-card">
 
+                <div class="section-heading">
 
-<!-- =====================================================
-     RIGHT PREVIEW
-====================================================== -->
+                    <h3>Watermark</h3>
 
-<div class="preview-area">
+                    <label class="switch">
 
-    <div class="preview-header">
+                        <input
+                            type="checkbox"
+                            id="watermarkToggle"
+                        >
 
-        <h2>Quote Output</h2>
+                        <span class="slider"></span>
 
-        <span>Live Preview</span>
+                    </label>
 
-    </div>
-
-
-    <div class="preview-scroll">
-
-        <div
-            class="quote-page"
-            id="quotePage">
+                </div>
 
 
-            <!-- WATERMARK -->
+                <input
+                    type="text"
+                    id="watermarkText"
+                    placeholder="Example: DRAFT / TM ELEVEN"
+                    value="TM ELEVEN"
+                >
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             QUOTE PREVIEW
+        ========================== -->
+
+        <section
+            class="quote-paper"
+            id="quotePaper"
+        >
+
 
             <div
                 class="quote-watermark"
-                id="quoteWatermark">
+                id="quoteWatermark"
+            >
                 TM ELEVEN
             </div>
 
 
             <!-- HEADER -->
 
-            <div class="quote-header">
+            <header class="quote-header">
 
-                <div class="company-left">
+                <div class="company-area">
 
                     <img
                         src="logo.png"
+                        alt="TM Eleven Logo"
                         class="company-logo"
-                        alt="TM Eleven">
+                    >
 
-                    <div class="company-details">
 
-                        <h2>TM ELEVEN PTY LTD</h2>
+                    <div class="company-info">
 
-                        <div class="services">
+                        <h1>TM ELEVEN PTY LTD</h1>
+
+                        <p>
                             CONCRETING | LANDSCAPING | FENCING
-                        </div>
-
-                        <div class="location">
-                            Melbourne | VIC
-                        </div>
-
-                        <div class="acn">
-                            ACN : 692 149 045
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="quote-heading">
-
-                    <h1>QUOTE</h1>
-
-                    <div class="quote-date">
-                        Date:
-                        <span id="previewDate">--/--/----</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- BODY -->
-
-            <div class="quote-body">
-
-
-                <!-- CUSTOMER -->
-
-                <div class="to-box">
-
-                    <div class="to-title">
-                        TO
-                    </div>
-
-                    <div
-                        class="to-grid"
-                        id="previewCustomer">
-
-                    </div>
-
-                </div>
-
-
-                <!-- TABLE -->
-
-                <table class="quote-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th style="width:38%;">
-                                Description
-                            </th>
-
-                            <th style="width:13%;">
-                                Unit
-                            </th>
-
-                            <th style="width:15%;">
-                                Unit Price
-                            </th>
-
-                            <th style="width:12%;">
-                                Quantity
-                            </th>
-
-                            <th style="width:22%;">
-                                Item Total
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="previewItems"></tbody>
-
-                </table>
-
-
-                <!-- TOTALS -->
-
-                <div class="totals-area">
-
-                    <div
-                        class="total-line">
-
-                        <strong>Item Totals</strong>
-
-                        <span
-                            id="previewItemTotals">
-                            $0.00
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="total-line"
-                        id="previewGSTLine"
-                        style="display:none;">
-
-                        <strong>GST</strong>
-
-                        <span id="previewGST">
-                            $0.00
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="grand-total"
-                        id="previewGrandTotal"
-                        style="display:none;">
+                        </p>
 
                         <span>
-                            ALL TOTAL
+                            Melbourne VIC
                         </span>
 
-                        <span class="gold">
-                            <span id="previewAllTotal">
-                                $0.00
-                            </span>
-                        </span>
+                        <small>
+                            ACN : 692 149 045
+                        </small>
 
                     </div>
 
                 </div>
 
-            </div>
+
+                <div class="quote-title-area">
+
+                    <h2>QUOTE</h2>
+
+                    <p>
+                        Date :
+                        <span id="previewDate"></span>
+                    </p>
+
+                    <p
+                        class="quote-number-preview"
+                        id="quoteNumberPreview"
+                    >
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- TO -->
+
+            <section class="to-box">
+
+                <h3>To</h3>
+
+                <div
+                    id="previewClientFields"
+                ></div>
+
+            </section>
+
+
+            <!-- ITEMS -->
+
+            <section class="items-section">
+
+                <div class="table-scroll">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Description</th>
+
+                                <th>Unit</th>
+
+                                <th>Unit Price</th>
+
+                                <th>Quantity</th>
+
+                                <th>Item Total</th>
+
+                                <th class="editor-only">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody
+                            id="quoteItems"
+                        ></tbody>
+
+                    </table>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-item-btn editor-only"
+                    id="addItemBtn"
+                >
+                    + Add New Item
+                </button>
+
+            </section>
+
+
+            <!-- GRAND TOTAL -->
+
+            <section
+                class="grand-total-section"
+                id="grandTotalSection"
+            >
+
+                <div class="total-box">
+
+                    <div class="total-row">
+
+                        <span>Subtotal</span>
+
+                        <strong
+                            id="subtotalValue"
+                        >
+                            $0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="total-row gst-row"
+                        id="grandGSTRow"
+                    >
+
+                        <span>GST</span>
+
+                        <strong
+                            id="grandGSTValue"
+                        >
+                            $0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="total-row final-total">
+
+                        <span>ALL TOTAL</span>
+
+                        <strong
+                            id="grandTotalValue"
+                        >
+                            $0.00
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
 
 
             <!-- FOOTER -->
 
-            <div class="quote-footer">
+            <footer class="quote-footer">
 
-                <div>
-                    <strong>TM ELEVEN PTY LTD</strong><br>
+                <h3>TM ELEVEN PTY LTD</h3>
+
+                <p>
                     CONCRETING | LANDSCAPING | FENCING
-                </div>
+                </p>
 
-                <div class="footer-right">
-                    +61 451 160 058<br>
-                    tmeleven111@gmail.com<br>
-                    tmeleven.com.au
-                </div>
+                <p>+61 451 160 058</p>
 
-            </div>
+                <p>tmeleven111@gmail.com</p>
 
+                <p>tmeleven.com.au</p>
 
-        </div>
+            </footer>
 
-    </div>
 
-</div>
+        </section>
 
-</div>
+    </main>
 
-</main>
 
-
-<!-- =====================================================
-     FIXED ACTION BAR
-====================================================== -->
-
-<div class="action-bar">
-
-    <div class="action-inner">
-
-        <button
-            class="btn btn-dark action-btn"
-            onclick="saveDraft()">
-            💾 Save Draft
-        </button>
-
-
-        <button
-            class="btn btn-dark action-btn"
-            onclick="restoreDraft()">
-            ↻ Restore Draft
-        </button>
-
-
-        <button
-            class="btn btn-danger action-btn"
-            onclick="confirmClearDraft()">
-            🗑 Clear Draft
-        </button>
-
-
-        <button
-            class="btn btn-gold action-btn"
-            onclick="convertToPDF()">
-            📄 Convert to PDF
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div
-    class="toast"
-    id="toast">
-</div>
-
-
-<!-- CLEAR DRAFT CONFIRM MODAL -->
-
-<div
-    class="modal-overlay"
-    id="clearModal">
-
-    <div class="modal-box">
-
-        <h3>Clear saved draft?</h3>
-
-        <p>
-            This will permanently delete the draft saved in this browser.
-            This action cannot be undone.
-        </p>
-
-        <div class="modal-actions">
-
-            <button
-                class="btn btn-dark btn-small"
-                onclick="closeClearModal()">
-                Cancel
-            </button>
-
-            <button
-                class="btn btn-danger btn-small"
-                onclick="clearDraft()">
-                Clear Draft
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-/* =========================================================
-   GLOBAL DATA
-========================================================= */
-
-let customFields = [];
-let items = [];
-
-const DRAFT_KEY = "tmElevenQuoteDraft";
-
-
-/* =========================================================
-   START
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const today = new Date();
-
-    const formatted =
-        today.getFullYear() +
-        "-" +
-        String(today.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(today.getDate()).padStart(2, "0");
-
-    document.getElementById("quoteDate").value = formatted;
-
-
-    /* Default item */
-
-    addItem();
-
-
-    /* Inputs */
-
-    document
-        .querySelectorAll(
-            "#customerName, #customerEmail, #customerAddress, #project, #quoteDate"
-        )
-        .forEach(input => {
-
-            input.addEventListener("input", updatePreview);
-
-        });
-
-
-    document
-        .getElementById("showAllTotal")
-        .addEventListener("change", function () {
-
-            document.getElementById("allGstOption").style.display =
-                this.checked ? "flex" : "none";
-
-            updatePreview();
-
-        });
-
-
-    document
-        .getElementById("allTotalGST")
-        .addEventListener("change", updatePreview);
-
-
-    document
-        .getElementById("showWatermark")
-        .addEventListener("change", function () {
-
-            document
-                .getElementById("watermarkControls")
-                .classList.toggle("active", this.checked);
-
-            updateWatermark();
-
-        });
-
-
-    document
-        .getElementById("watermarkText")
-        .addEventListener("input", updateWatermark);
-
-
-    document
-        .getElementById("watermarkOpacity")
-        .addEventListener("input", function () {
-
-            document.getElementById("opacityValue").textContent =
-                this.value;
-
-            updateWatermark();
-
-        });
-
-
-    updatePreview();
-
-
-    /* Auto-detect existing draft on load */
-
-    if (localStorage.getItem(DRAFT_KEY)) {
-
-        showToast("A saved draft was found. Tap Restore Draft to load it.");
-
-    }
-
-});
-
-
-/* =========================================================
-   CUSTOM FIELDS
-========================================================= */
-
-function addCustomField(
-    label = "",
-    value = ""
-) {
-
-    const id = Date.now() + Math.random();
-
-    customFields.push({
-        id: id,
-        label: label,
-        value: value
-    });
-
-    renderCustomFields();
-
-    updatePreview();
-}
-
-
-function renderCustomFields() {
-
-    const container =
-        document.getElementById("customFields");
-
-    container.innerHTML = "";
-
-
-    customFields.forEach((field, index) => {
-
-        const row =
-            document.createElement("div");
-
-        row.className = "custom-field";
-
-        row.innerHTML = `
-
-            <input
-                type="text"
-                placeholder="Field name"
-                value="${escapeAttribute(field.label)}"
-                oninput="updateCustomField(${index}, 'label', this.value)"
-            >
-
-            <input
-                type="text"
-                placeholder="Value"
-                value="${escapeAttribute(field.value)}"
-                oninput="updateCustomField(${index}, 'value', this.value)"
-            >
-
-            <button
-                class="remove-field"
-                onclick="removeCustomField(${index})"
-                title="Remove field">
-                ×
-            </button>
-
-        `;
-
-        container.appendChild(row);
-
-    });
-
-}
-
-
-function updateCustomField(index, key, value) {
-
-    customFields[index][key] = value;
-
-    updatePreview();
-}
-
-
-function removeCustomField(index) {
-
-    customFields.splice(index, 1);
-
-    renderCustomFields();
-
-    updatePreview();
-}
-
-
-/* =========================================================
-   ITEMS
-========================================================= */
-
-function addItem(
-    description = "",
-    unit = "",
-    price = 0,
-    quantity = 1,
-    gst = false
-) {
-
-    items.push({
-
-        id: Date.now() + Math.random(),
-
-        description: description,
-
-        unit: unit,
-
-        price: Number(price) || 0,
-
-        quantity: Number(quantity) || 1,
-
-        gst: gst
-
-    });
-
-
-    renderItems();
-
-    updatePreview();
-}
-
-
-function removeItem(index) {
-
-    items.splice(index, 1);
-
-    renderItems();
-
-    updatePreview();
-}
-
-
-function renderItems() {
-
-    const container =
-        document.getElementById("items");
-
-    container.innerHTML = "";
-
-
-    if (items.length === 0) {
-
-        container.innerHTML =
-            `<div class="empty-hint">No items yet. Click "+ Add Item" to start.</div>`;
-
-        return;
-    }
-
-
-    items.forEach((item, index) => {
-
-        const row =
-            document.createElement("div");
-
-        row.className = "item-row";
-
-        const total =
-            item.price * item.quantity;
-
-
-        row.innerHTML = `
-
-            <input
-                type="text"
-                placeholder="Description"
-                value="${escapeAttribute(item.description)}"
-                oninput="updateItem(${index}, 'description', this.value)"
-            >
-
-
-            <div class="unit-cell">
-
-                <input
-                    type="text"
-                    placeholder="e.g. m², Each, Hour"
-                    value="${escapeAttribute(item.unit)}"
-                    oninput="updateItem(${index}, 'unit', this.value)"
-                >
-
-                <label class="gst-box">
-
-                    <input
-                        type="checkbox"
-                        ${item.gst ? "checked" : ""}
-                        onchange="updateItemGST(${index}, this.checked)"
-                    >
-
-                    + GST
-
-                </label>
-
-            </div>
-
-
-            <input
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                value="${item.price}"
-                oninput="updateItem(${index}, 'price', this.value)"
-            >
-
-
-            <input
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="1"
-                value="${item.quantity}"
-                oninput="updateItem(${index}, 'quantity', this.value)"
-            >
-
-
-            <div class="item-total-editor">
-
-                ${formatMoney(total)}
-
-            </div>
-
-
-            <button
-                class="btn btn-danger btn-small"
-                onclick="removeItem(${index})"
-                title="Remove item">
-                ×
-            </button>
-
-        `;
-
-
-        container.appendChild(row);
-
-    });
-
-}
-
-
-function updateItem(index, key, value) {
-
-    if (
-        key === "price" ||
-        key === "quantity"
-    ) {
-
-        value = Number(value) || 0;
-
-    }
-
-    items[index][key] = value;
-
-    renderItems();
-
-    updatePreview();
-}
-
-
-function updateItemGST(index, value) {
-
-    items[index].gst = value;
-
-    updatePreview();
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-function updatePreview() {
-
-    updateDate();
-
-    updateCustomer();
-
-    updateItems();
-
-    updateTotals();
-
-    updateWatermark();
-
-}
-
-
-function updateDate() {
-
-    const value =
-        document.getElementById("quoteDate").value;
-
-    if (!value) {
-
-        document.getElementById("previewDate").textContent =
-            "--/--/----";
-
-        return;
-    }
-
-
-    const date =
-        new Date(value + "T00:00:00");
-
-
-    const formatted =
-        String(date.getDate()).padStart(2, "0") +
-        "/" +
-        String(date.getMonth() + 1).padStart(2, "0") +
-        "/" +
-        date.getFullYear();
-
-
-    document.getElementById("previewDate").textContent =
-        formatted;
-
-}
-
-
-function updateCustomer() {
-
-    const container =
-        document.getElementById("previewCustomer");
-
-    container.innerHTML = "";
-
-
-    const fields = [
-
-        [
-            "Name",
-            document.getElementById("customerName").value
-        ],
-
-        [
-            "Email",
-            document.getElementById("customerEmail").value
-        ],
-
-        [
-            "Address",
-            document.getElementById("customerAddress").value
-        ],
-
-        [
-            "Project",
-            document.getElementById("project").value
-        ]
-
-    ];
-
-
-    customFields.forEach(field => {
-
-        if (field.label || field.value) {
-
-            fields.push([
-                field.label,
-                field.value
-            ]);
-
-        }
-
-    });
-
-
-    let anyContent = false;
-
-
-    fields.forEach(field => {
-
-        if (!field[0] && !field[1]) {
-            return;
-        }
-
-        anyContent = true;
-
-
-        const div =
-            document.createElement("div");
-
-        div.className = "to-line";
-
-
-        const valueHTML =
-            escapeHTML(field[1]).replace(/\n/g, "<br>");
-
-
-        div.innerHTML =
-            `<strong>${escapeHTML(field[0])}:</strong>
-             ${valueHTML}`;
-
-
-        container.appendChild(div);
-
-    });
-
-
-    if (!anyContent) {
-
-        container.innerHTML =
-            `<div class="to-empty">No customer details entered yet.</div>`;
-
-    }
-
-}
-
-
-function updateItems() {
-
-    const container =
-        document.getElementById("previewItems");
-
-    container.innerHTML = "";
-
-
-    items.forEach(item => {
-
-        const total =
-            item.price * item.quantity;
-
-
-        const tr =
-            document.createElement("tr");
-
-
-        tr.innerHTML = `
-
-            <td>
-                ${escapeHTML(item.description || "-")}
-            </td>
-
-            <td>
-                ${escapeHTML(item.unit || "-")}
-            </td>
-
-            <td>
-                ${formatMoney(item.price)}
-            </td>
-
-            <td>
-                ${escapeHTML(String(item.quantity))}
-            </td>
-
-            <td>
-
-                ${formatMoney(total)}
-
-                ${
-                    item.gst
-                    ? `<div class="gst-tag">+ GST</div>`
-                    : ""
-                }
-
-            </td>
-
-        `;
-
-
-        container.appendChild(tr);
-
-    });
-
-
-    if (items.length === 0) {
-
-        const tr =
-            document.createElement("tr");
-
-        tr.innerHTML = `
-
-            <td colspan="5"
-                style="text-align:center;color:#999;padding:25px;">
-                No quote items
-            </td>
-
-        `;
-
-        container.appendChild(tr);
-
-    }
-
-}
-
-
-/* =========================================================
-   TOTALS
-========================================================= */
-
-function calculateTotals() {
-
-    let subtotal = 0;
-
-    let itemGST = 0;
-
-
-    items.forEach(item => {
-
-        const total =
-            Number(item.price || 0) *
-            Number(item.quantity || 0);
-
-
-        subtotal += total;
-
-
-        if (item.gst) {
-
-            itemGST += total * 0.10;
-
-        }
-
-    });
-
-
-    return {
-
-        subtotal: subtotal,
-
-        itemGST: itemGST
-
-    };
-
-}
-
-
-function updateTotals() {
-
-    const totals =
-        calculateTotals();
-
-
-    document.getElementById("previewItemTotals").textContent =
-        formatMoney(totals.subtotal);
-
-
-    const showAll =
-        document.getElementById("showAllTotal").checked;
-
-
-    const allGST =
-        document.getElementById("allTotalGST").checked;
-
-
-    const gstLine =
-        document.getElementById("previewGSTLine");
-
-
-    const grand =
-        document.getElementById("previewGrandTotal");
-
-
-    if (!showAll) {
-
-        gstLine.style.display = "none";
-
-        grand.style.display = "none";
-
-        return;
-
-    }
-
-
-    let gst = totals.itemGST;
-
-
-    let allTotal =
-        totals.subtotal + gst;
-
-
-    if (allGST && totals.itemGST === 0) {
-
-        gst =
-            totals.subtotal * 0.10;
-
-        allTotal =
-            totals.subtotal + gst;
-
-    }
-
-
-    if (gst > 0) {
-
-        gstLine.style.display = "flex";
-
-        document.getElementById("previewGST").textContent =
-            formatMoney(gst);
-
-    } else {
-
-        gstLine.style.display = "none";
-
-    }
-
-
-    document.getElementById("previewAllTotal").textContent =
-        formatMoney(allTotal);
-
-
-    grand.style.display = "flex";
-
-}
-
-
-/* =========================================================
-   WATERMARK
-========================================================= */
-
-function updateWatermark() {
-
-    const enabled =
-        document.getElementById("showWatermark").checked;
-
-
-    const page =
-        document.getElementById("quotePage");
-
-
-    const watermark =
-        document.getElementById("quoteWatermark");
-
-
-    page.classList.toggle(
-        "watermark-active",
-        enabled
-    );
-
-
-    watermark.textContent =
-        document.getElementById("watermarkText").value ||
-        "TM ELEVEN";
-
-
-    const opacity =
-        document.getElementById("watermarkOpacity").value;
-
-
-    watermark.style.opacity =
-        enabled ? opacity : "0";
-
-}
-
-
-/* =========================================================
-   SAVE DRAFT
-========================================================= */
-
-function saveDraft() {
-
-    const data = {
-
-        customerName:
-            document.getElementById("customerName").value,
-
-        customerEmail:
-            document.getElementById("customerEmail").value,
-
-        customerAddress:
-            document.getElementById("customerAddress").value,
-
-        project:
-            document.getElementById("project").value,
-
-        quoteDate:
-            document.getElementById("quoteDate").value,
-
-        customFields:
-            customFields,
-
-        items:
-            items,
-
-        showAllTotal:
-            document.getElementById("showAllTotal").checked,
-
-        allTotalGST:
-            document.getElementById("allTotalGST").checked,
-
-        showWatermark:
-            document.getElementById("showWatermark").checked,
-
-        watermarkText:
-            document.getElementById("watermarkText").value,
-
-        watermarkOpacity:
-            document.getElementById("watermarkOpacity").value
-
-    };
-
-
-    try {
-
-        localStorage.setItem(
-            DRAFT_KEY,
-            JSON.stringify(data)
-        );
-
-        showToast("Draft saved successfully.");
-
-    } catch (error) {
-
-        showToast("Unable to save draft.");
-
-        console.error(error);
-
-    }
-
-}
-
-
-/* =========================================================
-   RESTORE DRAFT
-========================================================= */
-
-function restoreDraft() {
-
-    const saved =
-        localStorage.getItem(
-            DRAFT_KEY
-        );
-
-
-    if (!saved) {
-
-        showToast("No saved draft found.");
-
-        return;
-
-    }
-
-
-    try {
-
-        const data =
-            JSON.parse(saved);
-
-
-        document.getElementById("customerName").value =
-            data.customerName || "";
-
-
-        document.getElementById("customerEmail").value =
-            data.customerEmail || "";
-
-
-        document.getElementById("customerAddress").value =
-            data.customerAddress || "";
-
-
-        document.getElementById("project").value =
-            data.project || "";
-
-
-        document.getElementById("quoteDate").value =
-            data.quoteDate || "";
-
-
-        customFields =
-            Array.isArray(data.customFields) ? data.customFields : [];
-
-
-        items =
-            Array.isArray(data.items) ? data.items : [];
-
-
-        document.getElementById("showAllTotal").checked =
-            !!data.showAllTotal;
-
-
-        document.getElementById("allTotalGST").checked =
-            !!data.allTotalGST;
-
-
-        document.getElementById("showWatermark").checked =
-            !!data.showWatermark;
-
-
-        document.getElementById("watermarkText").value =
-            data.watermarkText || "TM ELEVEN";
-
-
-        document.getElementById("watermarkOpacity").value =
-            data.watermarkOpacity || "0.08";
-
-
-        document.getElementById("opacityValue").textContent =
-            document.getElementById("watermarkOpacity").value;
-
-
-        document.getElementById("allGstOption").style.display =
-            data.showAllTotal ? "flex" : "none";
-
-
-        document
-            .getElementById("watermarkControls")
-            .classList.toggle(
-                "active",
-                !!data.showWatermark
-            );
-
-
-        renderCustomFields();
-
-        renderItems();
-
-        updatePreview();
-
-
-        showToast("Draft restored successfully.");
-
-    } catch (error) {
-
-        showToast("Unable to restore draft.");
-
-        console.error(error);
-
-    }
-
-}
-
-
-/* =========================================================
-   CLEAR DRAFT
-========================================================= */
-
-function confirmClearDraft() {
-
-    if (!localStorage.getItem(DRAFT_KEY)) {
-
-        showToast("No saved draft to clear.");
-
-        return;
-
-    }
-
-    document.getElementById("clearModal").classList.add("show");
-
-}
-
-
-function closeClearModal() {
-
-    document.getElementById("clearModal").classList.remove("show");
-
-}
-
-
-function clearDraft() {
-
-    localStorage.removeItem(DRAFT_KEY);
-
-    closeClearModal();
-
-    showToast("Draft cleared.");
-
-}
-
-
-/* =========================================================
-   PDF
-========================================================= */
-
-async function convertToPDF() {
-
-    const quote =
-        document.getElementById("quotePage");
-
-
-    const button =
-        document.querySelector(
-            ".action-btn.btn-gold"
-        );
-
-
-    const oldText =
-        button.innerHTML;
-
-
-    button.innerHTML =
-        "Generating PDF...";
-
-
-    button.disabled = true;
-
-
-    try {
-
-        const canvas =
-            await html2canvas(
-                quote,
-                {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: "#ffffff"
-                }
-            );
-
-
-        const imgData =
-            canvas.toDataURL(
-                "image/png",
-                1.0
-            );
-
-
-        const {
-            jsPDF
-        } = window.jspdf;
-
-
-        const pdf =
-            new jsPDF(
-                "p",
-                "mm",
-                "a4"
-            );
-
-
-        const pageWidth =
-            210;
-
-
-        const pageHeight =
-            297;
-
-
-        const imgWidth =
-            pageWidth;
-
-
-        const imgHeight =
-            canvas.height *
-            imgWidth /
-            canvas.width;
-
-
-        let heightLeft =
-            imgHeight;
-
-
-        let position = 0;
-
-
-        pdf.addImage(
-            imgData,
-            "PNG",
-            0,
-            position,
-            imgWidth,
-            imgHeight
-        );
-
-
-        heightLeft -= pageHeight;
-
-
-        while (heightLeft > 0) {
-
-            position =
-                heightLeft -
-                imgHeight;
-
-            pdf.addPage();
-
-            pdf.addImage(
-                imgData,
-                "PNG",
-                0,
-                position,
-                imgWidth,
-                imgHeight
-            );
-
-            heightLeft -= pageHeight;
-
-        }
-
-
-        const date =
-            document.getElementById("quoteDate").value ||
-            "quote";
-
-
-        pdf.save(
-            "TM-ELEVEN-Quote-" +
-            date +
-            ".pdf"
-        );
-
-
-        showToast(
-            "PDF created successfully."
-        );
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        showToast(
-            "PDF generation failed."
-        );
-
-    }
-
-
-    button.innerHTML =
-        oldText;
-
-    button.disabled = false;
-
-}
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function formatMoney(value) {
-
-    return "$" +
-        Number(value || 0).toLocaleString(
-            "en-AU",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
-
-}
-
-
-function escapeHTML(value) {
-
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-function escapeAttribute(value) {
-
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;")
-        .replace(/\n/g, "&#10;");
-
-}
-
-
-function showToast(message) {
-
-    const toast =
-        document.getElementById("toast");
-
-
-    toast.textContent =
-        message;
-
-
-    toast.classList.add("show");
-
-
-    clearTimeout(window.__toastTimer);
-
-    window.__toastTimer = setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 2800);
-
-}
-
-</script>
+    <script src="script.js"></script>
 
 </body>
 </html>
