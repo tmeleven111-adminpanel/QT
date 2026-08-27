@@ -175,6 +175,8 @@ textarea{
     gap:10px;
 }
 
+/* LOGO */
+
 .logo-upload{
     border:1.5px dashed #c9ccd2;
     padding:16px;
@@ -194,6 +196,33 @@ textarea{
     object-fit:contain;
     margin:auto;
     display:none;
+}
+
+/* LOGO TOGGLE */
+
+.logo-toggle{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:10px;
+    padding:10px 12px;
+    background:#f7f7f8;
+    border:1px solid #e1e2e5;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logo-toggle input{
+    width:17px;
+    height:17px;
+    margin:0;
+    cursor:pointer;
+}
+
+.logo-toggle span{
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
 }
 
 /* TEMPLATES */
@@ -505,15 +534,29 @@ textarea{
 <header class="header">
 
     <div class="brand">
-        <img src="logo.png" id="headerLogo" onerror="this.style.display='none'">
+
+        <img
+            src="logo.png"
+            id="headerLogo"
+            onerror="this.style.display='none'"
+        >
+
         <div class="brand-text">
             TM Eleven <span>Letter Studio</span>
         </div>
+
     </div>
 
     <div class="header-actions">
-        <button class="btn btn-dark" onclick="saveDraft()">Save Draft</button>
-        <button class="btn btn-white" onclick="window.print()">Print / PDF</button>
+
+        <button class="btn btn-dark" onclick="saveDraft()">
+            Save Draft
+        </button>
+
+        <button class="btn btn-white" onclick="window.print()">
+            Print / PDF
+        </button>
+
     </div>
 
 </header>
@@ -527,27 +570,44 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Letter Template</div>
+        <div class="section-title">
+            Letter Template
+        </div>
 
         <div class="templates">
 
-            <div class="template active" onclick="setTemplate('modern',this)">
+            <div
+                class="template active"
+                onclick="setTemplate('modern',this)"
+            >
                 Modern
             </div>
 
-            <div class="template" onclick="setTemplate('corporate',this)">
+            <div
+                class="template"
+                onclick="setTemplate('corporate',this)"
+            >
                 Corporate
             </div>
 
-            <div class="template" onclick="setTemplate('minimal',this)">
+            <div
+                class="template"
+                onclick="setTemplate('minimal',this)"
+            >
                 Minimal
             </div>
 
-            <div class="template" onclick="setTemplate('classic',this)">
+            <div
+                class="template"
+                onclick="setTemplate('classic',this)"
+            >
                 Classic
             </div>
 
-            <div class="template" onclick="setTemplate('elegant',this)">
+            <div
+                class="template"
+                onclick="setTemplate('elegant',this)"
+            >
                 Elegant
             </div>
 
@@ -558,20 +618,29 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Company Details</div>
+        <div class="section-title">
+            Company Details
+        </div>
 
         <div class="field">
 
-            <label>Company Logo</label>
+            <label>
+                Company Logo
+            </label>
 
             <label class="logo-upload">
 
-                <input type="file"
-                       id="logoInput"
-                       accept="image/*"
-                       hidden>
+                <input
+                    type="file"
+                    id="logoInput"
+                    accept="image/*"
+                    hidden
+                >
 
-                <img id="logoPreview" class="logo-preview">
+                <img
+                    id="logoPreview"
+                    class="logo-preview"
+                >
 
                 <span id="logoText">
                     Click to upload logo
@@ -579,37 +648,143 @@ textarea{
 
             </label>
 
+            <!-- NEW LOGO TOGGLE -->
+
+            <label class="logo-toggle">
+
+                <input
+                    type="checkbox"
+                    id="showLogo"
+                    checked
+                    onchange="toggleLogo()"
+                >
+
+                <span>
+                    Show logo on letter
+                </span>
+
+            </label>
+
         </div>
 
-        <div class="field">
-            <label>Company Name</label>
-            <input id="companyName"
-                   value="TM Eleven"
-                   oninput="updatePreview()">
-        </div>
 
         <div class="field">
-            <label>Company Address</label>
-            <input id="companyAddress"
-                   placeholder="Melbourne, Victoria, Australia"
-                   oninput="updatePreview()">
+
+            <label>
+                Company Name
+            </label>
+
+            <input
+                id="companyName"
+                value="TM Eleven"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Address
+            </label>
+
+            <input
+                id="companyAddress"
+                placeholder="Melbourne, Victoria, Australia"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="field">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="companyEmail"
+                    placeholder="info@example.com"
+                    oninput="updatePreview()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Phone
+                </label>
+
+                <input
+                    id="companyPhone"
+                    placeholder="+61 xxx xxx xxx"
+                    oninput="updatePreview()"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Letter Details
         </div>
 
         <div class="row">
 
             <div class="field">
-                <label>Email</label>
-                <input id="companyEmail"
-                       placeholder="info@example.com"
-                       oninput="updatePreview()">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="letterDate"
+                    onchange="updatePreview()"
+                >
+
             </div>
 
+
             <div class="field">
-                <label>Phone</label>
-                <input id="companyPhone"
-                       placeholder="+61 xxx xxx xxx"
-                       oninput="updatePreview()">
+
+                <label>
+                    Reference No.
+                </label>
+
+                <input
+                    id="reference"
+                    placeholder="REF-001"
+                    oninput="updatePreview()"
+                >
+
             </div>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                id="subject"
+                placeholder="Letter subject"
+                oninput="updatePreview()"
+            >
 
         </div>
 
@@ -618,31 +793,52 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Letter Details</div>
-
-        <div class="row">
-
-            <div class="field">
-                <label>Date</label>
-                <input type="date"
-                       id="letterDate"
-                       onchange="updatePreview()">
-            </div>
-
-            <div class="field">
-                <label>Reference No.</label>
-                <input id="reference"
-                       placeholder="REF-001"
-                       oninput="updatePreview()">
-            </div>
-
+        <div class="section-title">
+            Recipient
         </div>
 
         <div class="field">
-            <label>Subject</label>
-            <input id="subject"
-                   placeholder="Letter subject"
-                   oninput="updatePreview()">
+
+            <label>
+                Name
+            </label>
+
+            <input
+                id="recipientName"
+                placeholder="John Smith"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company
+            </label>
+
+            <input
+                id="recipientCompany"
+                placeholder="Company Name"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Address
+            </label>
+
+            <textarea
+                id="recipientAddress"
+                placeholder="Street, Suburb, State, Postcode"
+                oninput="updatePreview()"
+            ></textarea>
+
         </div>
 
     </div>
@@ -650,45 +846,38 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Recipient</div>
-
-        <div class="field">
-            <label>Name</label>
-            <input id="recipientName"
-                   placeholder="John Smith"
-                   oninput="updatePreview()">
+        <div class="section-title">
+            Greeting
         </div>
 
-        <div class="field">
-            <label>Company</label>
-            <input id="recipientCompany"
-                   placeholder="Company Name"
-                   oninput="updatePreview()">
-        </div>
+        <select
+            id="greeting"
+            onchange="updatePreview()"
+        >
 
-        <div class="field">
-            <label>Address</label>
-            <textarea id="recipientAddress"
-                      placeholder="Street, Suburb, State, Postcode"
-                      oninput="updatePreview()"></textarea>
-        </div>
+            <option>
+                Dear Sir/Madam,
+            </option>
 
-    </div>
+            <option>
+                Dear Sir,
+            </option>
 
+            <option>
+                Dear Madam,
+            </option>
 
-    <div class="section">
+            <option>
+                Dear Customer,
+            </option>
 
-        <div class="section-title">Greeting</div>
+            <option>
+                To Whom It May Concern,
+            </option>
 
-        <select id="greeting"
-                onchange="updatePreview()">
-
-            <option>Dear Sir/Madam,</option>
-            <option>Dear Sir,</option>
-            <option>Dear Madam,</option>
-            <option>Dear Customer,</option>
-            <option>To Whom It May Concern,</option>
-            <option>Dear Client,</option>
+            <option>
+                Dear Client,
+            </option>
 
         </select>
 
@@ -697,49 +886,75 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Letter Content</div>
+        <div class="section-title">
+            Letter Content
+        </div>
 
         <div class="toolbar">
 
-            <button class="tool" onclick="format('bold')">
+            <button
+                class="tool"
+                onclick="format('bold')"
+            >
                 B
             </button>
 
-            <button class="tool" onclick="format('italic')">
+            <button
+                class="tool"
+                onclick="format('italic')"
+            >
                 I
             </button>
 
-            <button class="tool" onclick="format('underline')">
+            <button
+                class="tool"
+                onclick="format('underline')"
+            >
                 U
             </button>
 
-            <button class="tool" onclick="format('insertUnorderedList')">
+            <button
+                class="tool"
+                onclick="format('insertUnorderedList')"
+            >
                 •
             </button>
 
-            <button class="tool" onclick="format('justifyLeft')">
+            <button
+                class="tool"
+                onclick="format('justifyLeft')"
+            >
                 ≡
             </button>
 
-            <button class="tool" onclick="format('justifyCenter')">
+            <button
+                class="tool"
+                onclick="format('justifyCenter')"
+            >
                 ≡
             </button>
 
-            <button class="tool" onclick="format('justifyRight')">
+            <button
+                class="tool"
+                onclick="format('justifyRight')"
+            >
                 ≡
             </button>
 
         </div>
 
-        <div id="editor"
-             class="editor"
-             contenteditable="true"
-             oninput="updatePreview()">
+
+        <div
+            id="editor"
+            class="editor"
+            contenteditable="true"
+            oninput="updatePreview()"
+        >
 
             We are pleased to provide this letter regarding your request.
             <br><br>
             Please feel free to contact us if you require any additional information.
-            
+
         </div>
 
     </div>
@@ -747,16 +962,34 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Closing</div>
+        <div class="section-title">
+            Closing
+        </div>
 
-        <select id="closing"
-                onchange="updatePreview()">
+        <select
+            id="closing"
+            onchange="updatePreview()"
+        >
 
-            <option>Kind regards,</option>
-            <option>Best regards,</option>
-            <option>Yours sincerely,</option>
-            <option>Yours faithfully,</option>
-            <option>Thank you,</option>
+            <option>
+                Kind regards,
+            </option>
+
+            <option>
+                Best regards,
+            </option>
+
+            <option>
+                Yours sincerely,
+            </option>
+
+            <option>
+                Yours faithfully,
+            </option>
+
+            <option>
+                Thank you,
+            </option>
 
         </select>
 
@@ -765,20 +998,37 @@ textarea{
 
     <div class="section">
 
-        <div class="section-title">Signature</div>
-
-        <div class="field">
-            <label>Name</label>
-            <input id="signName"
-                   value="TM Eleven"
-                   oninput="updatePreview()">
+        <div class="section-title">
+            Signature
         </div>
 
         <div class="field">
-            <label>Position</label>
-            <input id="signPosition"
-                   value="Director"
-                   oninput="updatePreview()">
+
+            <label>
+                Name
+            </label>
+
+            <input
+                id="signName"
+                value="TM Eleven"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Position
+            </label>
+
+            <input
+                id="signPosition"
+                value="Director"
+                oninput="updatePreview()"
+            >
+
         </div>
 
     </div>
@@ -796,32 +1046,45 @@ textarea{
             Live Letter Preview
         </div>
 
-        <button class="btn btn-primary"
-                onclick="window.print()">
+        <button
+            class="btn btn-primary"
+            onclick="window.print()"
+        >
             Generate PDF
         </button>
 
     </div>
 
 
-    <div class="a4 modern" id="paper">
+    <div
+        class="a4 modern"
+        id="paper"
+    >
 
         <div class="letter-header">
 
             <div class="company">
 
-                <img id="previewLogo"
-                     class="company-logo">
+                <img
+                    id="previewLogo"
+                    class="company-logo"
+                    src="logo.png"
+                    onerror="this.style.display='none'"
+                >
 
                 <div>
 
-                    <div class="company-name"
-                         id="previewCompany">
+                    <div
+                        class="company-name"
+                        id="previewCompany"
+                    >
                         TM Eleven
                     </div>
 
-                    <div class="company-details"
-                         id="previewCompanyDetails">
+                    <div
+                        class="company-details"
+                        id="previewCompanyDetails"
+                    >
                         Melbourne, Victoria, Australia
                     </div>
 
@@ -830,8 +1093,10 @@ textarea{
             </div>
 
 
-            <div class="letter-date"
-                 id="previewDate">
+            <div
+                class="letter-date"
+                id="previewDate"
+            >
                 27 August 2026
             </div>
 
@@ -856,25 +1121,35 @@ textarea{
 
 
         <div class="subject">
-            RE: <span id="previewSubject">
+
+            RE:
+
+            <span id="previewSubject">
                 Letter Subject
             </span>
+
         </div>
 
 
-        <div class="greeting"
-             id="previewGreeting">
+        <div
+            class="greeting"
+            id="previewGreeting"
+        >
             Dear Sir/Madam,
         </div>
 
 
-        <div class="letter-body"
-             id="previewBody">
+        <div
+            class="letter-body"
+            id="previewBody"
+        >
         </div>
 
 
-        <div class="closing"
-             id="previewClosing">
+        <div
+            class="closing"
+            id="previewClosing"
+        >
             Kind regards,
         </div>
 
@@ -918,6 +1193,7 @@ function format(command){
     document.getElementById("editor").focus();
 
     updatePreview();
+
 }
 
 
@@ -933,10 +1209,11 @@ function setTemplate(template, element){
     const paper = document.getElementById("paper");
 
     paper.className = "a4 " + template;
+
 }
 
 
-// LOGO
+// LOGO UPLOAD
 
 document.getElementById("logoInput")
 .addEventListener("change", function(){
@@ -952,14 +1229,20 @@ document.getElementById("logoInput")
         const src = e.target.result;
 
         document.getElementById("logoPreview").src = src;
+
         document.getElementById("logoPreview").style.display = "block";
 
         document.getElementById("logoText").style.display = "none";
 
-        const preview = document.getElementById("previewLogo");
+        const preview =
+            document.getElementById("previewLogo");
 
         preview.src = src;
-        preview.style.display = "block";
+
+        preview.style.display =
+            document.getElementById("showLogo").checked
+            ? "block"
+            : "none";
 
         localStorage.setItem("letterLogo",src);
 
@@ -968,6 +1251,29 @@ document.getElementById("logoInput")
     reader.readAsDataURL(file);
 
 });
+
+
+// SHOW / HIDE LOGO
+
+function toggleLogo(){
+
+    const show =
+        document.getElementById("showLogo").checked;
+
+    const preview =
+        document.getElementById("previewLogo");
+
+    if(show){
+
+        preview.style.display = "block";
+
+    }else{
+
+        preview.style.display = "none";
+
+    }
+
+}
 
 
 // UPDATE PREVIEW
@@ -1015,18 +1321,22 @@ function updatePreview(){
 
 
     document.getElementById("previewCompany")
-        .textContent = company || "Company Name";
+        .textContent =
+        company || "Company Name";
 
 
     let details = "";
 
-    if(address) details += address;
+    if(address)
+        details += address;
 
     if(email)
-        details += (details ? " • " : "") + email;
+        details +=
+            (details ? " • " : "") + email;
 
     if(phone)
-        details += (details ? " • " : "") + phone;
+        details +=
+            (details ? " • " : "") + phone;
 
 
     document.getElementById("previewCompanyDetails")
@@ -1035,15 +1345,19 @@ function updatePreview(){
 
     if(date){
 
-        const d = new Date(date + "T00:00:00");
+        const d =
+            new Date(date + "T00:00:00");
 
         document.getElementById("previewDate")
             .textContent =
-            d.toLocaleDateString("en-AU",{
-                day:"numeric",
-                month:"long",
-                year:"numeric"
-            });
+            d.toLocaleDateString(
+                "en-AU",
+                {
+                    day:"numeric",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
 
     }
 
@@ -1060,7 +1374,8 @@ function updatePreview(){
 
     document.getElementById("previewRecipientAddress")
         .innerHTML =
-        (recipientAddress || "").replace(/\n/g,"<br>");
+        (recipientAddress || "")
+        .replace(/\n/g,"<br>");
 
 
     document.getElementById("previewSubject")
@@ -1091,6 +1406,9 @@ function updatePreview(){
     document.getElementById("previewSignPosition")
         .textContent =
         signPosition;
+
+
+    toggleLogo();
 
 }
 
@@ -1144,7 +1462,10 @@ function saveDraft(){
             document.getElementById("signName").value,
 
         signPosition:
-            document.getElementById("signPosition").value
+            document.getElementById("signPosition").value,
+
+        showLogo:
+            document.getElementById("showLogo").checked
 
     };
 
@@ -1156,6 +1477,7 @@ function saveDraft(){
 
 
     alert("Letter draft saved successfully.");
+
 }
 
 
@@ -1168,18 +1490,31 @@ function loadDraft(){
 
     if(!saved) return;
 
-    const data = JSON.parse(saved);
+    const data =
+        JSON.parse(saved);
 
     Object.keys(data).forEach(key => {
 
-        const el = document.getElementById(key);
+        const el =
+            document.getElementById(key);
 
         if(!el) return;
 
         if(key === "editor"){
-            el.innerHTML = data[key];
+
+            el.innerHTML =
+                data[key];
+
+        }else if(key === "showLogo"){
+
+            el.checked =
+                data[key];
+
         }else{
-            el.value = data[key];
+
+            el.value =
+                data[key];
+
         }
 
     });
@@ -1196,15 +1531,65 @@ window.addEventListener("load",function(){
     const savedLogo =
         localStorage.getItem("letterLogo");
 
+
+    /*
+       FIRST:
+       Automatically use logo.png
+       from the same folder.
+    */
+
+    const previewLogo =
+        document.getElementById("previewLogo");
+
+    const headerLogo =
+        document.getElementById("headerLogo");
+
+
     if(savedLogo){
 
-        document.getElementById("previewLogo").src =
+        previewLogo.src =
             savedLogo;
 
-        document.getElementById("previewLogo").style.display =
+        previewLogo.style.display =
+            document.getElementById("showLogo").checked
+            ? "block"
+            : "none";
+
+        document.getElementById("logoPreview").src =
+            savedLogo;
+
+        document.getElementById("logoPreview").style.display =
             "block";
 
+        document.getElementById("logoText").style.display =
+            "none";
+
+    }else{
+
+        /*
+           No uploaded logo?
+           Automatically use logo.png.
+        */
+
+        previewLogo.src =
+            "logo.png";
+
+        previewLogo.style.display =
+            document.getElementById("showLogo").checked
+            ? "block"
+            : "none";
+
+        document.getElementById("logoPreview").src =
+            "logo.png";
+
+        document.getElementById("logoPreview").style.display =
+            "block";
+
+        document.getElementById("logoText").style.display =
+            "none";
+
     }
+
 
     loadDraft();
 
