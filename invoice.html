@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TM Eleven Quote Generator</title>
+
+<!-- PDF Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+:root {
+    --bg: #0b1017;
+    --panel: #121a24;
+    --panel2: #192431;
+    --border: #2a3948;
+    --text: #edf2f7;
+    --muted: #94a3b8;
+    --gold: #c58a2a;
+    --gold2: #e0ad58;
+    --red: #e05252;
+    --green: #25a36a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(circle at top right, rgba(197,138,42,.08), transparent 30%),
+        #0b1017;
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 100px;
+}
+
+.app-header {
+    padding: 22px 25px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,15,22,.95);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: .5px;
+}
+
+.app-header p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.editor {
+    max-width: 1450px;
+    margin: auto;
+    padding: 25px;
+}
+
+.editor-grid {
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    gap: 20px;
+}
+
+.panel {
+    background: rgba(18,26,36,.97);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    margin: 0 0 18px;
+    font-size: 16px;
+    color: var(--gold2);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    background: #0c131c;
+    color: white;
+    border: 1px solid #314253;
+    border-radius: 8px;
+    padding: 11px 12px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(197,138,42,.1);
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+button {
+    border: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.btn {
+    padding: 11px 16px;
+    background: #273544;
+    color: white;
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #b8791f, #dfa84e);
+    color: #111;
+}
+
+.btn-red {
+    background: #5d2525;
+    color: #ffb7b7;
+}
+
+.btn-green {
+    background: var(--green);
+    color: white;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.extra-fields {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.extra-field-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 8px;
+}
+
+.item-row {
+    background: #0d151e;
+    border: 1px solid #2a3948;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.item-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: end;
+}
+
+.item-options {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #24313e;
+}
+
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #cbd5e1;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.check-label input {
+    width: auto;
+    accent-color: var(--gold);
+}
+
+.gst-amount-option {
+    display: none;
+}
+
+.gst-amount-option.show {
+    display: flex;
+}
+
+.gst-rate {
+    width: 80px;
+    padding: 7px;
+}
+
+.item-preview {
+    margin-top: 10px;
+    color: var(--gold2);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.add-row {
+    margin-top: 10px;
+}
+
+.option-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0d151e;
+    border: 1px solid #263646;
+    padding: 12px;
+    border-radius: 9px;
+}
+
+.option-row span {
+    font-size: 13px;
+}
+
+.switch {
+    position: relative;
+    width: 46px;
+    height: 25px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: #344454;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: white;
+    transition: .2s;
+}
+
+.switch input:checked + .slider {
+    background: var(--gold);
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(21px);
+}
+
+.preview-panel {
+    overflow: auto;
+}
+
+/* =========================================================
+   PDF QUOTE
+========================================================= */
+
+#quotePreview {
+    width: 210mm;
+    min-height: 297mm;
+    background: #FFFFFF !important;
+    background-color: rgb(255, 255, 255) !important;
+    color: #1c2730;
+    padding: 15mm 12mm;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+.quote-watermark {
+    display: none;
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.quote-watermark span {
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(197,138,42,.06);
+    transform: rotate(-35deg);
+    white-space: nowrap;
+}
+
+.quote-content {
+    position: relative;
+    z-index: 2;
+}
+
+.quote-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.quote-company {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.quote-logo {
+    width: 58px;
+    max-height: 70px;
+    object-fit: contain;
+}
+
+.company-name {
+    color: #bd8027;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    margin-bottom: 4px;
+}
+
+.company-services {
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: .3px;
+}
+
+.company-sub {
+    font-size: 8px;
+    margin-top: 4px;
+}
+
+.quote-title-area {
+    text-align: right;
+}
+
+.quote-title {
+    font-size: 50px;
+    line-height: .9;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #d8b47b;
+}
+
+.quote-date {
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.client-box {
+    border: 1px solid #bd8a48;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 35px;
+    min-height: 130px;
+}
+
+.client-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.client-label {
+    font-weight: 800;
+}
+
+.client-value {
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+
+.quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 35px;
+    font-size: 12px;
+}
+
+.quote-table thead {
+    background: #bf7920;
+    color: white;
+}
+
+.quote-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.quote-table th:not(:first-child),
+.quote-table td:not(:first-child) {
+    text-align: center;
+}
+
+.quote-table tbody tr {
+    border-bottom: 7px solid #eee8df;
+}
+
+.quote-table td {
+    padding: 9px 12px;
+    vertical-align: middle;
+    font-weight: 700;
+}
+
+.item-desc-note {
+    display: block;
+    font-size: 7px;
+    font-weight: normal;
+    margin-top: 3px;
+}
+
+.total-section {
+    display: none;
+    width: 100%;
+    margin-top: 24px;
+    margin-left: auto;
+    font-size: 13px;
+}
+
+.total-section-inner {
+    width: 48%;
+    margin-left: auto;
+    border-top: 2px solid #bf7920;
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 4px;
+}
+
+.grand-total {
+    background: #bf7920;
+    color: white;
+    padding: 10px !important;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.quote-footer {
+    position: absolute;
+    left: 12mm;
+    bottom: 16mm;
+}
+
+.footer-company {
+    font-size: 18px;
+    font-weight: 900;
+    color: #bd8027;
+}
+
+.footer-services {
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 3px;
+}
+
+.footer-details {
+    margin-top: 9px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.fixed-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(10,15,22,.96);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid #2b3948;
+    padding: 13px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.fixed-actions button {
+    min-width: 140px;
+}
+
+@media (max-width: 1100px) {
+    .editor-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 750px) {
+    .editor {
+        padding: 12px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .item-top {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .item-top .description-field {
+        grid-column: span 2;
+    }
+
+    .extra-field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fixed-actions {
+        justify-content: stretch;
+        padding: 10px;
+    }
+
+    .fixed-actions button {
+        min-width: 0;
+        flex: 1;
+        padding: 12px 6px;
+        font-size: 11px;
+    }
+
+    .preview-panel {
+        padding: 8px;
+    }
+
+    #quotePreview {
+        transform-origin: top left;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-header">
+    <h1>TM ELEVEN — Quote Generator</h1>
+    <p>Create, save drafts and export professional PDF quotes.</p>
+</div>
+
+<div class="editor">
+
+    <div class="editor-grid">
+
+        <!-- LEFT SIDE EDITOR -->
+        <div>
+
+            <div class="panel">
+                <h2>Client Details</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="clientName" placeholder="Client name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" id="clientEmail" placeholder="client@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="clientAddress" placeholder="Client address">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Project</label>
+                        <input type="text" id="clientProject" placeholder="Project details">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quote Date</label>
+                        <input type="date" id="quoteDate">
+                    </div>
+
+                </div>
+
+                <div class="extra-fields" id="extraFields"></div>
+
+                <div style="margin-top:15px;">
+                    <button class="btn btn-gold btn-small" onclick="addExtraField()">
+                        + Add More
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- ITEMS -->
+            <div class="panel">
+                <h2>Quote Items</h2>
+
+                <div id="itemsContainer"></div>
+
+                <div class="add-row">
+                    <button class="btn btn-gold" onclick="addItem()">
+                        + Add Item
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT OPTIONS -->
+        <div>
+
+            <div class="panel">
+                <h2>Quote Options</h2>
+
+                <div class="option-box">
+
+                    <div class="option-row">
+                        <span>Show All Total</span>
+                        <label class="switch">
+                            <input type="checkbox" id="showGrandTotal">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="option-row">
+                        <span>Include GST Amount in Total</span>
+                        <label class="switch">
+                            <input type="checkbox" id="totalGST">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="option-row">
+                        <span>Show Watermark</span>
+                        <label class="switch">
+                            <input type="checkbox" id="showWatermark">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="margin-top:18px;">
+                    <label>Watermark Text</label>
+                    <input type="text" id="watermarkText" value="TM ELEVEN">
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+                <h2>Company Details</h2>
+
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="companyName" value="TM ELEVEN PTY LTD">
+                </div>
+
+                <div class="form-group" style="margin-top:12px;">
+                    <label>Services</label>
+                    <input type="text" id="companyServices"
+                        value="CONCRETING | LANDSCAPING | FENCING">
+                </div>
+
+                <div class="form-group" style="margin-top:12px;">
+                    <label>ACN / Registration</label>
+                    <input type="text" id="companyACN"
+                        value="ACN : 692 149 045">
+                </div>
+
+                <div class="form-group" style="margin-top:12px;">
+                    <label>Phone</label>
+                    <input type="text" id="companyPhone"
+                        value="+61 451 160 058">
+                </div>
+
+                <div class="form-group" style="margin-top:12px;">
+                    <label>Email</label>
+                    <input type="text" id="companyEmail"
+                        value="tmeleven111@gmail.com">
+                </div>
+
+                <div class="form-group" style="margin-top:12px;">
+                    <label>Website</label>
+                    <input type="text" id="companyWebsite"
+                        value="tmeleven.com.au">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PREVIEW -->
+    <div class="panel preview-panel">
+        <h2>Live PDF Preview</h2>
+
+        <div id="quotePreview">
+
+            <div class="quote-watermark" id="previewWatermark">
+                <span id="previewWatermarkText">TM ELEVEN</span>
+            </div>
+
+            <div class="quote-content">
+
+                <div class="quote-top">
+
+                    <div class="quote-company">
+
+                        <img src="logo.png"
+                             class="quote-logo"
+                             alt="TM Eleven Logo"
+                             onerror="this.style.display='none'">
+
+                        <div>
+                            <div class="company-name" id="previewCompanyName">
+                                TM ELEVEN PTY LTD
+                            </div>
+
+                            <div class="company-services" id="previewCompanyServices">
+                                CONCRETING | LANDSCAPING | FENCING
+                            </div>
+
+                            <div class="company-sub" id="previewACN">
+                                ACN : 692 149 045
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="quote-title-area">
+                        <div class="quote-title">INVOICE</div>
+
+                        <div class="quote-date">
+                            Date :
+                            <span id="previewDate"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- CLIENT -->
+                <div class="client-box" id="clientBox">
+
+                    <div class="client-row">
+                        <div class="client-label">To</div>
+                        <div class="client-value" id="previewName"></div>
+                    </div>
+
+                    <div class="client-row">
+                        <div class="client-label">Email</div>
+                        <div class="client-value" id="previewEmail"></div>
+                    </div>
+
+                    <div class="client-row">
+                        <div class="client-label">Address</div>
+                        <div class="client-value" id="previewAddress"></div>
+                    </div>
+
+                    <div class="client-row">
+                        <div class="client-label">Project</div>
+                        <div class="client-value" id="previewProject"></div>
+                    </div>
+
+                    <div id="previewExtraFields"></div>
+
+                </div>
+
+
+                <!-- TABLE -->
+                <table class="quote-table">
+
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Unit</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Item Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="previewItems"></tbody>
+
+                </table>
+
+
+                <!-- TOTAL -->
+                <div class="total-section" id="previewTotalSection">
+
+                    <div class="total-section-inner">
+
+                        <div class="total-line">
+                            <span>Subtotal</span>
+                            <strong id="previewSubtotal">$0.00</strong>
+                        </div>
+
+                        <div class="total-line" id="previewGSTLine">
+                            <span>GST</span>
+                            <strong id="previewGST">$0.00</strong>
+                        </div>
+
+                        <div class="total-line grand-total">
+                            <span>ALL TOTAL</span>
+                            <strong id="previewGrandTotal">$0.00</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <div class="quote-footer">
+
+                <div class="footer-company" id="footerCompanyName">
+                    TM ELEVEN PTY LTD
+                </div>
+
+                <div class="footer-services" id="footerServices">
+                    CONCRETING | LANDSCAPING | FENCING
+                </div>
+
+                <div class="footer-details">
+                    <div id="footerPhone">+61 451 160 058</div>
+                    <div id="footerEmail">tmeleven111@gmail.com</div>
+                    <div id="footerWebsite">tmeleven.com.au</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FIXED BUTTONS -->
+<div class="fixed-actions">
+
+    <button class="btn" onclick="saveDraft()">
+        💾 Save Draft
+    </button>
+
+    <button class="btn btn-red" onclick="clearDraft()">
+        🗑 Clear
+    </button>
+
+    <button class="btn btn-green" onclick="downloadPDF()">
+        📄 Convert PDF
+    </button>
+
+</div>
+
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+const today = new Date();
+$("quoteDate").value = today.toISOString().split("T")[0];
+
+
+/* =========================================================
+   ADD EXTRA CLIENT FIELD
+========================================================= */
+
+function addExtraField(label = "", value = "") {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "extra-field-row";
+
+    wrapper.innerHTML = `
+        <input class="extra-label"
+               placeholder="Field name"
+               value="${escapeHTML(label)}">
+
+        <input class="extra-value"
+               placeholder="Field value"
+               value="${escapeHTML(value)}">
+
+        <button class="btn btn-red btn-small"
+                onclick="this.parentElement.remove(); updatePreview();">
+            Remove
+        </button>
+    `;
+
+    $("extraFields").appendChild(wrapper);
+
+    wrapper.querySelectorAll("input").forEach(input => {
+        input.addEventListener("input", updatePreview);
+    });
+
+    updatePreview();
+}
+
+
+/* =========================================================
+   ADD ITEM
+========================================================= */
+
+function addItem(data = {}) {
+
+    const item = document.createElement("div");
+
+    item.className = "item-row";
+
+    item.innerHTML = `
+
+        <div class="item-top">
+
+            <div class="form-group description-field">
+                <label>Description</label>
+                <input class="item-description"
+                       placeholder="Example: Fencing"
+                       value="${escapeHTML(data.description || "")}">
+            </div>
+
+            <div class="form-group">
+                <label>Unit</label>
+                <input class="item-unit"
+                       placeholder="1m / One Gate / One Step"
+                       value="${escapeHTML(data.unit || "")}">
+            </div>
+
+            <div class="form-group">
+                <label>Unit Price</label>
+                <input type="number"
+                       class="item-price"
+                       placeholder="0"
+                       value="${data.price || ""}">
+            </div>
+
+            <div class="form-group">
+                <label>Quantity</label>
+                <input class="item-qty"
+                       placeholder="160m / 8 Gates"
+                       value="${escapeHTML(data.qty || "")}">
+            </div>
+
+            <button class="btn btn-red btn-small remove-item">
+                Remove
+            </button>
+
+        </div>
+
+
+        <div class="item-options">
+
+            <label class="check-label">
+                <input type="checkbox"
+                       class="item-gst-toggle"
+                       ${data.gst ? "checked" : ""}>
+                Add GST
+            </label>
+
+
+            <label class="check-label gst-amount-option ${data.gstAmount ? "show" : ""}">
+                <input type="checkbox"
+                       class="item-gst-amount"
+                       ${data.gstAmount ? "checked" : ""}>
+                Calculate GST amount
+            </label>
+
+
+            <label class="check-label gst-amount-option ${data.gstAmount ? "show" : ""}">
+                GST %
+                <input type="number"
+                       class="gst-rate"
+                       value="${data.gstRate || 10}">
+            </label>
+
+        </div>
+
+        <div class="item-preview"></div>
+
+    `;
+
+    $("itemsContainer").appendChild(item);
+
+
+    item.querySelectorAll("input").forEach(input => {
+
+        input.addEventListener("input", updatePreview);
+        input.addEventListener("change", updatePreview);
+
+    });
+
+
+    item.querySelector(".item-gst-toggle")
+        .addEventListener("change", function() {
+
+            item.querySelectorAll(".gst-amount-option")
+                .forEach(el => {
+
+                    if (this.checked) {
+                        el.classList.add("show");
+                    } else {
+                        el.classList.remove("show");
+                        item.querySelector(".item-gst-amount").checked = false;
+                    }
+
+                });
+
+            updatePreview();
+
+        });
+
+
+    item.querySelector(".remove-item")
+        .addEventListener("click", function() {
+
+            item.remove();
+            updatePreview();
+
+        });
+
+
+    updatePreview();
+}
+
+
+/* =========================================================
+   CALCULATE QUANTITY FROM TEXT
+   Example:
+   160m = 160
+   8 Gates = 8
+   One Gate = 1
+========================================================= */
+
+function getNumericQuantity(value) {
+
+    if (!value) return 0;
+
+    const text = String(value).trim().toLowerCase();
+
+    const words = {
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10
+    };
+
+    for (const word in words) {
+
+        if (text.startsWith(word + " ")) {
+            return words[word];
+        }
+
+    }
+
+    const match = text.match(/[\d.]+/);
+
+    return match ? parseFloat(match[0]) : 1;
+}
+
+
+/* =========================================================
+   FORMAT MONEY
+========================================================= */
+
+function money(number) {
+
+    return "$" + Number(number || 0).toLocaleString("en-AU", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+}
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(value) {
+
+    if (!value) return "";
+
+    const date = new Date(value + "T00:00:00");
+
+    return date.toLocaleDateString("en-AU", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+    });
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+}
+
+
+/* =========================================================
+   UPDATE PREVIEW
+========================================================= */
+
+function updatePreview() {
+
+    /* CLIENT */
+
+    $("previewName").textContent =
+        $("clientName").value;
+
+    $("previewEmail").textContent =
+        $("clientEmail").value;
+
+    $("previewAddress").textContent =
+        $("clientAddress").value;
+
+    $("previewProject").textContent =
+        $("clientProject").value;
+
+    $("previewDate").textContent =
+        formatDate($("quoteDate").value);
+
+
+    /* EXTRA FIELDS */
+
+    const extraPreview = $("previewExtraFields");
+
+    extraPreview.innerHTML = "";
+
+    document.querySelectorAll(".extra-field-row")
+        .forEach(row => {
+
+            const label =
+                row.querySelector(".extra-label").value;
+
+            const value =
+                row.querySelector(".extra-value").value;
+
+            if (label || value) {
+
+                extraPreview.innerHTML += `
+                    <div class="client-row">
+                        <div class="client-label">
+                            ${escapeHTML(label)}
+                        </div>
+
+                        <div class="client-value">
+                            ${escapeHTML(value)}
+                        </div>
+                    </div>
+                `;
+
+            }
+
+        });
+
+
+    /* COMPANY */
+
+    $("previewCompanyName").textContent =
+        $("companyName").value;
+
+    $("previewCompanyServices").textContent =
+        $("companyServices").value;
+
+    $("previewACN").textContent =
+        $("companyACN").value;
+
+    $("footerCompanyName").textContent =
+        $("companyName").value;
+
+    $("footerServices").textContent =
+        $("companyServices").value;
+
+    $("footerPhone").textContent =
+        $("companyPhone").value;
+
+    $("footerEmail").textContent =
+        $("companyEmail").value;
+
+    $("footerWebsite").textContent =
+        $("companyWebsite").value;
+
+
+    /* WATERMARK */
+
+    const watermarkEnabled =
+        $("showWatermark").checked;
+
+    $("previewWatermark").style.display =
+        watermarkEnabled ? "flex" : "none";
+
+    $("previewWatermarkText").textContent =
+        $("watermarkText").value || "TM ELEVEN";
+
+
+    /* ITEMS */
+
+    const previewItems =
+        $("previewItems");
+
+    previewItems.innerHTML = "";
+
+    let subtotal = 0;
+    let totalGSTAmount = 0;
+
+
+    document.querySelectorAll(".item-row")
+        .forEach(item => {
+
+            const description =
+                item.querySelector(".item-description").value;
+
+            const unit =
+                item.querySelector(".item-unit").value;
+
+            const price =
+                parseFloat(item.querySelector(".item-price").value) || 0;
+
+            const qtyText =
+                item.querySelector(".item-qty").value;
+
+            const qty =
+                getNumericQuantity(qtyText);
+
+            const gstEnabled =
+                item.querySelector(".item-gst-toggle").checked;
+
+            const gstAmountEnabled =
+                item.querySelector(".item-gst-amount").checked;
+
+            const gstRate =
+                parseFloat(item.querySelector(".gst-rate").value) || 10;
+
+            const baseTotal =
+                price * qty;
+
+            let displayTotal =
+                baseTotal;
+
+            let gstText = "";
+
+            let itemGST = 0;
+
+
+            if (gstEnabled) {
+
+                if (gstAmountEnabled) {
+
+                    itemGST =
+                        baseTotal * (gstRate / 100);
+
+                    displayTotal =
+                        baseTotal + itemGST;
+
+                    gstText =
+                        ` + GST (${gstRate}%)`;
+
+                } else {
+
+                    gstText =
+                        " + GST";
+
+                }
+
+            }
+
+
+            subtotal += baseTotal;
+
+            totalGSTAmount += itemGST;
+
+
+            previewItems.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(description)}
+
+                        <span class="item-desc-note"></span>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(unit)}
+                    </td>
+
+                    <td>
+                        ${money(price)}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(qtyText)}
+                    </td>
+
+                    <td>
+                        ${money(displayTotal)}${gstText}
+                    </td>
+
+                </tr>
+
+            `;
+
+
+            item.querySelector(".item-preview").textContent =
+                `Item Total: ${money(displayTotal)}${gstText}`;
+
+        });
+
+
+    /* GRAND TOTAL */
+
+    const showTotal =
+        $("showGrandTotal").checked;
+
+    const includeGST =
+        $("totalGST").checked;
+
+    $("previewTotalSection").style.display =
+        showTotal ? "block" : "none";
+
+    $("previewSubtotal").textContent =
+        money(subtotal);
+
+    $("previewGSTLine").style.display =
+        includeGST ? "flex" : "none";
+
+
+    let grandTotal = subtotal;
+
+    if (includeGST) {
+
+        /*
+           Only GST amounts specifically selected
+           in the individual item "Calculate GST amount"
+           are added.
+        */
+
+        grandTotal += totalGSTAmount;
+
+    }
+
+
+    $("previewGST").textContent =
+        money(totalGSTAmount);
+
+    $("previewGrandTotal").textContent =
+        money(grandTotal);
+
+}
+
+
+/* =========================================================
+   SAVE DRAFT
+========================================================= */
+
+function saveDraft() {
+
+    const items = [];
+
+    document.querySelectorAll(".item-row")
+        .forEach(item => {
+
+            items.push({
+                description:
+                    item.querySelector(".item-description").value,
+
+                unit:
+                    item.querySelector(".item-unit").value,
+
+                price:
+                    item.querySelector(".item-price").value,
+
+                qty:
+                    item.querySelector(".item-qty").value,
+
+                gst:
+                    item.querySelector(".item-gst-toggle").checked,
+
+                gstAmount:
+                    item.querySelector(".item-gst-amount").checked,
+
+                gstRate:
+                    item.querySelector(".gst-rate").value
+            });
+
+        });
+
+
+    const extraFields = [];
+
+    document.querySelectorAll(".extra-field-row")
+        .forEach(row => {
+
+            extraFields.push({
+                label:
+                    row.querySelector(".extra-label").value,
+
+                value:
+                    row.querySelector(".extra-value").value
+            });
+
+        });
+
+
+    const draft = {
+
+        clientName:
+            $("clientName").value,
+
+        clientEmail:
+            $("clientEmail").value,
+
+        clientAddress:
+            $("clientAddress").value,
+
+        clientProject:
+            $("clientProject").value,
+
+        quoteDate:
+            $("quoteDate").value,
+
+        companyName:
+            $("companyName").value,
+
+        companyServices:
+            $("companyServices").value,
+
+        companyACN:
+            $("companyACN").value,
+
+        companyPhone:
+            $("companyPhone").value,
+
+        companyEmail:
+            $("companyEmail").value,
+
+        companyWebsite:
+            $("companyWebsite").value,
+
+        showGrandTotal:
+            $("showGrandTotal").checked,
+
+        totalGST:
+            $("totalGST").checked,
+
+        showWatermark:
+            $("showWatermark").checked,
+
+        watermarkText:
+            $("watermarkText").value,
+
+        items,
+        extraFields
+
+    };
+
+
+    localStorage.setItem(
+        "tm11QuoteDraft",
+        JSON.stringify(draft)
+    );
+
+    alert("Draft saved successfully!");
+
+}
+
+
+/* =========================================================
+   LOAD DRAFT
+========================================================= */
+
+function loadDraft() {
+
+    const saved =
+        localStorage.getItem("tm11QuoteDraft");
+
+    if (!saved) {
+
+        addItem();
+
+        return;
+
+    }
+
+
+    const data =
+        JSON.parse(saved);
+
+
+    [
+        "clientName",
+        "clientEmail",
+        "clientAddress",
+        "clientProject",
+        "quoteDate",
+        "companyName",
+        "companyServices",
+        "companyACN",
+        "companyPhone",
+        "companyEmail",
+        "companyWebsite",
+        "watermarkText"
+    ]
+    .forEach(id => {
+
+        if (data[id] !== undefined) {
+            $(id).value = data[id];
+        }
+
+    });
+
+
+    $("showGrandTotal").checked =
+        !!data.showGrandTotal;
+
+    $("totalGST").checked =
+        !!data.totalGST;
+
+    $("showWatermark").checked =
+        !!data.showWatermark;
+
+
+    $("itemsContainer").innerHTML = "";
+
+    if (data.items && data.items.length) {
+
+        data.items.forEach(item =>
+            addItem(item)
+        );
+
+    } else {
+
+        addItem();
+
+    }
+
+
+    $("extraFields").innerHTML = "";
+
+    if (data.extraFields) {
+
+        data.extraFields.forEach(field =>
+            addExtraField(
+                field.label,
+                field.value
+            )
+        );
+
+    }
+
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   CLEAR DRAFT
+========================================================= */
+
+function clearDraft() {
+
+    if (!confirm("Clear the saved draft and start again?")) {
+        return;
+    }
+
+    localStorage.removeItem("tm11QuoteDraft");
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   PDF DOWNLOAD
+========================================================= */
+
+async function downloadPDF() {
+
+    updatePreview();
+
+    const quote = $("quotePreview");
+
+    // Save original styles
+    const originalTransform = quote.style.transform;
+    const originalBackground = quote.style.background;
+    const originalBackgroundColor = quote.style.backgroundColor;
+
+    // Force PURE WHITE before canvas capture
+    quote.style.transform = "none";
+    quote.style.background = "#FFFFFF";
+    quote.style.backgroundColor = "#FFFFFF";
+
+    try {
+
+        const canvas = await html2canvas(quote, {
+            scale: 3,
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: "#FFFFFF",
+            logging: false,
+
+            onclone: function(documentClone) {
+
+                // Force the cloned document and quote page to PURE WHITE
+                documentClone.documentElement.style.background = "#FFFFFF";
+                documentClone.documentElement.style.backgroundColor = "#FFFFFF";
+                documentClone.body.style.background = "#FFFFFF";
+                documentClone.body.style.backgroundColor = "#FFFFFF";
+
+                const clonedQuote =
+                    documentClone.getElementById("quotePreview");
+
+                clonedQuote.style.transform = "none";
+                clonedQuote.style.background = "#FFFFFF";
+                clonedQuote.style.backgroundColor = "#FFFFFF";
+                clonedQuote.style.backgroundImage = "none";
+            }
+        });
+
+        const imgData = canvas.toDataURL("image/png", 1.0);
+
+        const { jsPDF } = window.jspdf;
+
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4",
+            compress: true
+        });
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        // Force the entire PDF page itself to 100% PURE WHITE
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(0, 0, pageWidth, pageHeight, "F");
+
+        const imgWidth = pageWidth;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+
+        pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            0,
+            imgWidth,
+            imgHeight,
+            undefined,
+            "FAST"
+        );
+
+        const clientName =
+            $("clientName").value
+            .trim()
+            .replace(/[^a-z0-9]/gi, "_");
+
+        pdf.save(
+            `TM11_Quote_${clientName || "Draft"}.pdf`
+        );
+
+    } catch (error) {
+
+        console.error("PDF Error:", error);
+        alert("Error generating PDF. Please try again.");
+
+    } finally {
+
+        // Restore editor preview styles
+        quote.style.transform = originalTransform;
+        quote.style.background = originalBackground;
+        quote.style.backgroundColor = originalBackgroundColor;
+    }
+}
+
+/* =========================================================
+   LIVE INPUT EVENTS
+========================================================= */
+
+document.querySelectorAll("input")
+    .forEach(input => {
+
+        input.addEventListener(
+            "input",
+            updatePreview
+        );
+
+        input.addEventListener(
+            "change",
+            updatePreview
+        );
+
+    });
+
+
+/* START */
+
+loadDraft();
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
