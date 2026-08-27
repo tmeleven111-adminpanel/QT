@@ -1,179 +1,90 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TM ELEVEN - Professional Letter Generator</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>TM Eleven Letter Generator</title>
 
 <style>
-
-/* =========================================================
-   GLOBAL
-========================================================= */
+:root {
+    --bg: #0b1017;
+    --panel: #121a24;
+    --input: #0c131c;
+    --border: #2a3948;
+    --gold: #c58a2a;
+    --gold-light: #e0ad58;
+    --text: #edf2f7;
+    --muted: #94a3b8;
+    --green: #25a36a;
+    --red: #d95050;
+}
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: #111315;
-    color: #f5f5f5;
+    background:
+        radial-gradient(circle at top right, rgba(197,138,42,.08), transparent 30%),
+        var(--bg);
+    color: var(--text);
     padding-bottom: 90px;
 }
 
-button,
-input,
-textarea {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.top-header {
-    background: #0b0c0d;
-    border-bottom: 1px solid #292c2f;
-    padding: 17px 30px;
+.header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 100;
+    padding: 20px 30px;
+    background: rgba(11,16,23,.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
 }
 
-.header-inner {
-    max-width: 1500px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.header h1 {
+    margin: 0;
+    font-size: 22px;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 13px;
+.header p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 13px;
 }
 
-.brand img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-}
-
-.brand h1 {
-    color: #d9a441;
-    font-size: 20px;
-    letter-spacing: 2px;
-}
-
-.brand span {
-    display: block;
-    color: #777;
-    font-size: 10px;
-    letter-spacing: 1px;
-    margin-top: 3px;
-}
-
-.header-label {
-    color: #888;
-    font-size: 12px;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app {
-    max-width: 1500px;
+.container {
+    max-width: 1400px;
     margin: auto;
     padding: 25px;
 }
 
-.workspace {
+.grid {
     display: grid;
-    grid-template-columns: minmax(400px, .85fr) minmax(500px, 1.15fr);
-    gap: 25px;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
 }
 
-
-/* =========================================================
-   EDITOR
-========================================================= */
-
-.editor {
-    background: #191b1d;
-    border: 1px solid #2c2f32;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 15px 45px rgba(0,0,0,.3);
-}
-
-.editor-title {
-    margin-bottom: 22px;
-}
-
-.editor-title h2 {
-    font-size: 24px;
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.editor-title p {
-    color: #777;
-    font-size: 12px;
-}
-
-
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section {
-    background: #121416;
-    border: 1px solid #292c2f;
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+.panel h2 {
+    margin-top: 0;
+    color: var(--gold-light);
+    font-size: 17px;
 }
-
-.section-title h3 {
-    color: #d9a441;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-
-/* =========================================================
-   FORMS
-========================================================= */
 
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 13px;
+    gap: 12px;
 }
 
 .form-group {
@@ -183,537 +94,228 @@ button {
 }
 
 .form-group.full {
-    grid-column: 1 / -1;
+    grid-column: span 2;
 }
 
-.form-group label {
-    color: #999;
-    font-size: 10px;
+label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: .7px;
 }
 
 input,
 textarea {
     width: 100%;
-    background: #1d2023;
-    border: 1px solid #35393d;
+    background: var(--input);
+    color: white;
+    border: 1px solid #304151;
     border-radius: 8px;
-    color: #fff;
     padding: 11px 12px;
+    font-size: 14px;
     outline: none;
-    font-size: 13px;
-    transition: .2s;
 }
 
 input:focus,
 textarea:focus {
-    border-color: #d9a441;
-    box-shadow: 0 0 0 2px rgba(217,164,65,.08);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(197,138,42,.1);
 }
 
 textarea {
-    min-height: 220px;
+    min-height: 350px;
     resize: vertical;
     line-height: 1.6;
 }
 
+.voice-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+.voice-status {
+    color: var(--muted);
+    font-size: 12px;
+}
 
-.btn {
+button {
     border: 0;
     border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 12px;
+    padding: 11px 15px;
+    color: white;
     font-weight: bold;
-    transition: .2s;
+    cursor: pointer;
+}
+
+.btn {
+    background: #273544;
 }
 
 .btn-gold {
-    background: linear-gradient(135deg,#d9a441,#b77c20);
-    color: #111;
+    background: linear-gradient(135deg, #b8791f, #dfa84e);
+    color: #151515;
 }
 
-.btn-gold:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 18px rgba(217,164,65,.2);
+.btn-green {
+    background: var(--green);
 }
 
-.btn-dark {
-    background: #272a2d;
-    color: #ddd;
-    border: 1px solid #393d40;
+.btn-red {
+    background: #692b2b;
 }
 
-.btn-dark:hover {
-    border-color: #d9a441;
+.recording {
+    background: var(--red) !important;
+    animation: pulse 1s infinite;
 }
 
-.btn-danger {
-    background: #301d1e;
-    color: #ffabab;
-    border: 1px solid #563334;
+@keyframes pulse {
+    50% {
+        opacity: .65;
+    }
 }
 
-.btn-small {
-    padding: 7px 10px;
-    font-size: 10px;
-}
-
-
-/* =========================================================
-   CUSTOM FIELDS
-========================================================= */
-
-.custom-field {
-    display: grid;
-    grid-template-columns: 140px 1fr 36px;
-    gap: 8px;
-    margin-top: 9px;
-}
-
-
-/* =========================================================
-   OPTIONS
-========================================================= */
-
-.option-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 11px 0;
-    border-bottom: 1px solid #292c2f;
-}
-
-.option-row:last-child {
-    border-bottom: 0;
-}
-
-.option-info strong {
-    display: block;
-    font-size: 13px;
-}
-
-.option-info span {
-    display: block;
-    color: #777;
-    font-size: 10px;
-    margin-top: 3px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-}
-
-.checkbox-label input {
-    width: 17px;
-    height: 17px;
-    accent-color: #d9a441;
-}
-
-
-/* =========================================================
-   WATERMARK
-========================================================= */
-
-.watermark-controls {
-    display: none;
-    background: #1b1e20;
-    border: 1px solid #34383b;
-    border-radius: 9px;
-    padding: 12px;
-    margin-top: 10px;
-}
-
-.watermark-controls.active {
-    display: block;
-}
-
-.range-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.range-row input[type="range"] {
-    padding: 0;
-    accent-color: #d9a441;
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-.preview-area {
-    position: sticky;
-    top: 95px;
-}
-
-.preview-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.preview-header h2 {
-    font-size: 15px;
-}
-
-.preview-header span {
-    color: #777;
-    font-size: 10px;
-}
-
-.preview-scroll {
-    background: #282a2c;
-    padding: 25px;
-    border-radius: 18px;
+.preview-wrap {
     overflow: auto;
-    max-height: calc(100vh - 140px);
 }
 
+/* =================================================
+   LETTER PDF / PREVIEW
+================================================= */
 
-/* =========================================================
-   A4 LETTER
-========================================================= */
-
-.letter-page {
-    width: 794px;
-    min-height: 1123px;
-    background: #fff;
-    color: #222;
-    margin: auto;
-    padding: 55px 55px 75px;
+#letterPreview {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    color: #1e2933;
+    padding: 16mm 15mm;
     position: relative;
-    box-shadow: 0 15px 50px rgba(0,0,0,.4);
-    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-
-/* =========================================================
-   LETTER HEADER
-========================================================= */
-
-.letter-header {
+.letter-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding-bottom: 22px;
-    border-bottom: 3px solid #d49b35;
+    border-bottom: 2px solid #c58a2a;
+    padding-bottom: 15px;
 }
 
-.company {
+.company-area {
     display: flex;
+    gap: 12px;
     align-items: flex-start;
-    gap: 14px;
 }
 
-.company-logo {
-    width: 72px;
-    height: 72px;
+.logo {
+    width: 65px;
+    height: auto;
     object-fit: contain;
 }
 
-.company-details h2 {
+.company-name {
     font-size: 18px;
-    letter-spacing: 1px;
-    color: #171717;
-    margin-top: 4px;
+    font-weight: 900;
+    color: #bd8027;
+    margin-bottom: 5px;
 }
 
 .company-services {
-    color: #a06e16;
-    font-size: 8px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-top: 6px;
-}
-
-.company-location {
-    color: #777;
     font-size: 9px;
-    margin-top: 5px;
+    font-weight: bold;
 }
 
-.letter-label {
+.company-acn {
+    margin-top: 5px;
+    font-size: 8px;
+}
+
+.letter-title-area {
     text-align: right;
 }
 
-.letter-label h1 {
-    color: #1b1b1b;
-    font-size: 29px;
-    letter-spacing: 3px;
+.letter-title {
+    color: #d3ae73;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 2px;
 }
 
-.letter-label .date {
-    color: #777;
-    font-size: 9px;
-    margin-top: 7px;
-}
-
-
-/* =========================================================
-   RECIPIENT
-========================================================= */
-
-.letter-content {
-    padding-top: 30px;
-}
-
-.recipient-box {
-    border-left: 4px solid #d49b35;
-    background: #fafafa;
-    padding: 14px 16px;
-    margin-bottom: 27px;
-}
-
-.recipient-title {
-    color: #a06e16;
-    font-size: 8px;
+.date {
+    margin-top: 8px;
+    font-size: 11px;
     font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
 }
 
-.recipient-line {
-    color: #333;
-    font-size: 10px;
+.recipient {
+    margin-top: 30px;
     line-height: 1.6;
+    font-size: 12px;
 }
-
-.recipient-line strong {
-    color: #111;
-}
-
-
-/* =========================================================
-   SUBJECT
-========================================================= */
 
 .subject {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 13px;
-    margin-bottom: 22px;
-}
-
-.subject-label {
-    color: #a06e16;
-    font-size: 8px;
+    margin-top: 25px;
     font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+    font-size: 13px;
+    text-transform: uppercase;
 }
 
-.subject-text {
-    font-size: 15px;
-    font-weight: bold;
-    color: #1b1b1b;
-}
-
-
-/* =========================================================
-   LETTER BODY
-========================================================= */
-
-.greeting {
-    font-size: 11px;
-    margin-bottom: 17px;
-}
-
-.body-text {
-    white-space: pre-line;
-    font-size: 11px;
-    line-height: 1.75;
-    color: #333;
-}
-
-.closing {
-    margin-top: 27px;
-    font-size: 11px;
-    line-height: 1.7;
+.letter-body {
+    margin-top: 22px;
+    font-size: 12px;
+    line-height: 1.8;
+    white-space: pre-wrap;
 }
 
 .signature {
-    margin-top: 30px;
-}
-
-.signature-name {
+    margin-top: 35px;
     font-size: 12px;
-    font-weight: bold;
-    color: #111;
+    line-height: 1.7;
 }
 
-.signature-position {
-    font-size: 9px;
-    color: #777;
-    margin-top: 3px;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.letter-footer {
+.footer {
     position: absolute;
-    left: 55px;
-    right: 55px;
-    bottom: 25px;
+    left: 15mm;
+    bottom: 14mm;
+    right: 15mm;
     border-top: 1px solid #ddd;
-    padding-top: 10px;
+    padding-top: 8px;
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    font-size: 9px;
+    color: #555;
 }
 
-.letter-footer div {
-    color: #777;
-    font-size: 7px;
-    line-height: 1.5;
-}
-
-.letter-footer strong {
-    color: #333;
-}
-
-
-/* =========================================================
-   WATERMARK
-========================================================= */
-
-.letter-watermark {
-    display: none;
-    position: absolute;
-    left: 50%;
-    top: 52%;
-    transform: translate(-50%,-50%) rotate(-32deg);
-    color: #d49b35;
-    font-size: 82px;
-    font-weight: 900;
-    letter-spacing: 7px;
-    white-space: nowrap;
-    pointer-events: none;
-}
-
-.letter-page.watermark-active .letter-watermark {
-    display: block;
-}
-
-.letter-page > *:not(.letter-watermark) {
-    position: relative;
-    z-index: 1;
-}
-
-
-/* =========================================================
-   FIXED ACTION BAR
-========================================================= */
-
-.action-bar {
+.actions {
     position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(10,11,12,.96);
-    border-top: 1px solid #343638;
-    backdrop-filter: blur(10px);
-    padding: 12px 20px;
-}
-
-.action-inner {
-    max-width: 1500px;
-    margin: auto;
+    z-index: 1000;
+    padding: 12px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 10px;
+    background: rgba(10,15,22,.97);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(12px);
 }
 
-.action-btn {
-    min-width: 145px;
+.actions button {
+    min-width: 140px;
 }
 
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-    position: fixed;
-    right: 25px;
-    top: 80px;
-    background: #242729;
-    border: 1px solid #d49b35;
-    color: #fff;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 12px;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: .3s;
-    z-index: 5000;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width:1100px) {
-
-    .workspace {
+@media (max-width: 1000px) {
+    .grid {
         grid-template-columns: 1fr;
     }
-
-    .preview-area {
-        position: static;
-    }
-
-    .preview-scroll {
-        max-height: none;
-    }
 }
 
-
-@media (max-width:700px) {
-
-    body {
-        padding-bottom: 82px;
-    }
-
-    .top-header {
-        padding: 14px 16px;
-    }
-
-    .header-label {
-        display: none;
-    }
-
-    .app {
-        padding: 12px;
-    }
-
-    .editor {
-        padding: 14px;
-    }
-
-    .section {
-        padding: 13px;
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
     }
 
     .form-grid {
@@ -721,463 +323,217 @@ textarea {
     }
 
     .form-group.full {
-        grid-column: auto;
+        grid-column: span 1;
     }
 
-    .custom-field {
-        grid-template-columns: 1fr 1fr 36px;
-    }
-
-    .preview-scroll {
-        padding: 10px;
-    }
-
-    .letter-page {
-        transform: scale(.76);
-        transform-origin: top left;
-        margin-bottom: -270px;
-    }
-
-    .action-inner {
-        justify-content: center;
-    }
-
-    .action-btn {
-        min-width: 0;
+    .actions button {
+        min-width: auto;
         flex: 1;
-        padding: 11px 7px;
-        font-size: 10px;
+        font-size: 11px;
+        padding: 12px 5px;
     }
 }
-
-
-@media (max-width:450px) {
-
-    .letter-page {
-        transform: scale(.58);
-        margin-bottom: -470px;
-    }
-
-    .action-bar {
-        padding: 9px;
-    }
-}
-
 </style>
 </head>
 
-
 <body>
 
-
-<!-- =====================================================
-     HEADER
-====================================================== -->
-
-<header class="top-header">
-
-<div class="header-inner">
-
-    <div class="brand">
-
-        <img src="logo.png" alt="TM ELEVEN">
-
-        <div>
-            <h1>TM ELEVEN</h1>
-            <span>PROFESSIONAL LETTER GENERATOR</span>
-        </div>
-
-    </div>
-
-    <div class="header-label">
-        Professional Business Letter
-    </div>
-
+<div class="header">
+    <h1>TM ELEVEN — Letter Generator</h1>
+    <p>Create professional letters with voice typing.</p>
 </div>
 
-</header>
+<div class="container">
 
+    <div class="grid">
 
-<main class="app">
+        <!-- EDITOR -->
+        <div>
 
-<div class="workspace">
+            <div class="panel">
+                <h2>Letter Details</h2>
 
+                <div class="form-grid">
 
-<!-- =====================================================
-     EDITOR
-====================================================== -->
+                    <div class="form-group">
+                        <label>Recipient Name</label>
+                        <input type="text" id="recipientName"
+                               placeholder="Makray Homes">
+                    </div>
 
-<div class="editor">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="letterDate">
+                    </div>
 
-    <div class="editor-title">
+                    <div class="form-group full">
+                        <label>Recipient Address</label>
+                        <input type="text" id="recipientAddress"
+                               placeholder="Address">
+                    </div>
 
-        <h2>Create Letter</h2>
+                    <div class="form-group full">
+                        <label>Subject</label>
+                        <input type="text" id="letterSubject"
+                               placeholder="Letter subject">
+                    </div>
 
-        <p>
-            Create a professional TM ELEVEN business letter.
-        </p>
-
-    </div>
-
-
-    <!-- DATE -->
-
-    <div class="section">
-
-        <div class="section-title">
-            <h3>Letter Details</h3>
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Date</label>
-
-                <input
-                    type="date"
-                    id="letterDate">
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- RECIPIENT -->
-
-    <div class="section">
-
-        <div class="section-title">
-
-            <h3>Recipient</h3>
-
-            <button
-                class="btn btn-gold btn-small"
-                onclick="addCustomField()">
-
-                + Add More
-
-            </button>
-
-        </div>
-
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Name</label>
-
-                <input
-                    id="toName"
-                    placeholder="Recipient name">
-
+                </div>
             </div>
 
 
-            <div class="form-group">
-
-                <label>Company</label>
-
-                <input
-                    id="toCompany"
-                    placeholder="Company name">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>Email</label>
-
-                <input
-                    id="toEmail"
-                    type="email"
-                    placeholder="Email address">
-
-            </div>
-
-
-            <div class="form-group full">
-
-                <label>Address</label>
-
-                <textarea
-                    id="toAddress"
-                    style="min-height:80px;"
-                    placeholder="Recipient address"></textarea>
-
-            </div>
-
-        </div>
-
-
-        <div id="customFields"></div>
-
-    </div>
-
-
-    <!-- SUBJECT -->
-
-    <div class="section">
-
-        <div class="section-title">
-            <h3>Subject</h3>
-        </div>
-
-        <div class="form-group">
-
-            <label>Subject</label>
-
-            <input
-                id="subject"
-                placeholder="Letter subject">
-
-        </div>
-
-    </div>
-
-
-    <!-- CONTENT -->
-
-    <div class="section">
-
-        <div class="section-title">
-            <h3>Letter Content</h3>
-        </div>
-
-
-        <div class="form-group">
-
-            <label>Greeting</label>
-
-            <input
-                id="greeting"
-                value="Dear Sir / Madam,">
-
-        </div>
-
-
-        <br>
-
-
-        <div class="form-group">
-
-            <label>Letter Body</label>
-
-            <textarea
-                id="letterBody"
-                placeholder="Write your letter here..."></textarea>
-
-        </div>
-
-
-        <br>
-
-
-        <div class="form-group">
-
-            <label>Closing</label>
-
-            <input
-                id="closing"
-                value="Kind regards,">
-
-        </div>
-
-    </div>
-
-
-    <!-- SENDER -->
-
-    <div class="section">
-
-        <div class="section-title">
-            <h3>Sender</h3>
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label>Name</label>
-
-                <input
-                    id="senderName"
-                    value="TM ELEVEN">
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>Position</label>
-
-                <input
-                    id="senderPosition"
-                    value="Director">
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- WATERMARK -->
-
-    <div class="section">
-
-        <div class="section-title">
-            <h3>Watermark</h3>
-        </div>
-
-
-        <div class="option-row">
-
-            <div class="option-info">
-
-                <strong>Show Watermark</strong>
-
-                <span>
-                    Add TM ELEVEN watermark to the letter.
-                </span>
-
-            </div>
-
-
-            <label class="checkbox-label">
-
-                <input
-                    type="checkbox"
-                    id="showWatermark">
-
-                TM ELEVEN
-
-            </label>
-
-        </div>
-
-
-        <div
-            class="watermark-controls"
-            id="watermarkControls">
-
-
-            <div class="form-group">
-
-                <label>Watermark Text</label>
-
-                <input
-                    id="watermarkText"
-                    value="TM ELEVEN">
-
-            </div>
-
-
-            <br>
-
-
-            <div class="form-group">
-
-                <label>
-                    Opacity:
-                    <span id="opacityValue">0.08</span>
-                </label>
-
-                <div class="range-row">
-
-                    <input
-                        type="range"
-                        id="watermarkOpacity"
-                        min="0.02"
-                        max="0.20"
-                        step="0.01"
-                        value="0.08">
+            <div class="panel">
+                <h2>Letter Body</h2>
+
+                <div class="voice-bar">
+
+                    <button id="voiceBtn"
+                            class="btn btn-gold"
+                            onclick="toggleVoice()">
+                        🎤 Start Voice Typing
+                    </button>
+
+                    <span class="voice-status" id="voiceStatus">
+                        Click microphone and start speaking.
+                    </span>
 
                 </div>
 
+                <textarea id="letterBody"
+placeholder="Type your letter here or use voice typing..."></textarea>
+
+            </div>
+
+
+            <div class="panel">
+                <h2>Signature</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Sender Name</label>
+                        <input type="text" id="senderName"
+                               value="TM Eleven">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Position</label>
+                        <input type="text" id="senderPosition"
+                               value="Director">
+                    </div>
+
+                </div>
             </div>
 
         </div>
 
-    </div>
 
-</div>
+        <!-- PREVIEW -->
+        <div class="preview-wrap">
 
+            <div class="panel">
+                <h2>Live Preview</h2>
 
-<!-- =====================================================
-     PREVIEW
-====================================================== -->
+                <div id="letterPreview">
 
-<div class="preview-area">
+                    <div class="letter-top">
 
-    <div class="preview-header">
+                        <div class="company-area">
 
-        <h2>Letter Output</h2>
+                            <img src="logo.png"
+                                 class="logo"
+                                 alt="TM Eleven Logo">
 
-        <span>Live Preview</span>
+                            <div>
+                                <div class="company-name">
+                                    TM ELEVEN PTY LTD
+                                </div>
 
-    </div>
+                                <div class="company-services">
+                                    CONCRETING | LANDSCAPING | FENCING
+                                </div>
 
+                                <div class="company-acn">
+                                    ACN : 692 149 045
+                                </div>
+                            </div>
 
-    <div class="preview-scroll">
-
-        <div
-            class="letter-page"
-            id="letterPage">
-
-
-            <div
-                class="letter-watermark"
-                id="letterWatermark">
-                TM ELEVEN
-            </div>
-
-
-            <!-- HEADER -->
-
-            <div class="letter-header">
-
-                <div class="company">
-
-                    <img
-                        src="logo.png"
-                        class="company-logo"
-                        alt="TM ELEVEN">
-
-
-                    <div class="company-details">
-
-                        <h2>
-                            TM ELEVEN PTY LTD
-                        </h2>
-
-                        <div class="company-services">
-                            CONCRETING | LANDSCAPING | FENCING
                         </div>
 
-                        <div class="company-location">
-                            Melbourne | VIC
+
+                        <div class="letter-title-area">
+
+                            <div class="letter-title">
+                                LETTER
+                            </div>
+
+                            <div class="date">
+                                Date: <span id="previewDate"></span>
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+
+                    <div class="recipient">
+
+                        <strong id="previewRecipientName">
+                            Recipient Name
+                        </strong>
+
+                        <br>
+
+                        <span id="previewRecipientAddress">
+                            Recipient Address
+                        </span>
+
+                    </div>
 
 
-                <div class="letter-label">
+                    <div class="subject"
+                         id="previewSubject">
+                        SUBJECT
+                    </div>
 
-                    <h1>LETTER</h1>
 
-                    <div class="date">
+                    <div class="letter-body"
+                         id="previewBody">
+Your letter content will appear here.
+                    </div>
 
-                        Date:
-                        <span id="previewDate">
-                            --/--/----
 
+                    <div class="signature">
+
+                        Kind regards,
+
+                        <br><br>
+
+                        <strong id="previewSenderName">
+                            TM Eleven
+                        </strong>
+
+                        <br>
+
+                        <span id="previewSenderPosition">
+                            Director
+                        </span>
+
+                    </div>
+
+
+                    <div class="footer">
+
+                        <span>
+                            TM ELEVEN PTY LTD
+                        </span>
+
+                        <span>
+                            +61 451 160 058
+                            &nbsp; | &nbsp;
+                            tmeleven111@gmail.com
+                            &nbsp; | &nbsp;
+                            tmeleven.com.au
                         </span>
 
                     </div>
@@ -1186,379 +542,93 @@ textarea {
 
             </div>
 
-
-            <!-- CONTENT -->
-
-            <div class="letter-content">
-
-
-                <!-- RECIPIENT -->
-
-                <div class="recipient-box">
-
-                    <div class="recipient-title">
-                        TO
-                    </div>
-
-                    <div id="previewRecipient"></div>
-
-                </div>
-
-
-                <!-- SUBJECT -->
-
-                <div class="subject">
-
-                    <div class="subject-label">
-                        SUBJECT
-                    </div>
-
-                    <div
-                        class="subject-text"
-                        id="previewSubject">
-                        Letter Subject
-                    </div>
-
-                </div>
-
-
-                <!-- GREETING -->
-
-                <div
-                    class="greeting"
-                    id="previewGreeting">
-
-                    Dear Sir / Madam,
-
-                </div>
-
-
-                <!-- BODY -->
-
-                <div
-                    class="body-text"
-                    id="previewBody">
-
-                    Your letter content will appear here.
-
-                </div>
-
-
-                <!-- CLOSING -->
-
-                <div class="closing">
-
-                    <div id="previewClosing">
-                        Kind regards,
-                    </div>
-
-
-                    <div class="signature">
-
-                        <div
-                            class="signature-name"
-                            id="previewSender">
-                            TM ELEVEN
-                        </div>
-
-                        <div
-                            class="signature-position"
-                            id="previewPosition">
-                            Director
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- FOOTER -->
-
-            <div class="letter-footer">
-
-                <div>
-
-                    <strong>
-                        TM ELEVEN PTY LTD
-                    </strong>
-
-                    <br>
-
-                    Melbourne | VIC
-
-                </div>
-
-
-                <div style="text-align:right;">
-
-                    Concreting | Landscaping | Fencing
-
-                    <br>
-
-                    Professional & Reliable Services
-
-                </div>
-
-            </div>
-
         </div>
 
     </div>
 
 </div>
 
-</div>
 
-</main>
+<!-- FIXED BUTTONS -->
 
+<div class="actions">
 
-<!-- =====================================================
-     ACTION BAR
-====================================================== -->
-
-<div class="action-bar">
-
-    <div class="action-inner">
-
-        <button
-            class="btn btn-dark action-btn"
+    <button class="btn"
             onclick="saveDraft()">
+        💾 Save Draft
+    </button>
 
-            💾 Save Draft
+    <button class="btn btn-red"
+            onclick="clearDraft()">
+        🗑 Clear
+    </button>
 
-        </button>
-
-
-        <button
-            class="btn btn-dark action-btn"
-            onclick="restoreDraft()">
-
-            ↻ Restore Draft
-
-        </button>
-
-
-        <button
-            class="btn btn-gold action-btn"
-            id="pdfButton"
-            onclick="convertToPDF()">
-
-            📄 Convert to PDF
-
-        </button>
-
-    </div>
+    <button class="btn btn-green"
+            onclick="downloadPDF()">
+        📄 Convert PDF
+    </button>
 
 </div>
 
 
-<div
-    class="toast"
-    id="toast">
-</div>
+<!-- PDF LIBRARIES -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
 <script>
 
-/* =========================================================
-   DATA
-========================================================= */
+/* =============================================
+   DATE
+============================================= */
 
-let customFields = [];
+const today = new Date();
 
-
-/* =========================================================
-   INIT
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const today = new Date();
-
-    const date =
-        today.getFullYear() +
-        "-" +
-        String(today.getMonth() + 1).padStart(2,"0") +
-        "-" +
-        String(today.getDate()).padStart(2,"0");
+document.getElementById("letterDate").value =
+    today.toISOString().split("T")[0];
 
 
-    document.getElementById("letterDate").value = date;
+/* =============================================
+   UPDATE PREVIEW
+============================================= */
 
+function formatDate(value) {
 
-    const ids = [
+    if (!value) return "";
 
-        "letterDate",
-        "toName",
-        "toCompany",
-        "toEmail",
-        "toAddress",
-        "subject",
-        "greeting",
-        "letterBody",
-        "closing",
-        "senderName",
-        "senderPosition"
-
-    ];
-
-
-    ids.forEach(id => {
-
-        document
-            .getElementById(id)
-            .addEventListener("input", updatePreview);
-
-    });
-
-
-    document
-        .getElementById("showWatermark")
-        .addEventListener("change", function() {
-
-            document
-                .getElementById("watermarkControls")
-                .classList.toggle(
-                    "active",
-                    this.checked
-                );
-
-            updateWatermark();
-
+    return new Date(value + "T00:00:00")
+        .toLocaleDateString("en-AU", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
         });
 
-
-    document
-        .getElementById("watermarkText")
-        .addEventListener(
-            "input",
-            updateWatermark
-        );
-
-
-    document
-        .getElementById("watermarkOpacity")
-        .addEventListener(
-            "input",
-            function() {
-
-                document
-                    .getElementById("opacityValue")
-                    .textContent = this.value;
-
-                updateWatermark();
-
-            }
-        );
-
-
-    updatePreview();
-
-});
-
-
-/* =========================================================
-   CUSTOM FIELDS
-========================================================= */
-
-function addCustomField(
-    label = "",
-    value = ""
-) {
-
-    customFields.push({
-        label: label,
-        value: value
-    });
-
-    renderCustomFields();
-
-    updatePreview();
-
 }
 
-
-function renderCustomFields() {
-
-    const container =
-        document.getElementById("customFields");
-
-    container.innerHTML = "";
-
-
-    customFields.forEach((field,index) => {
-
-        const row =
-            document.createElement("div");
-
-        row.className =
-            "custom-field";
-
-
-        row.innerHTML = `
-
-            <input
-                type="text"
-                placeholder="Field name"
-                value="${escapeAttr(field.label)}"
-                oninput="
-                    customFields[${index}].label=this.value;
-                    updatePreview();
-                "
-            >
-
-
-            <input
-                type="text"
-                placeholder="Value"
-                value="${escapeAttr(field.value)}"
-                oninput="
-                    customFields[${index}].value=this.value;
-                    updatePreview();
-                "
-            >
-
-
-            <button
-                class="btn btn-danger btn-small"
-                onclick="
-                    customFields.splice(${index},1);
-                    renderCustomFields();
-                    updatePreview();
-                ">
-                ×
-            </button>
-
-        `;
-
-
-        container.appendChild(row);
-
-    });
-
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
 
 function updatePreview() {
 
-    updateDate();
+    document.getElementById("previewDate").textContent =
+        formatDate(
+            document.getElementById("letterDate").value
+        );
 
-    updateRecipient();
+
+    document.getElementById("previewRecipientName").textContent =
+        document.getElementById("recipientName").value ||
+        "Recipient Name";
+
+
+    document.getElementById("previewRecipientAddress").textContent =
+        document.getElementById("recipientAddress").value ||
+        "Recipient Address";
+
 
     document.getElementById("previewSubject").textContent =
-        document.getElementById("subject").value ||
-        "Letter Subject";
-
-
-    document.getElementById("previewGreeting").textContent =
-        document.getElementById("greeting").value ||
-        "Dear Sir / Madam,";
+        document.getElementById("letterSubject").value ||
+        "SUBJECT";
 
 
     document.getElementById("previewBody").textContent =
@@ -1566,524 +636,380 @@ function updatePreview() {
         "Your letter content will appear here.";
 
 
-    document.getElementById("previewClosing").textContent =
-        document.getElementById("closing").value ||
-        "Kind regards,";
-
-
-    document.getElementById("previewSender").textContent =
+    document.getElementById("previewSenderName").textContent =
         document.getElementById("senderName").value ||
-        "TM ELEVEN";
+        "TM Eleven";
 
 
-    document.getElementById("previewPosition").textContent =
+    document.getElementById("previewSenderPosition").textContent =
         document.getElementById("senderPosition").value ||
         "Director";
-
-
-    updateWatermark();
 
 }
 
 
-/* =========================================================
-   DATE
-========================================================= */
+/* =============================================
+   LIVE UPDATE
+============================================= */
 
-function updateDate() {
+document.querySelectorAll("input, textarea")
+    .forEach(element => {
 
-    const value =
-        document.getElementById("letterDate").value;
+        element.addEventListener(
+            "input",
+            updatePreview
+        );
+
+        element.addEventListener(
+            "change",
+            updatePreview
+        );
+
+    });
 
 
-    if (!value) {
+/* =============================================
+   VOICE TYPING
+============================================= */
 
-        document.getElementById("previewDate").textContent =
-            "--/--/----";
+let recognition;
+let isRecording = false;
+
+const voiceBtn =
+    document.getElementById("voiceBtn");
+
+const voiceStatus =
+    document.getElementById("voiceStatus");
+
+const letterBody =
+    document.getElementById("letterBody");
+
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+if (SpeechRecognition) {
+
+    recognition =
+        new SpeechRecognition();
+
+    recognition.continuous = true;
+
+    recognition.interimResults = true;
+
+    recognition.lang = "en-AU";
+
+
+    recognition.onstart = function() {
+
+        isRecording = true;
+
+        voiceBtn.classList.add("recording");
+
+        voiceBtn.innerHTML =
+            "🔴 Stop Voice Typing";
+
+        voiceStatus.textContent =
+            "Listening... Speak now.";
+
+    };
+
+
+    recognition.onresult = function(event) {
+
+        let finalTranscript = "";
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            const transcript =
+                event.results[i][0].transcript;
+
+            if (event.results[i].isFinal) {
+
+                finalTranscript += transcript;
+
+            }
+
+        }
+
+
+        if (finalTranscript) {
+
+            letterBody.value +=
+                (letterBody.value ? " " : "") +
+                finalTranscript;
+
+            updatePreview();
+
+        }
+
+    };
+
+
+    recognition.onerror = function(event) {
+
+        voiceStatus.textContent =
+            "Voice typing error: " +
+            event.error;
+
+    };
+
+
+    recognition.onend = function() {
+
+        isRecording = false;
+
+        voiceBtn.classList.remove("recording");
+
+        voiceBtn.innerHTML =
+            "🎤 Start Voice Typing";
+
+        voiceStatus.textContent =
+            "Voice typing stopped.";
+
+    };
+
+}
+
+
+function toggleVoice() {
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Voice typing is not supported in this browser. Please use Google Chrome or Microsoft Edge."
+        );
 
         return;
 
     }
 
 
-    const date =
-        new Date(value + "T00:00:00");
+    if (isRecording) {
 
+        recognition.stop();
 
-    document.getElementById("previewDate").textContent =
+    } else {
 
-        String(date.getDate()).padStart(2,"0") +
-        "/" +
-        String(date.getMonth()+1).padStart(2,"0") +
-        "/" +
-        date.getFullYear();
+        recognition.start();
+
+    }
 
 }
 
 
-/* =========================================================
-   RECIPIENT
-========================================================= */
-
-function updateRecipient() {
-
-    const container =
-        document.getElementById("previewRecipient");
-
-    container.innerHTML = "";
-
-
-    const fields = [
-
-        [
-            "Name",
-            document.getElementById("toName").value
-        ],
-
-        [
-            "Company",
-            document.getElementById("toCompany").value
-        ],
-
-        [
-            "Email",
-            document.getElementById("toEmail").value
-        ],
-
-        [
-            "Address",
-            document.getElementById("toAddress").value
-        ]
-
-    ];
-
-
-    customFields.forEach(field => {
-
-        if (field.label || field.value) {
-
-            fields.push([
-                field.label,
-                field.value
-            ]);
-
-        }
-
-    });
-
-
-    fields.forEach(field => {
-
-        if (!field[0] && !field[1]) return;
-
-
-        const div =
-            document.createElement("div");
-
-        div.className =
-            "recipient-line";
-
-
-        div.innerHTML =
-            `<strong>
-                ${escapeHTML(field[0])}:
-             </strong>
-             ${escapeHTML(field[1])}`;
-
-
-        container.appendChild(div);
-
-    });
-
-}
-
-
-/* =========================================================
-   WATERMARK
-========================================================= */
-
-function updateWatermark() {
-
-    const enabled =
-        document.getElementById("showWatermark").checked;
-
-
-    const page =
-        document.getElementById("letterPage");
-
-
-    const watermark =
-        document.getElementById("letterWatermark");
-
-
-    page.classList.toggle(
-        "watermark-active",
-        enabled
-    );
-
-
-    watermark.textContent =
-        document.getElementById("watermarkText").value ||
-        "TM ELEVEN";
-
-
-    watermark.style.opacity =
-        enabled
-        ? document.getElementById("watermarkOpacity").value
-        : "0";
-
-}
-
-
-/* =========================================================
-   SAVE
-========================================================= */
+/* =============================================
+   SAVE DRAFT
+============================================= */
 
 function saveDraft() {
 
     const data = {
 
+        recipientName:
+            document.getElementById("recipientName").value,
+
+        recipientAddress:
+            document.getElementById("recipientAddress").value,
+
         letterDate:
             document.getElementById("letterDate").value,
 
-        toName:
-            document.getElementById("toName").value,
-
-        toCompany:
-            document.getElementById("toCompany").value,
-
-        toEmail:
-            document.getElementById("toEmail").value,
-
-        toAddress:
-            document.getElementById("toAddress").value,
-
-        subject:
-            document.getElementById("subject").value,
-
-        greeting:
-            document.getElementById("greeting").value,
+        letterSubject:
+            document.getElementById("letterSubject").value,
 
         letterBody:
             document.getElementById("letterBody").value,
-
-        closing:
-            document.getElementById("closing").value,
 
         senderName:
             document.getElementById("senderName").value,
 
         senderPosition:
-            document.getElementById("senderPosition").value,
-
-        customFields:
-            customFields,
-
-        showWatermark:
-            document.getElementById("showWatermark").checked,
-
-        watermarkText:
-            document.getElementById("watermarkText").value,
-
-        watermarkOpacity:
-            document.getElementById("watermarkOpacity").value
+            document.getElementById("senderPosition").value
 
     };
 
 
     localStorage.setItem(
-        "tmElevenLetterDraft",
+        "tm11LetterDraft",
         JSON.stringify(data)
     );
 
 
-    showToast(
-        "Letter draft saved successfully."
-    );
+    alert("Letter draft saved successfully!");
 
 }
 
 
-/* =========================================================
-   RESTORE
-========================================================= */
+/* =============================================
+   LOAD DRAFT
+============================================= */
 
-function restoreDraft() {
+function loadDraft() {
 
     const saved =
         localStorage.getItem(
-            "tmElevenLetterDraft"
+            "tm11LetterDraft"
         );
 
 
     if (!saved) {
 
-        showToast(
-            "No saved letter draft found."
-        );
+        updatePreview();
 
         return;
 
     }
 
 
-    try {
-
-        const data =
-            JSON.parse(saved);
+    const data =
+        JSON.parse(saved);
 
 
-        document.getElementById("letterDate").value =
-            data.letterDate || "";
+    Object.keys(data)
+        .forEach(key => {
+
+            const element =
+                document.getElementById(key);
+
+            if (element) {
+
+                element.value =
+                    data[key];
+
+            }
+
+        });
 
 
-        document.getElementById("toName").value =
-            data.toName || "";
-
-
-        document.getElementById("toCompany").value =
-            data.toCompany || "";
-
-
-        document.getElementById("toEmail").value =
-            data.toEmail || "";
-
-
-        document.getElementById("toAddress").value =
-            data.toAddress || "";
-
-
-        document.getElementById("subject").value =
-            data.subject || "";
-
-
-        document.getElementById("greeting").value =
-            data.greeting || "Dear Sir / Madam,";
-
-
-        document.getElementById("letterBody").value =
-            data.letterBody || "";
-
-
-        document.getElementById("closing").value =
-            data.closing || "Kind regards,";
-
-
-        document.getElementById("senderName").value =
-            data.senderName || "TM ELEVEN";
-
-
-        document.getElementById("senderPosition").value =
-            data.senderPosition || "Director";
-
-
-        customFields =
-            data.customFields || [];
-
-
-        document.getElementById("showWatermark").checked =
-            !!data.showWatermark;
-
-
-        document.getElementById("watermarkText").value =
-            data.watermarkText || "TM ELEVEN";
-
-
-        document.getElementById("watermarkOpacity").value =
-            data.watermarkOpacity || "0.08";
-
-
-        document.getElementById("opacityValue").textContent =
-            document.getElementById("watermarkOpacity").value;
-
-
-        document
-            .getElementById("watermarkControls")
-            .classList.toggle(
-                "active",
-                !!data.showWatermark
-            );
-
-
-        renderCustomFields();
-
-        updatePreview();
-
-
-        showToast(
-            "Letter draft restored."
-        );
-
-    } catch(error) {
-
-        console.error(error);
-
-        showToast(
-            "Could not restore draft."
-        );
-
-    }
+    updatePreview();
 
 }
 
 
-/* =========================================================
-   PDF
-========================================================= */
+/* =============================================
+   CLEAR
+============================================= */
 
-async function convertToPDF() {
+function clearDraft() {
 
-    const page =
-        document.getElementById("letterPage");
-
-
-    const button =
-        document.getElementById("pdfButton");
-
-
-    const oldText =
-        button.innerHTML;
-
-
-    button.innerHTML =
-        "Generating PDF...";
-
-
-    button.disabled = true;
-
-
-    try {
-
-        const canvas =
-            await html2canvas(
-                page,
-                {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: "#ffffff"
-                }
-            );
-
-
-        const imgData =
-            canvas.toDataURL(
-                "image/png",
-                1
-            );
-
-
-        const {
-            jsPDF
-        } = window.jspdf;
-
-
-        const pdf =
-            new jsPDF(
-                "p",
-                "mm",
-                "a4"
-            );
-
-
-        const width = 210;
-
-        const height =
-            canvas.height *
-            width /
-            canvas.width;
-
-
-        pdf.addImage(
-            imgData,
-            "PNG",
-            0,
-            0,
-            width,
-            height
-        );
-
-
-        const date =
-            document.getElementById("letterDate").value ||
-            "letter";
-
-
-        pdf.save(
-            "TM-ELEVEN-Letter-" +
-            date +
-            ".pdf"
-        );
-
-
-        showToast(
-            "PDF created successfully."
-        );
-
-    } catch(error) {
-
-        console.error(error);
-
-        showToast(
-            "PDF generation failed."
-        );
-
+    if (
+        !confirm(
+            "Are you sure you want to clear this letter?"
+        )
+    ) {
+        return;
     }
 
 
-    button.innerHTML =
-        oldText;
-
-    button.disabled = false;
-
-}
+    localStorage.removeItem(
+        "tm11LetterDraft"
+    );
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function escapeHTML(value) {
-
-    return String(value || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    location.reload();
 
 }
 
 
-function escapeAttr(value) {
+/* =============================================
+   DOWNLOAD PDF
+============================================= */
 
-    return escapeHTML(value);
+async function downloadPDF() {
+
+    updatePreview();
+
+    const letter =
+        document.getElementById(
+            "letterPreview"
+        );
+
+
+    const canvas =
+        await html2canvas(letter, {
+
+            scale: 2,
+
+            useCORS: true,
+
+            backgroundColor: "#ffffff"
+
+        });
+
+
+    const image =
+        canvas.toDataURL(
+            "image/png"
+        );
+
+
+    const { jsPDF } =
+        window.jspdf;
+
+
+    const pdf =
+        new jsPDF({
+
+            orientation: "portrait",
+
+            unit: "mm",
+
+            format: "a4"
+
+        });
+
+
+    const pageWidth =
+        pdf.internal.pageSize.getWidth();
+
+
+    const imageHeight =
+        canvas.height *
+        pageWidth /
+        canvas.width;
+
+
+    pdf.addImage(
+        image,
+        "PNG",
+        0,
+        0,
+        pageWidth,
+        imageHeight
+    );
+
+
+    const recipient =
+        document.getElementById(
+            "recipientName"
+        )
+        .value
+        .trim()
+        .replace(
+            /[^a-z0-9]/gi,
+            "_"
+        );
+
+
+    pdf.save(
+        `TM11_Letter_${recipient || "Draft"}.pdf`
+    );
 
 }
 
 
-function showToast(message) {
+/* START */
 
-    const toast =
-        document.getElementById("toast");
-
-
-    toast.textContent =
-        message;
-
-
-    toast.classList.add("show");
-
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    },2500);
-
-}
+loadDraft();
 
 </script>
 
 </body>
 </html>
-```
