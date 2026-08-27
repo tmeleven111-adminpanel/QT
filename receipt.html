@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Professional Receipt Generator</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:#f4f5f7;
+    color:#16181d;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+    height:72px;
+    background:#111318;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand img{
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    border-radius:8px;
+}
+
+.brand-text{
+    font-family:"Manrope",sans-serif;
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-text span{
+    color:#aaa;
+    font-weight:500;
+}
+
+.header-actions{
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    border:0;
+    border-radius:9px;
+    padding:11px 17px;
+    font-family:inherit;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-dark{
+    background:#242832;
+    color:white;
+}
+
+.btn-white{
+    background:white;
+    color:#111;
+}
+
+.btn-primary{
+    background:#111318;
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    display:grid;
+    grid-template-columns:390px 1fr;
+    min-height:calc(100vh - 72px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    background:white;
+    border-right:1px solid #dddfe3;
+    padding:24px;
+    overflow:auto;
+    height:calc(100vh - 72px);
+    position:sticky;
+    top:72px;
+}
+
+.section{
+    margin-bottom:26px;
+}
+
+.section-title{
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#777b83;
+    margin-bottom:13px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid #d9dce1;
+    background:#fafbfc;
+    border-radius:8px;
+    padding:11px 12px;
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#111;
+    background:white;
+}
+
+textarea{
+    resize:vertical;
+    min-height:85px;
+}
+
+.field{
+    margin-bottom:13px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+/* LOGO */
+
+.logo-upload{
+    border:1.5px dashed #c9ccd2;
+    padding:16px;
+    text-align:center;
+    border-radius:10px;
+    cursor:pointer;
+    background:#fafafa;
+}
+
+.logo-upload:hover{
+    background:#f2f3f5;
+}
+
+.logo-preview{
+    width:80px;
+    height:55px;
+    object-fit:contain;
+    margin:auto;
+    display:block;
+}
+
+.logo-toggle{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:10px;
+    padding:10px 12px;
+    background:#f7f7f8;
+    border:1px solid #e1e2e5;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logo-toggle input{
+    width:17px;
+    height:17px;
+    margin:0;
+    cursor:pointer;
+}
+
+.logo-toggle span{
+    font-size:13px;
+    font-weight:600;
+}
+
+/* PAYMENT METHOD */
+
+.payment-methods{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.payment-method{
+    border:1px solid #dddfe3;
+    border-radius:8px;
+    padding:10px;
+    text-align:center;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    background:#fafafa;
+}
+
+.payment-method.active{
+    background:#111318;
+    color:white;
+    border-color:#111318;
+}
+
+/* ITEMS */
+
+.items-box{
+    border:1px solid #dddfe3;
+    border-radius:9px;
+    overflow:hidden;
+}
+
+.item{
+    padding:12px;
+    border-bottom:1px solid #e5e6e9;
+    background:#fafbfc;
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.item-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.item-number{
+    font-size:11px;
+    font-weight:800;
+    color:#777;
+    text-transform:uppercase;
+}
+
+.remove-item{
+    border:0;
+    background:#eee;
+    color:#555;
+    width:25px;
+    height:25px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.add-item{
+    width:100%;
+    margin-top:10px;
+    padding:11px;
+    border:1px dashed #bbbfc6;
+    background:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.add-item:hover{
+    background:#f3f4f5;
+}
+
+/* PREVIEW */
+
+.preview-area{
+    padding:35px;
+    overflow:auto;
+}
+
+.preview-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.preview-title{
+    font-family:"Manrope";
+    font-weight:800;
+    font-size:19px;
+}
+
+/* A4 */
+
+.a4{
+    width:210mm;
+    min-height:297mm;
+    background:white;
+    margin:auto;
+    padding:20mm;
+    box-shadow:0 8px 35px rgba(0,0,0,.12);
+    position:relative;
+}
+
+/* RECEIPT */
+
+.receipt-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding-bottom:22px;
+    border-bottom:3px solid #111;
+}
+
+.company{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.company-logo{
+    width:72px;
+    height:58px;
+    object-fit:contain;
+    display:block;
+}
+
+.company-name{
+    font-family:"Manrope";
+    font-size:23px;
+    font-weight:800;
+    letter-spacing:-.03em;
+}
+
+.company-details{
+    font-size:10px;
+    color:#666;
+    line-height:1.7;
+    max-width:330px;
+}
+
+.receipt-title{
+    text-align:right;
+}
+
+.receipt-title h1{
+    font-family:"Manrope";
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:-.04em;
+}
+
+.receipt-number{
+    margin-top:5px;
+    font-size:11px;
+    color:#666;
+}
+
+/* CUSTOMER */
+
+.customer-section{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.info-label{
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-weight:800;
+    color:#888;
+    margin-bottom:5px;
+}
+
+.info-value{
+    font-size:12px;
+    line-height:1.7;
+}
+
+/* PAYMENT */
+
+.payment-summary{
+    margin-top:28px;
+    border:1px solid #dedfe2;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.payment-summary-header{
+    background:#111318;
+    color:white;
+    padding:11px 14px;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+}
+
+.payment-row{
+    display:grid;
+    grid-template-columns:1fr 100px 120px;
+    gap:10px;
+    padding:12px 14px;
+    border-bottom:1px solid #e5e6e8;
+    font-size:11px;
+}
+
+.payment-row.header-row{
+    background:#f5f6f7;
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    color:#777;
+}
+
+.payment-row:last-child{
+    border-bottom:0;
+}
+
+.payment-row span:nth-child(2),
+.payment-row span:nth-child(3){
+    text-align:right;
+}
+
+/* TOTAL */
+
+.total-area{
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.total-box{
+    width:270px;
+}
+
+.total-line{
+    display:flex;
+    justify-content:space-between;
+    padding:7px 0;
+    font-size:11px;
+}
+
+.total-line.grand{
+    margin-top:5px;
+    padding:13px 0;
+    border-top:2px solid #111;
+    font-size:17px;
+    font-weight:800;
+}
+
+.amount-words{
+    margin-top:18px;
+    padding:13px;
+    background:#f6f7f8;
+    border-radius:8px;
+    font-size:11px;
+    line-height:1.6;
+}
+
+.amount-words strong{
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    display:block;
+    margin-bottom:3px;
+    color:#777;
+}
+
+/* FOOTER */
+
+.receipt-footer{
+    position:absolute;
+    left:20mm;
+    right:20mm;
+    bottom:20mm;
+    border-top:1px solid #ddd;
+    padding-top:14px;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.notes{
+    font-size:10px;
+    color:#666;
+    line-height:1.6;
+}
+
+.signature{
+    text-align:right;
+    font-size:11px;
+}
+
+.signature-line{
+    width:140px;
+    border-top:1px solid #222;
+    margin:35px 0 6px auto;
+}
+
+.thank-you{
+    text-align:center;
+    margin-top:25px;
+    font-family:"Manrope";
+    font-size:12px;
+    font-weight:700;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:relative;
+        top:0;
+        height:auto;
+        border-right:0;
+        border-bottom:1px solid #ddd;
+    }
+
+    .preview-area{
+        padding:20px 10px;
+    }
+
+}
+
+/* PRINT */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .header,
+    .sidebar,
+    .preview-top{
+        display:none!important;
+    }
+
+    .main{
+        display:block;
+    }
+
+    .preview-area{
+        padding:0;
+    }
+
+    .a4{
+        box-shadow:none;
+        margin:0;
+    }
+
+    @page{
+        size:A4;
+        margin:0;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="brand">
+
+        <img
+            src="logo.png"
+            id="headerLogo"
+            onerror="this.style.display='none'"
+        >
+
+        <div class="brand-text">
+            TM Eleven <span>Receipt Studio</span>
+        </div>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="btn btn-dark"
+            onclick="saveDraft()"
+        >
+            Save Draft
+        </button>
+
+        <button
+            class="btn btn-white"
+            onclick="window.print()"
+        >
+            Print / PDF
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="main">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+
+    <!-- COMPANY -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Company Details
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Logo
+            </label>
+
+            <label class="logo-upload">
+
+                <input
+                    type="file"
+                    id="logoInput"
+                    accept="image/*"
+                    hidden
+                >
+
+                <img
+                    id="logoPreview"
+                    class="logo-preview"
+                    src="logo.png"
+                    onerror="this.style.display='none'"
+                >
+
+            </label>
+
+
+            <label class="logo-toggle">
+
+                <input
+                    type="checkbox"
+                    id="showLogo"
+                    checked
+                    onchange="toggleLogo()"
+                >
+
+                <span>
+                    Show logo on receipt
+                </span>
+
+            </label>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Name
+            </label>
+
+            <input
+                id="companyName"
+                value="TM Eleven"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Address
+            </label>
+
+            <input
+                id="companyAddress"
+                placeholder="Melbourne, Victoria, Australia"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="field">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="companyEmail"
+                    placeholder="info@example.com"
+                    oninput="updatePreview()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Phone
+                </label>
+
+                <input
+                    id="companyPhone"
+                    placeholder="+61 xxx xxx xxx"
+                    oninput="updatePreview()"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RECEIPT DETAILS -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Receipt Details
+        </div>
+
+
+        <div class="row">
+
+            <div class="field">
+
+                <label>
+                    Receipt No.
+                </label>
+
+                <input
+                    id="receiptNumber"
+                    value="REC-001"
+                    oninput="updatePreview()"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="receiptDate"
+                    onchange="updatePreview()"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTOMER -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Customer
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Customer Name
+            </label>
+
+            <input
+                id="customerName"
+                placeholder="John Smith"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Email
+            </label>
+
+            <input
+                id="customerEmail"
+                placeholder="customer@email.com"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Phone
+            </label>
+
+            <input
+                id="customerPhone"
+                placeholder="+61 xxx xxx xxx"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Address
+            </label>
+
+            <textarea
+                id="customerAddress"
+                placeholder="Customer address"
+                oninput="updatePreview()"
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Payment Details
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Payment For
+            </label>
+
+            <input
+                id="paymentFor"
+                placeholder="Concrete driveway installation"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Payment Method
+            </label>
+
+
+            <div class="payment-methods">
+
+                <div
+                    class="payment-method active"
+                    onclick="setPaymentMethod('Cash',this)"
+                >
+                    Cash
+                </div>
+
+                <div
+                    class="payment-method"
+                    onclick="setPaymentMethod('Card',this)"
+                >
+                    Card
+                </div>
+
+                <div
+                    class="payment-method"
+                    onclick="setPaymentMethod('Bank Transfer',this)"
+                >
+                    Bank Transfer
+                </div>
+
+                <div
+                    class="payment-method"
+                    onclick="setPaymentMethod('Other',this)"
+                >
+                    Other
+                </div>
+
+            </div>
+
+            <input
+                id="paymentMethod"
+                value="Cash"
+                type="hidden"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Currency
+            </label>
+
+            <select
+                id="currency"
+                onchange="updatePreview()"
+            >
+
+                <option value="$">AUD $</option>
+                <option value="$">USD $</option>
+                <option value="£">GBP £</option>
+                <option value="€">EUR €</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- ITEMS -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Payment Items
+        </div>
+
+
+        <div
+            class="items-box"
+            id="items"
+        ></div>
+
+
+        <button
+            class="add-item"
+            onclick="addItem()"
+        >
+            + Add Item
+        </button>
+
+    </div>
+
+
+    <!-- NOTES -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Notes
+        </div>
+
+
+        <textarea
+            id="notes"
+            placeholder="Thank you for your payment."
+            oninput="updatePreview()"
+        ></textarea>
+
+    </div>
+
+
+    <!-- SIGNATURE -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Signature
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Name
+            </label>
+
+            <input
+                id="signName"
+                value="TM Eleven"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Position
+            </label>
+
+            <input
+                id="signPosition"
+                value="Director"
+                oninput="updatePreview()"
+            >
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- PREVIEW -->
+
+<main class="preview-area">
+
+    <div class="preview-top">
+
+        <div class="preview-title">
+            Live Receipt Preview
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            onclick="window.print()"
+        >
+            Generate PDF
+        </button>
+
+    </div>
+
+
+    <div
+        class="a4"
+        id="paper"
+    >
+
+
+        <!-- RECEIPT HEADER -->
+
+        <div class="receipt-header">
+
+
+            <div class="company">
+
+                <img
+                    id="previewLogo"
+                    class="company-logo"
+                    src="logo.png"
+                    onerror="this.style.display='none'"
+                >
+
+                <div>
+
+                    <div
+                        class="company-name"
+                        id="previewCompany"
+                    >
+                        TM Eleven
+                    </div>
+
+                    <div
+                        class="company-details"
+                        id="previewCompanyDetails"
+                    >
+                        Melbourne, Victoria, Australia
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="receipt-title">
+
+                <h1>
+                    RECEIPT
+                </h1>
+
+                <div
+                    class="receipt-number"
+                    id="previewReceiptNumber"
+                >
+                    Receipt No. REC-001
+                </div>
+
+                <div
+                    class="receipt-number"
+                    id="previewDate"
+                >
+                    27 August 2026
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CUSTOMER -->
+
+        <div class="customer-section">
+
+
+            <div>
+
+                <div class="info-label">
+                    Received From
+                </div>
+
+                <div
+                    class="info-value"
+                    id="previewCustomer"
+                >
+                    Customer Name
+                </div>
+
+                <div
+                    class="info-value"
+                    id="previewCustomerContact"
+                >
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Payment For
+                </div>
+
+                <div
+                    class="info-value"
+                    id="previewPaymentFor"
+                >
+                    Payment description
+                </div>
+
+                <div
+                    class="info-value"
+                    id="previewPaymentMethod"
+                >
+                    Payment Method: Cash
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ITEMS -->
+
+        <div class="payment-summary">
+
+            <div class="payment-summary-header">
+                Payment Details
+            </div>
+
+
+            <div class="payment-row header-row">
+
+                <span>
+                    Description
+                </span>
+
+                <span>
+                    Qty
+                </span>
+
+                <span>
+                    Amount
+                </span>
+
+            </div>
+
+
+            <div id="previewItems">
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL -->
+
+        <div class="total-area">
+
+            <div class="total-box">
+
+                <div class="total-line">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span id="previewSubtotal">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+                <div class="total-line">
+
+                    <span>
+                        Discount
+                    </span>
+
+                    <span id="previewDiscount">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+                <div class="total-line grand">
+
+                    <span>
+                        TOTAL PAID
+                    </span>
+
+                    <span id="previewTotal">
+                        $0.00
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AMOUNT WORDS -->
+
+        <div class="amount-words">
+
+            <strong>
+                Amount in Words
+            </strong>
+
+            <span id="previewWords">
+                Zero dollars
+            </span>
+
+        </div>
+
+
+        <!-- THANK YOU -->
+
+        <div class="thank-you">
+            Thank you for your payment.
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="receipt-footer">
+
+            <div class="footer-grid">
+
+
+                <div class="notes">
+
+                    <strong>
+                        Notes
+                    </strong>
+
+                    <br>
+
+                    <span id="previewNotes">
+                        Thank you for your payment.
+                    </span>
+
+                </div>
+
+
+                <div class="signature">
+
+                    <div class="signature-line"></div>
+
+                    <strong id="previewSignName">
+                        TM Eleven
+                    </strong>
+
+                    <br>
+
+                    <span id="previewSignPosition">
+                        Director
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* DATE */
+
+const today = new Date();
+
+document.getElementById("receiptDate").value =
+    today.toISOString().split("T")[0];
+
+
+/* ITEMS */
+
+let items = [
+    {
+        description:"",
+        quantity:1,
+        price:0
+    }
+];
+
+
+function addItem(){
+
+    items.push({
+        description:"",
+        quantity:1,
+        price:0
+    });
+
+    renderItems();
+
+}
+
+
+function removeItem(index){
+
+    if(items.length === 1){
+
+        items[0] = {
+            description:"",
+            quantity:1,
+            price:0
+        };
+
+    }else{
+
+        items.splice(index,1);
+
+    }
+
+    renderItems();
+
+}
+
+
+function renderItems(){
+
+    const container =
+        document.getElementById("items");
+
+    container.innerHTML = "";
+
+
+    items.forEach((item,index)=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "item";
+
+
+        div.innerHTML = `
+
+            <div class="item-head">
+
+                <span class="item-number">
+                    Item ${index + 1}
+                </span>
+
+                <button
+                    class="remove-item"
+                    onclick="removeItem(${index})"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Description
+                </label>
+
+                <input
+                    value="${escapeHtml(item.description)}"
+                    placeholder="Service or product"
+                    oninput="updateItem(${index},'description',this.value)"
+                >
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="field">
+
+                    <label>
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value="${item.quantity}"
+                        oninput="updateItem(${index},'quantity',this.value)"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Price
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value="${item.price}"
+                        oninput="updateItem(${index},'price',this.value)"
+                    >
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+    updatePreview();
+
+}
+
+
+function updateItem(index,key,value){
+
+    if(key === "quantity" || key === "price"){
+
+        value = parseFloat(value) || 0;
+
+    }
+
+    items[index][key] = value;
+
+    updatePreview();
+
+}
+
+
+/* PAYMENT METHOD */
+
+function setPaymentMethod(method,element){
+
+    document.querySelectorAll(".payment-method")
+        .forEach(el =>
+            el.classList.remove("active")
+        );
+
+    element.classList.add("active");
+
+    document.getElementById("paymentMethod").value =
+        method;
+
+    updatePreview();
+
+}
+
+
+/* LOGO */
+
+document.getElementById("logoInput")
+.addEventListener("change",function(){
+
+    const file = this.files[0];
+
+    if(!file) return;
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(e){
+
+        const src = e.target.result;
+
+
+        document.getElementById("logoPreview").src =
+            src;
+
+
+        document.getElementById("previewLogo").src =
+            src;
+
+
+        localStorage.setItem(
+            "receiptLogo",
+            src
+        );
+
+
+        toggleLogo();
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+});
+
+
+function toggleLogo(){
+
+    const show =
+        document.getElementById("showLogo").checked;
+
+    document.getElementById("previewLogo").style.display =
+        show ? "block" : "none";
+
+}
+
+
+/* UPDATE PREVIEW */
+
+function updatePreview(){
+
+    const company =
+        document.getElementById("companyName").value;
+
+    const address =
+        document.getElementById("companyAddress").value;
+
+    const email =
+        document.getElementById("companyEmail").value;
+
+    const phone =
+        document.getElementById("companyPhone").value;
+
+
+    document.getElementById("previewCompany")
+        .textContent =
+        company || "Company Name";
+
+
+    let details = "";
+
+    if(address)
+        details += address;
+
+    if(email)
+        details +=
+            (details ? " • " : "") + email;
+
+    if(phone)
+        details +=
+            (details ? " • " : "") + phone;
+
+
+    document.getElementById("previewCompanyDetails")
+        .textContent = details;
+
+
+    /* DATE */
+
+    const date =
+        document.getElementById("receiptDate").value;
+
+
+    if(date){
+
+        const d =
+            new Date(date + "T00:00:00");
+
+
+        document.getElementById("previewDate")
+            .textContent =
+            d.toLocaleDateString(
+                "en-AU",
+                {
+                    day:"numeric",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+
+    }
+
+
+    /* RECEIPT NUMBER */
+
+    document.getElementById("previewReceiptNumber")
+        .textContent =
+        "Receipt No. " +
+        (
+            document.getElementById("receiptNumber").value
+            || "REC-001"
+        );
+
+
+    /* CUSTOMER */
+
+    const customer =
+        document.getElementById("customerName").value;
+
+    const customerEmail =
+        document.getElementById("customerEmail").value;
+
+    const customerPhone =
+        document.getElementById("customerPhone").value;
+
+    const customerAddress =
+        document.getElementById("customerAddress").value;
+
+
+    document.getElementById("previewCustomer")
+        .textContent =
+        customer || "Customer Name";
+
+
+    let contact = "";
+
+    if(customerEmail)
+        contact += customerEmail;
+
+    if(customerPhone)
+        contact +=
+            (contact ? " • " : "") +
+            customerPhone;
+
+    if(customerAddress)
+        contact +=
+            (contact ? "<br>" : "") +
+            customerAddress.replace(/\n/g,"<br>");
+
+
+    document.getElementById("previewCustomerContact")
+        .innerHTML = contact;
+
+
+    /* PAYMENT */
+
+    document.getElementById("previewPaymentFor")
+        .textContent =
+        document.getElementById("paymentFor").value
+        || "Payment description";
+
+
+    document.getElementById("previewPaymentMethod")
+        .textContent =
+        "Payment Method: " +
+        document.getElementById("paymentMethod").value;
+
+
+    /* ITEMS */
+
+    const previewItems =
+        document.getElementById("previewItems");
+
+    previewItems.innerHTML = "";
+
+
+    let subtotal = 0;
+
+
+    items.forEach(item => {
+
+        const quantity =
+            parseFloat(item.quantity) || 0;
+
+        const price =
+            parseFloat(item.price) || 0;
+
+        const amount =
+            quantity * price;
+
+        subtotal += amount;
+
+
+        const row =
+            document.createElement("div");
+
+        row.className = "payment-row";
+
+
+        row.innerHTML = `
+
+            <span>
+                ${escapeHtml(item.description || "Service / Product")}
+            </span>
+
+            <span>
+                ${quantity}
+            </span>
+
+            <span>
+                ${formatMoney(amount)}
+            </span>
+
+        `;
+
+
+        previewItems.appendChild(row);
+
+    });
+
+
+    const currency =
+        document.getElementById("currency").value;
+
+
+    document.getElementById("previewSubtotal")
+        .textContent =
+        currency +
+        subtotal.toFixed(2);
+
+
+    document.getElementById("previewDiscount")
+        .textContent =
+        currency + "0.00";
+
+
+    document.getElementById("previewTotal")
+        .textContent =
+        currency +
+        subtotal.toFixed(2);
+
+
+    document.getElementById("previewWords")
+        .textContent =
+        numberToWords(subtotal) +
+        " dollars";
+
+
+    /* NOTES */
+
+    document.getElementById("previewNotes")
+        .textContent =
+        document.getElementById("notes").value
+        || "Thank you for your payment.";
+
+
+    /* SIGNATURE */
+
+    document.getElementById("previewSignName")
+        .textContent =
+        document.getElementById("signName").value;
+
+
+    document.getElementById("previewSignPosition")
+        .textContent =
+        document.getElementById("signPosition").value;
+
+
+    toggleLogo();
+
+}
+
+
+/* MONEY */
+
+function formatMoney(amount){
+
+    const currency =
+        document.getElementById("currency").value;
+
+    return currency + amount.toFixed(2);
+
+}
+
+
+/* NUMBER TO WORDS */
+
+function numberToWords(number){
+
+    number = Math.floor(number);
+
+    if(number === 0)
+        return "Zero";
+
+
+    const ones = [
+        "",
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten",
+        "Eleven",
+        "Twelve",
+        "Thirteen",
+        "Fourteen",
+        "Fifteen",
+        "Sixteen",
+        "Seventeen",
+        "Eighteen",
+        "Nineteen"
+    ];
+
+
+    const tens = [
+        "",
+        "",
+        "Twenty",
+        "Thirty",
+        "Forty",
+        "Fifty",
+        "Sixty",
+        "Seventy",
+        "Eighty",
+        "Ninety"
+    ];
+
+
+    function convert(n){
+
+        if(n < 20)
+            return ones[n];
+
+        if(n < 100)
+            return tens[Math.floor(n/10)] +
+                (n%10 ? " " + ones[n%10] : "");
+
+        if(n < 1000)
+            return ones[Math.floor(n/100)] +
+                " Hundred" +
+                (n%100 ? " " + convert(n%100) : "");
+
+        if(n < 1000000)
+            return convert(Math.floor(n/1000)) +
+                " Thousand" +
+                (n%1000 ? " " + convert(n%1000) : "");
+
+        if(n < 1000000000)
+            return convert(Math.floor(n/1000000)) +
+                " Million" +
+                (n%1000000 ? " " + convert(n%1000000) : "");
+
+        return convert(Math.floor(n/1000000000)) +
+            " Billion" +
+            (n%1000000000 ? " " + convert(n%1000000000) : "");
+
+    }
+
+
+    return convert(number);
+
+}
+
+
+/* ESCAPE HTML */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* SAVE DRAFT */
+
+function saveDraft(){
+
+    const data = {
+
+        companyName:
+            document.getElementById("companyName").value,
+
+        companyAddress:
+            document.getElementById("companyAddress").value,
+
+        companyEmail:
+            document.getElementById("companyEmail").value,
+
+        companyPhone:
+            document.getElementById("companyPhone").value,
+
+        receiptNumber:
+            document.getElementById("receiptNumber").value,
+
+        receiptDate:
+            document.getElementById("receiptDate").value,
+
+        customerName:
+            document.getElementById("customerName").value,
+
+        customerEmail:
+            document.getElementById("customerEmail").value,
+
+        customerPhone:
+            document.getElementById("customerPhone").value,
+
+        customerAddress:
+            document.getElementById("customerAddress").value,
+
+        paymentFor:
+            document.getElementById("paymentFor").value,
+
+        paymentMethod:
+            document.getElementById("paymentMethod").value,
+
+        currency:
+            document.getElementById("currency").value,
+
+        notes:
+            document.getElementById("notes").value,
+
+        signName:
+            document.getElementById("signName").value,
+
+        signPosition:
+            document.getElementById("signPosition").value,
+
+        showLogo:
+            document.getElementById("showLogo").checked,
+
+        items:items
+
+    };
+
+
+    localStorage.setItem(
+        "tmElevenReceiptDraft",
+        JSON.stringify(data)
+    );
+
+
+    alert(
+        "Receipt draft saved successfully."
+    );
+
+}
+
+
+/* LOAD DRAFT */
+
+function loadDraft(){
+
+    const saved =
+        localStorage.getItem(
+            "tmElevenReceiptDraft"
+        );
+
+
+    if(!saved)
+        return;
+
+
+    const data =
+        JSON.parse(saved);
+
+
+    Object.keys(data).forEach(key => {
+
+        if(key === "items"){
+
+            items =
+                data.items || items;
+
+            return;
+
+        }
+
+
+        const el =
+            document.getElementById(key);
+
+
+        if(!el)
+            return;
+
+
+        if(key === "showLogo"){
+
+            el.checked =
+                data[key];
+
+        }else{
+
+            el.value =
+                data[key];
+
+        }
+
+    });
+
+
+    /* Restore payment method */
+
+    document.querySelectorAll(".payment-method")
+        .forEach(el => {
+
+            el.classList.remove("active");
+
+            if(
+                el.textContent.trim() ===
+                data.paymentMethod
+            ){
+
+                el.classList.add("active");
+
+            }
+
+        });
+
+
+    renderItems();
+
+}
+
+
+/* START */
+
+window.addEventListener("load",function(){
+
+    const savedLogo =
+        localStorage.getItem("receiptLogo");
+
+
+    if(savedLogo){
+
+        document.getElementById("logoPreview").src =
+            savedLogo;
+
+        document.getElementById("previewLogo").src =
+            savedLogo;
+
+    }
+
+
+    loadDraft();
+
+    renderItems();
+
+    updatePreview();
+
+});
+
+</script>
+
+</body>
+</html>
