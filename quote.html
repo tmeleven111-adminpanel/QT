@@ -311,7 +311,8 @@ button:hover {
 #quotePreview {
     width: 210mm;
     min-height: 297mm;
-    background: white;
+    background: #FFFFFF !important;
+    background-color: rgb(255, 255, 255) !important;
     color: #1c2730;
     padding: 15mm 12mm;
     position: relative;
@@ -1654,92 +1655,99 @@ async function downloadPDF() {
 
     updatePreview();
 
-    const quote =
-        $("quotePreview");
+    const quote = $("quotePreview");
 
+    // Save original styles
+    const originalTransform = quote.style.transform;
+    const originalBackground = quote.style.background;
+    const originalBackgroundColor = quote.style.backgroundColor;
 
-    const originalTransform =
-        quote.style.transform;
-
+    // Force PURE WHITE before canvas capture
     quote.style.transform = "none";
+    quote.style.background = "#FFFFFF";
+    quote.style.backgroundColor = "#FFFFFF";
 
+    try {
 
-    const canvas =
-        await html2canvas(quote, {
-
-            scale: 2,
+        const canvas = await html2canvas(quote, {
+            scale: 3,
             useCORS: true,
-            backgroundColor: "#ffffff",
+            allowTaint: false,
+            backgroundColor: "#FFFFFF",
+            logging: false,
 
             onclone: function(documentClone) {
+
+                // Force the cloned document and quote page to PURE WHITE
+                documentClone.documentElement.style.background = "#FFFFFF";
+                documentClone.documentElement.style.backgroundColor = "#FFFFFF";
+                documentClone.body.style.background = "#FFFFFF";
+                documentClone.body.style.backgroundColor = "#FFFFFF";
 
                 const clonedQuote =
                     documentClone.getElementById("quotePreview");
 
-                clonedQuote.style.transform =
-                    "none";
-
+                clonedQuote.style.transform = "none";
+                clonedQuote.style.background = "#FFFFFF";
+                clonedQuote.style.backgroundColor = "#FFFFFF";
+                clonedQuote.style.backgroundImage = "none";
             }
-
         });
 
+        const imgData = canvas.toDataURL("image/png", 1.0);
 
-    quote.style.transform =
-        originalTransform;
+        const { jsPDF } = window.jspdf;
 
-
-    const imgData =
-        canvas.toDataURL("image/png");
-
-
-    const { jsPDF } =
-        window.jspdf;
-
-
-    const pdf =
-        new jsPDF({
+        const pdf = new jsPDF({
             orientation: "portrait",
             unit: "mm",
-            format: "a4"
+            format: "a4",
+            compress: true
         });
 
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const pageWidth =
-        pdf.internal.pageSize.getWidth();
+        // Force the entire PDF page itself to 100% PURE WHITE
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-    const pageHeight =
-        pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
 
+        pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            0,
+            imgWidth,
+            imgHeight,
+            undefined,
+            "FAST"
+        );
 
-    const imgWidth =
-        pageWidth;
+        const clientName =
+            $("clientName").value
+            .trim()
+            .replace(/[^a-z0-9]/gi, "_");
 
-    const imgHeight =
-        canvas.height * imgWidth / canvas.width;
+        pdf.save(
+            `TM11_Quote_${clientName || "Draft"}.pdf`
+        );
 
+    } catch (error) {
 
-    pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        imgWidth,
-        imgHeight
-    );
+        console.error("PDF Error:", error);
+        alert("Error generating PDF. Please try again.");
 
+    } finally {
 
-    const clientName =
-        $("clientName").value
-        .trim()
-        .replace(/[^a-z0-9]/gi, "_");
-
-
-    pdf.save(
-        `TM11_Quote_${clientName || "Draft"}.pdf`
-    );
-
+        // Restore editor preview styles
+        quote.style.transform = originalTransform;
+        quote.style.background = originalBackground;
+        quote.style.backgroundColor = originalBackgroundColor;
+    }
 }
-
 
 /* =========================================================
    LIVE INPUT EVENTS
