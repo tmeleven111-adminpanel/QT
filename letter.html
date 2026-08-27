@@ -1,1603 +1,1244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Professional Letter Generator</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>TM ELEVEN — Letter Generator</title>
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:"Inter",sans-serif;
-    background:#f4f5f7;
-    color:#16181d;
-}
-
-.app{
-    min-height:100vh;
-}
-
-/* HEADER */
-
-.header{
-    height:72px;
-    background:#111318;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 28px;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.brand img{
-    width:40px;
-    height:40px;
-    object-fit:contain;
-    border-radius:8px;
-}
-
-.brand-text{
-    font-family:"Manrope";
-    font-size:20px;
-    font-weight:800;
-}
-
-.brand-text span{
-    color:#aaa;
-    font-weight:500;
-}
-
-.header-actions{
-    display:flex;
-    gap:10px;
-}
-
-.btn{
-    border:0;
-    border-radius:9px;
-    padding:11px 17px;
-    font-family:inherit;
-    font-weight:600;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.btn:hover{
-    transform:translateY(-1px);
-}
-
-.btn-dark{
-    background:#242832;
-    color:white;
-}
-
-.btn-white{
-    background:white;
-    color:#111;
-}
-
-.btn-primary{
-    background:#111318;
-    color:white;
-}
-
-/* MAIN */
-
-.main{
-    display:grid;
-    grid-template-columns:390px 1fr;
-    min-height:calc(100vh - 72px);
-}
-
-/* SIDEBAR */
-
-.sidebar{
-    background:white;
-    border-right:1px solid #dddfe3;
-    padding:24px;
-    overflow:auto;
-    height:calc(100vh - 72px);
-    position:sticky;
-    top:72px;
-}
-
-.section{
-    margin-bottom:26px;
-}
-
-.section-title{
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:#777b83;
-    margin-bottom:13px;
-}
-
-label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    margin-bottom:7px;
-}
-
-input,
-textarea,
-select{
-    width:100%;
-    border:1px solid #d9dce1;
-    background:#fafbfc;
-    border-radius:8px;
-    padding:11px 12px;
-    font-family:inherit;
-    font-size:14px;
-    outline:none;
-    transition:.2s;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-    border-color:#111;
-    background:white;
-}
-
-textarea{
-    resize:vertical;
-    min-height:110px;
-}
-
-.field{
-    margin-bottom:13px;
-}
-
-.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-/* LOGO */
-
-.logo-upload{
-    border:1.5px dashed #c9ccd2;
-    padding:16px;
-    text-align:center;
-    border-radius:10px;
-    cursor:pointer;
-    background:#fafafa;
-}
-
-.logo-upload:hover{
-    background:#f2f3f5;
-}
-
-.logo-preview{
-    width:80px;
-    height:55px;
-    object-fit:contain;
-    margin:auto;
-    display:none;
-}
-
-/* LOGO TOGGLE */
-
-.logo-toggle{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    margin-top:10px;
-    padding:10px 12px;
-    background:#f7f7f8;
-    border:1px solid #e1e2e5;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.logo-toggle input{
-    width:17px;
-    height:17px;
-    margin:0;
-    cursor:pointer;
-}
-
-.logo-toggle span{
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-}
-
-/* TEMPLATES */
-
-.templates{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-}
-
-.template{
-    border:1px solid #dddfe3;
-    border-radius:9px;
-    padding:12px 8px;
-    text-align:center;
-    cursor:pointer;
-    background:#fafafa;
-    font-size:12px;
-    font-weight:600;
-}
-
-.template:hover{
-    border-color:#111;
-}
-
-.template.active{
-    border:2px solid #111;
-    background:#f1f2f4;
-}
-
-/* EDITOR */
-
-.toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:5px;
-    border:1px solid #ddd;
-    padding:7px;
-    border-radius:9px 9px 0 0;
-    background:#f7f7f8;
-}
-
-.tool{
-    border:0;
-    background:white;
-    border:1px solid #ddd;
-    border-radius:6px;
-    min-width:32px;
-    height:30px;
-    cursor:pointer;
-    font-weight:600;
-}
-
-.tool:hover{
-    background:#eee;
-}
-
-.editor{
-    min-height:170px;
-    border:1px solid #ddd;
-    border-top:0;
-    padding:13px;
-    border-radius:0 0 9px 9px;
-    outline:none;
-    font-size:14px;
-    line-height:1.7;
-    background:white;
-}
-
-/* PREVIEW */
-
-.preview-area{
-    padding:35px;
-    overflow:auto;
-}
-
-.preview-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.preview-title{
-    font-family:"Manrope";
-    font-weight:800;
-    font-size:19px;
-}
-
-.a4{
-    width:210mm;
-    min-height:297mm;
-    background:white;
-    margin:auto;
-    padding:20mm;
-    box-shadow:0 8px 35px rgba(0,0,0,.12);
-    position:relative;
-    overflow:hidden;
-}
-
-/* LETTER */
-
-.letter-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    padding-bottom:22px;
-    border-bottom:2px solid #111;
-}
-
-.company{
-    display:flex;
-    gap:14px;
-    align-items:center;
-}
-
-.company-logo{
-    width:70px;
-    height:55px;
-    object-fit:contain;
-    display:none;
-}
-
-.company-name{
-    font-family:"Manrope";
-    font-weight:800;
-    font-size:21px;
-}
-
-.company-details{
-    font-size:10px;
-    color:#666;
-    line-height:1.6;
-}
-
-.letter-date{
-    font-size:11px;
-    color:#555;
-}
-
-.recipient{
-    margin-top:28px;
-    font-size:12px;
-    line-height:1.7;
-}
-
-.subject{
-    margin-top:23px;
-    font-size:13px;
-    font-weight:800;
-}
-
-.greeting{
-    margin-top:22px;
-    font-size:12px;
-}
-
-.letter-body{
-    margin-top:16px;
-    font-size:12px;
-    line-height:1.8;
-    min-height:150px;
-}
-
-.closing{
-    margin-top:28px;
-    font-size:12px;
-}
-
-.signature{
-    margin-top:30px;
-    font-size:12px;
-}
-
-.signature strong{
-    font-size:13px;
-}
-
-/* MODERN */
-
-.a4.modern .letter-header{
-    border-bottom:3px solid #111;
-}
-
-.a4.modern .company-name{
-    letter-spacing:-.03em;
-}
-
-/* CLASSIC */
-
-.a4.classic{
-    font-family:Georgia,serif;
-}
-
-.a4.classic .letter-header{
-    border-bottom:1px solid #777;
-}
-
-.a4.classic .company-name{
-    font-family:Georgia,serif;
-}
-
-/* ELEGANT */
-
-.a4.elegant{
-    font-family:"Manrope";
-}
-
-.a4.elegant .letter-header{
-    border:0;
-    padding-bottom:15px;
-}
-
-.a4.elegant .company-name{
-    font-family:"Playfair Display";
-    font-size:27px;
-}
-
-/* MINIMAL */
-
-.a4.minimal .letter-header{
-    border:0;
-    padding-bottom:30px;
-}
-
-.a4.minimal .company-details{
-    color:#888;
-}
-
-/* CORPORATE */
-
-.a4.corporate .letter-header{
-    background:#111318;
-    color:white;
-    margin:-20mm -20mm 0;
-    padding:15mm 20mm;
-}
-
-.a4.corporate .company-details,
-.a4.corporate .letter-date{
-    color:#ddd;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1000px){
-
-    .main{
-        grid-template-columns:1fr;
+  :root {
+    --bg: #0a0e17;
+    --bg-grad: #0d1322;
+    --panel: #131b2c;
+    --panel-alt: #0d1420;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #e9ecf3;
+    --text-dim: #98a2b8;
+    --text-faint: #616c82;
+    --gold: #d9a441;
+    --gold-light: #eac578;
+    --gold-dark: #a97a2c;
+    --danger: #d95b4a;
+    --danger-text: #e88b7d;
+    --radius: 14px;
+    --radius-sm: 9px;
+    --font: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top left, var(--bg-grad), var(--bg) 60%);
+    color: var(--text);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-shell {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 28px 60px;
+  }
+
+  /* ---------- Topbar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .topbar-logo { height: 46px; width: auto; object-fit: contain; }
+  .logo-fallback {
+    height: 46px; padding: 0 16px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: #1a1220; font-weight: 900; border-radius: 8px; font-size: 15px; letter-spacing: 1px;
+  }
+  .logo-fallback-sm {
+    height: 56px; width: 56px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: #1a1220; font-weight: 900; border-radius: 10px; font-size: 13px; letter-spacing: .5px;
+    flex-shrink: 0;
+  }
+  .topbar-text h1 {
+    margin: 0; font-size: 21px; font-weight: 800; letter-spacing: .2px; color: var(--text);
+  }
+  .topbar-text .tag { margin: 2px 0 0; font-size: 12.5px; color: var(--text-dim); }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 26px;
+    align-items: start;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+  }
+
+  /* ---------- Fields ---------- */
+  .field { margin-bottom: 16px; }
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .hint { font-weight: 400; color: var(--text-faint); }
+
+  input[type="text"], input[type="email"], input[type="date"], textarea, select {
+    width: 100%;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    color-scheme: dark;
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-faint); }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(217,164,65,0.15);
+  }
+  textarea { resize: vertical; min-height: 170px; line-height: 1.55; }
+
+  /* ---------- Section dividers ---------- */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 26px 0 16px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+  .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: #241a0a; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-secondary { background: var(--panel-alt); border-color: var(--border-strong); color: var(--text); }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold-light); }
+  .btn-danger { background: transparent; border-color: rgba(217,91,74,0.45); color: var(--danger-text); }
+  .btn-danger:hover { background: rgba(217,91,74,0.12); }
+  .btn-small { padding: 7px 12px; font-size: 12px; }
+
+  .add-new-btn {
+    width: 100%;
+    padding: 10px;
+    margin: 2px 0 20px;
+    background: transparent;
+    border: 1.5px dashed var(--border-strong);
+    color: var(--gold-light);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all .15s ease;
+  }
+  .add-new-btn:hover { border-color: var(--gold); background: rgba(217,164,65,0.07); }
+
+  /* ---------- Custom fields ---------- */
+  .custom-field-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px; }
+  .custom-field-row .field { margin-bottom: 0; flex: 1; min-width: 0; }
+  .btn-remove {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: var(--radius-sm);
+    background: rgba(217,91,74,0.12); border: 1px solid rgba(217,91,74,0.32);
+    color: var(--danger-text); cursor: pointer; font-size: 14px; font-family: inherit;
+  }
+  .btn-remove:hover { background: rgba(217,91,74,0.24); }
+
+  /* ---------- Idea row / tone ---------- */
+  .idea-row { display: flex; gap: 8px; }
+  .idea-row input { flex: 1; min-width: 0; }
+  .tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tone-btn {
+    flex: 1; min-width: 96px; padding: 9px 10px; background: var(--panel-alt);
+    border: 1px solid var(--border); color: var(--text-dim); border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 12.5px; font-weight: 700; font-family: inherit;
+    transition: all .15s ease;
+  }
+  .tone-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .tone-btn.active {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: #1a1220; border-color: transparent;
+  }
+
+  /* ---------- Checkboxes / extras ---------- */
+  .checkbox-row {
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    margin-bottom: 14px; font-size: 14px; color: var(--text); user-select: none;
+  }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+  .signature-section { display: none; margin: 4px 0 16px; }
+  #signatureCanvas {
+    display: block; background: #fff; border: 1.5px dashed var(--border-strong);
+    border-radius: 8px; touch-action: none; cursor: crosshair; margin-bottom: 10px; max-width: 100%;
+  }
+
+  /* ---------- Actions ---------- */
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .action-grid .btn { width: 100%; }
+
+  /* ---------- Preview column ---------- */
+  .preview-col { position: sticky; top: 24px; }
+  .preview-label {
+    color: var(--text-dim); font-size: 11.5px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.2px; margin-bottom: 12px;
+  }
+  .preview-wrap { display: flex; justify-content: center; overflow-x: auto; padding-bottom: 10px; }
+
+  /* ---------- A4 letter ---------- */
+  .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    color: #1c2230;
+    padding: 16mm 15mm;
+    position: relative;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+    font-size: 13px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .a4-page.pdf-mode { width: 210mm !important; min-height: 297mm !important; padding: 16mm 15mm !important; }
+
+  .watermark {
+    position: absolute; inset: 0; z-index: 0; display: none;
+    align-items: center; justify-content: center; overflow: hidden;
+    pointer-events: none; user-select: none;
+  }
+  .watermark span {
+    font-size: 92px; font-weight: 900; color: rgba(169,122,44,0.11);
+    letter-spacing: 10px; transform: rotate(-28deg); white-space: nowrap;
+  }
+
+  .page-content { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
+
+  .letter-header {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding-bottom: 14px; border-bottom: 3px solid var(--gold); margin-bottom: 22px;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .letter-logo { height: 56px; width: auto; object-fit: contain; }
+  .header-company h1 {
+    font-size: 18px; margin: 0 0 2px; color: var(--gold-dark); letter-spacing: .3px; font-weight: 800;
+  }
+  .company-tagline { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: #333; text-transform: uppercase; }
+  .header-date { text-align: right; font-size: 11.5px; color: #333; white-space: nowrap; }
+  .date-label {
+    font-weight: 800; color: var(--gold-dark); text-transform: uppercase; font-size: 9.5px;
+    letter-spacing: .7px; margin-bottom: 2px;
+  }
+
+  .recipient-box {
+    border: 1.5px solid var(--gold); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+  }
+  .to-label {
+    color: var(--gold-dark); font-weight: 800; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: .6px; margin-bottom: 8px;
+  }
+  .recipient-row { display: flex; font-size: 12.5px; margin-bottom: 4px; gap: 4px; }
+  .r-label { width: 88px; flex-shrink: 0; font-weight: 700; color: #222; }
+
+  .subject-line { font-weight: 800; font-size: 13.5px; margin-bottom: 18px; color: #1c2230; }
+  .greeting { margin-bottom: 14px; font-weight: 600; }
+  .letter-body { white-space: pre-wrap; margin-bottom: 26px; }
+  .placeholder-text { color: #9aa0ab !important; font-style: italic; font-weight: 400 !important; }
+
+  .closing-block { margin-top: 6px; }
+  .signature-area { margin: 10px 0; min-height: 4px; }
+  .signature-area img { max-height: 62px; display: block; }
+  .sender-name { font-weight: 800; margin-top: 6px; color: #1c2230; }
+
+  .letter-footer {
+    margin-top: auto; padding-top: 12px; border-top: 1px solid #e8e8e8;
+    font-size: 9.5px; color: #666; text-align: center; letter-spacing: .2px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(16px);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: #241a0a; padding: 12px 22px; border-radius: 10px; font-weight: 700; font-size: 13.5px;
+    opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- Print ---------- */
+  @media print {
+    @page { size: A4; margin: 0; }
+    html, body { background: #fff !important; margin: 0; padding: 0; height: auto; }
+    .topbar, .input-panel, .preview-label { display: none !important; }
+    .app-shell, .layout, .preview-col, .preview-wrap {
+      display: block !important; margin: 0 !important; padding: 0 !important;
+      max-width: none !important; width: auto !important; position: static !important;
     }
+    .a4-page { box-shadow: none !important; margin: 0 !important; width: 210mm !important; min-height: 297mm !important; }
+  }
 
-    .sidebar{
-        position:relative;
-        top:0;
-        height:auto;
-        border-right:0;
-        border-bottom:1px solid #ddd;
-    }
-
-    .preview-area{
-        padding:20px 10px;
-        overflow:auto;
-    }
-
-    .a4{
-        transform-origin:top left;
-    }
-}
-
-/* PRINT */
-
-@media print{
-
-    body{
-        background:white;
-    }
-
-    .header,
-    .sidebar,
-    .preview-top{
-        display:none!important;
-    }
-
-    .main{
-        display:block;
-    }
-
-    .preview-area{
-        padding:0;
-    }
-
-    .a4{
-        box-shadow:none;
-        margin:0;
-    }
-
-    @page{
-        size:A4;
-        margin:0;
-    }
-}
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .preview-col { position: static; }
+    .a4-page { width: 100%; min-height: auto; padding: 22px 18px; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+    .watermark span { font-size: 56px; letter-spacing: 6px; }
+  }
+  @media (max-width: 480px) {
+    .app-shell { padding: 16px 14px 40px; }
+    .panel { padding: 18px; }
+    .letter-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .header-date { text-align: left; }
+    .action-grid { grid-template-columns: 1fr 1fr; }
+    .idea-row { flex-direction: column; }
+    .r-label { width: 78px; }
+  }
 </style>
 </head>
-
 <body>
+<noscript>
+  <div style="padding:40px;text-align:center;font-family:sans-serif;">This application requires JavaScript to be enabled in your browser.</div>
+</noscript>
 
-<div class="app">
+<div class="app-shell">
+  <div class="topbar">
+    <img src="logo.png" alt="TM ELEVEN" class="topbar-logo"
+      onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'logo-fallback',textContent:'TM ELEVEN'}));" />
+    <div class="topbar-text">
+      <h1>Letter Generator</h1>
+      <p class="tag">Draft, brand and send professional TM ELEVEN letters in minutes.</p>
+    </div>
+  </div>
 
-<header class="header">
+  <div class="layout">
+    <!-- ============ INPUT PANEL ============ -->
+    <div class="panel input-panel">
 
-    <div class="brand">
+      <div class="section-divider" style="margin-top:0;">Recipient Details</div>
 
-        <img
-            src="logo.png"
-            id="headerLogo"
-            onerror="this.style.display='none'"
-        >
+      <div class="field">
+        <label for="fName">Name</label>
+        <input type="text" id="fName" placeholder="e.g. John Smith" />
+      </div>
+      <div class="field">
+        <label for="fEmail">Email</label>
+        <input type="email" id="fEmail" placeholder="e.g. john@example.com" />
+      </div>
+      <div class="field">
+        <label for="fAddress">Address</label>
+        <input type="text" id="fAddress" placeholder="e.g. 123 Example Street, Suburb VIC 3000" />
+      </div>
+      <div class="field">
+        <label for="fProject">Project</label>
+        <input type="text" id="fProject" placeholder="e.g. Fencing Installation" />
+      </div>
 
-        <div class="brand-text">
-            TM Eleven <span>Letter Studio</span>
+      <button type="button" class="add-new-btn" id="addFieldBtn">+ Add New</button>
+      <div id="customFieldsContainer"></div>
+
+      <div class="section-divider">Date &amp; Subject</div>
+      <div class="field">
+        <label for="fDate">Date</label>
+        <input type="date" id="fDate" />
+      </div>
+      <div class="field">
+        <label for="fSubject">Subject</label>
+        <input type="text" id="fSubject" placeholder="e.g. Project Update" />
+      </div>
+
+      <div class="section-divider">Letter Content</div>
+      <div class="field">
+        <label for="fIdea">Quick Idea <span class="hint">(optional)</span></label>
+        <div class="idea-row">
+          <input type="text" id="fIdea" placeholder="e.g. job finished, payment reminder..." />
+          <button type="button" class="btn btn-primary" id="makeProBtn">✨ Make Professional</button>
         </div>
+      </div>
+      <div class="field">
+        <label>Tone</label>
+        <div class="tone-row">
+          <button type="button" class="tone-btn active" data-tone="professional">Professional</button>
+          <button type="button" class="tone-btn" data-tone="formal">Formal</button>
+          <button type="button" class="tone-btn" data-tone="friendly">Friendly</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fContent">Letter Content</label>
+        <textarea id="fContent" rows="9" placeholder="Write your letter here, or use Make Professional above..."></textarea>
+      </div>
 
+      <div class="section-divider">Extras</div>
+      <label class="checkbox-row" for="fSignatureToggle">
+        <input type="checkbox" id="fSignatureToggle" />
+        <span>Add Signature</span>
+      </label>
+      <div id="signatureSection" class="signature-section">
+        <canvas id="signatureCanvas" width="320" height="130"></canvas>
+        <button type="button" class="btn btn-secondary btn-small" id="clearSigBtn">Clear Signature</button>
+      </div>
+      <label class="checkbox-row" for="fWatermarkToggle">
+        <input type="checkbox" id="fWatermarkToggle" />
+        <span>Add Watermark</span>
+      </label>
+
+      <div class="section-divider">Actions</div>
+      <div class="action-grid">
+        <button type="button" class="btn btn-secondary" id="saveDraftBtn">💾 Save Draft</button>
+        <button type="button" class="btn btn-danger" id="clearAllBtn">🗑 Clear All</button>
+        <button type="button" class="btn btn-secondary" id="printBtn">🖨 Print</button>
+        <button type="button" class="btn btn-primary" id="downloadPdfBtn">⬇ Download PDF</button>
+      </div>
     </div>
 
-    <div class="header-actions">
-
-        <button class="btn btn-dark" onclick="saveDraft()">
-            Save Draft
-        </button>
-
-        <button class="btn btn-white" onclick="window.print()">
-            Print / PDF
-        </button>
-
-    </div>
-
-</header>
-
-
-<div class="main">
-
-<!-- SIDEBAR -->
-
-<aside class="sidebar">
-
-    <div class="section">
-
-        <div class="section-title">
-            Letter Template
-        </div>
-
-        <div class="templates">
-
-            <div
-                class="template active"
-                onclick="setTemplate('modern',this)"
-            >
-                Modern
-            </div>
-
-            <div
-                class="template"
-                onclick="setTemplate('corporate',this)"
-            >
-                Corporate
-            </div>
-
-            <div
-                class="template"
-                onclick="setTemplate('minimal',this)"
-            >
-                Minimal
-            </div>
-
-            <div
-                class="template"
-                onclick="setTemplate('classic',this)"
-            >
-                Classic
-            </div>
-
-            <div
-                class="template"
-                onclick="setTemplate('elegant',this)"
-            >
-                Elegant
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Company Details
-        </div>
-
-        <div class="field">
-
-            <label>
-                Company Logo
-            </label>
-
-            <label class="logo-upload">
-
-                <input
-                    type="file"
-                    id="logoInput"
-                    accept="image/*"
-                    hidden
-                >
-
-                <img
-                    id="logoPreview"
-                    class="logo-preview"
-                >
-
-                <span id="logoText">
-                    Click to upload logo
-                </span>
-
-            </label>
-
-            <!-- NEW LOGO TOGGLE -->
-
-            <label class="logo-toggle">
-
-                <input
-                    type="checkbox"
-                    id="showLogo"
-                    checked
-                    onchange="toggleLogo()"
-                >
-
-                <span>
-                    Show logo on letter
-                </span>
-
-            </label>
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Company Name
-            </label>
-
-            <input
-                id="companyName"
-                value="TM Eleven"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Company Address
-            </label>
-
-            <input
-                id="companyAddress"
-                placeholder="Melbourne, Victoria, Australia"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-
-        <div class="row">
-
-            <div class="field">
-
-                <label>
-                    Email
-                </label>
-
-                <input
-                    id="companyEmail"
-                    placeholder="info@example.com"
-                    oninput="updatePreview()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    Phone
-                </label>
-
-                <input
-                    id="companyPhone"
-                    placeholder="+61 xxx xxx xxx"
-                    oninput="updatePreview()"
-                >
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Letter Details
-        </div>
-
-        <div class="row">
-
-            <div class="field">
-
-                <label>
-                    Date
-                </label>
-
-                <input
-                    type="date"
-                    id="letterDate"
-                    onchange="updatePreview()"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>
-                    Reference No.
-                </label>
-
-                <input
-                    id="reference"
-                    placeholder="REF-001"
-                    oninput="updatePreview()"
-                >
-
-            </div>
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Subject
-            </label>
-
-            <input
-                id="subject"
-                placeholder="Letter subject"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Recipient
-        </div>
-
-        <div class="field">
-
-            <label>
-                Name
-            </label>
-
-            <input
-                id="recipientName"
-                placeholder="John Smith"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Company
-            </label>
-
-            <input
-                id="recipientCompany"
-                placeholder="Company Name"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Address
-            </label>
-
-            <textarea
-                id="recipientAddress"
-                placeholder="Street, Suburb, State, Postcode"
-                oninput="updatePreview()"
-            ></textarea>
-
-        </div>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Greeting
-        </div>
-
-        <select
-            id="greeting"
-            onchange="updatePreview()"
-        >
-
-            <option>
-                Dear Sir/Madam,
-            </option>
-
-            <option>
-                Dear Sir,
-            </option>
-
-            <option>
-                Dear Madam,
-            </option>
-
-            <option>
-                Dear Customer,
-            </option>
-
-            <option>
-                To Whom It May Concern,
-            </option>
-
-            <option>
-                Dear Client,
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Letter Content
-        </div>
-
-        <div class="toolbar">
-
-            <button
-                class="tool"
-                onclick="format('bold')"
-            >
-                B
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('italic')"
-            >
-                I
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('underline')"
-            >
-                U
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('insertUnorderedList')"
-            >
-                •
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('justifyLeft')"
-            >
-                ≡
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('justifyCenter')"
-            >
-                ≡
-            </button>
-
-            <button
-                class="tool"
-                onclick="format('justifyRight')"
-            >
-                ≡
-            </button>
-
-        </div>
-
-
-        <div
-            id="editor"
-            class="editor"
-            contenteditable="true"
-            oninput="updatePreview()"
-        >
-
-            We are pleased to provide this letter regarding your request.
-            <br><br>
-            Please feel free to contact us if you require any additional information.
-
-        </div>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Closing
-        </div>
-
-        <select
-            id="closing"
-            onchange="updatePreview()"
-        >
-
-            <option>
-                Kind regards,
-            </option>
-
-            <option>
-                Best regards,
-            </option>
-
-            <option>
-                Yours sincerely,
-            </option>
-
-            <option>
-                Yours faithfully,
-            </option>
-
-            <option>
-                Thank you,
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="section">
-
-        <div class="section-title">
-            Signature
-        </div>
-
-        <div class="field">
-
-            <label>
-                Name
-            </label>
-
-            <input
-                id="signName"
-                value="TM Eleven"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Position
-            </label>
-
-            <input
-                id="signPosition"
-                value="Director"
-                oninput="updatePreview()"
-            >
-
-        </div>
-
-    </div>
-
-</aside>
-
-
-<!-- PREVIEW -->
-
-<main class="preview-area">
-
-    <div class="preview-top">
-
-        <div class="preview-title">
-            Live Letter Preview
-        </div>
-
-        <button
-            class="btn btn-primary"
-            onclick="window.print()"
-        >
-            Generate PDF
-        </button>
-
-    </div>
-
-
-    <div
-        class="a4 modern"
-        id="paper"
-    >
-
-        <div class="letter-header">
-
-            <div class="company">
-
-                <img
-                    id="previewLogo"
-                    class="company-logo"
-                    src="logo.png"
-                    onerror="this.style.display='none'"
-                >
-
-                <div>
-
-                    <div
-                        class="company-name"
-                        id="previewCompany"
-                    >
-                        TM Eleven
-                    </div>
-
-                    <div
-                        class="company-details"
-                        id="previewCompanyDetails"
-                    >
-                        Melbourne, Victoria, Australia
-                    </div>
-
+    <!-- ============ PREVIEW ============ -->
+    <div class="preview-col">
+      <div class="preview-label">Live Preview</div>
+      <div class="preview-wrap">
+        <div class="a4-page" id="letterPreview">
+          <div class="watermark" id="watermarkEl"><span>TM ELEVEN</span></div>
+          <div class="page-content">
+
+            <div class="letter-header">
+              <div class="header-left">
+                <img src="logo.png" alt="TM ELEVEN" class="letter-logo"
+                  onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'logo-fallback-sm',textContent:'TM11'}));" />
+                <div class="header-company">
+                  <h1>TM ELEVEN PTY LTD</h1>
+                  <div class="company-tagline">Concreting &middot; Landscaping &middot; Fencing</div>
                 </div>
-
+              </div>
+              <div class="header-date">
+                <div class="date-label">Date</div>
+                <div id="previewDate">—</div>
+              </div>
             </div>
 
-
-            <div
-                class="letter-date"
-                id="previewDate"
-            >
-                27 August 2026
+            <div class="recipient-box">
+              <div class="to-label">To</div>
+              <div class="recipient-row"><span class="r-label">Name</span><span>: <span id="previewName">—</span></span></div>
+              <div class="recipient-row"><span class="r-label">Email</span><span>: <span id="previewEmail">—</span></span></div>
+              <div class="recipient-row"><span class="r-label">Address</span><span>: <span id="previewAddress">—</span></span></div>
+              <div class="recipient-row"><span class="r-label">Project</span><span>: <span id="previewProject">—</span></span></div>
+              <div id="previewCustomFields"></div>
             </div>
 
-        </div>
+            <div class="subject-line" id="previewSubjectLine">Subject: <span id="previewSubject">—</span></div>
 
+            <div class="greeting" id="previewGreeting">Dear Sir/Madam,</div>
 
-        <div class="recipient">
+            <div class="letter-body placeholder-text" id="previewBody">Start typing your letter on the left, or use &quot;Make Professional&quot; to generate a first draft.</div>
 
-            <strong id="previewRecipient">
-                John Smith
-            </strong>
-
-            <div id="previewRecipientCompany">
-                Company Name
+            <div class="closing-block">
+              <div id="previewSignoff">Yours sincerely,</div>
+              <div class="signature-area" id="previewSignatureArea" style="display:none;">
+                <img id="previewSignatureImg" alt="Signature" />
+              </div>
+              <div class="sender-name">TM ELEVEN PTY LTD</div>
             </div>
 
-            <div id="previewRecipientAddress">
-                Street, Suburb, State, Postcode
+            <div class="letter-footer">
+              TM ELEVEN PTY LTD &nbsp;|&nbsp; Concreting &middot; Landscaping &middot; Fencing &nbsp;|&nbsp; +61 451 160 058 &nbsp;|&nbsp; tmeleven111@gmail.com &nbsp;|&nbsp; tmeleven.com.au
             </div>
 
+          </div>
         </div>
-
-
-        <div class="subject">
-
-            RE:
-
-            <span id="previewSubject">
-                Letter Subject
-            </span>
-
-        </div>
-
-
-        <div
-            class="greeting"
-            id="previewGreeting"
-        >
-            Dear Sir/Madam,
-        </div>
-
-
-        <div
-            class="letter-body"
-            id="previewBody"
-        >
-        </div>
-
-
-        <div
-            class="closing"
-            id="previewClosing"
-        >
-            Kind regards,
-        </div>
-
-
-        <div class="signature">
-
-            <strong id="previewSignName">
-                TM Eleven
-            </strong>
-
-            <br>
-
-            <span id="previewSignPosition">
-                Director
-            </span>
-
-        </div>
-
+      </div>
     </div>
-
-</main>
-
-</div>
+  </div>
 </div>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+(function () {
+  'use strict';
 
-const today = new Date();
+  var $ = function (sel) { return document.querySelector(sel); };
 
-document.getElementById("letterDate").value =
-    today.toISOString().split("T")[0];
+  /* ================= Helpers ================= */
+  function todayISO() {
+    var d = new Date();
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var dd = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + mm + '-' + dd;
+  }
+  function formatDate(iso) {
+    if (!iso) return '';
+    var parts = iso.split('-').map(Number);
+    var dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    return dateObj.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function valOrDash(v) { return (v && v.trim()) ? v.trim() : '—'; }
+  function cap(s) { if (!s) return s; return s.charAt(0).toUpperCase() + s.slice(1); }
 
+  /* ================= State ================= */
+  var currentTone = 'professional';
+  var currentSignatureDataUrl = null;
+  var customFieldCounter = 0;
+  var suggestedLabels = ['Company', 'ABN', 'Phone', 'Reference'];
+  var suggestionIndex = 0;
+  var STORAGE_KEY = 'tmeleven_letter_draft_v1';
 
-// FORMAT TOOLBAR
+  /* ================= Letter templates ================= */
+  function t(tone, opts) { return opts[tone] !== undefined ? opts[tone] : opts.professional; }
 
-function format(command){
+  var TEMPLATES = {
+    jobCompletion: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to let you know that work on ${project} has now been completed.`,
+            formal: `We are writing to formally confirm that all works relating to ${project} have been completed in accordance with the agreed scope.`,
+            friendly: `Great news — the work on ${project} is all finished!`
+          })
+        : t(tone, {
+            professional: `I am writing to let you know that the work has now been completed.`,
+            formal: `We are writing to formally confirm that the agreed works have been completed in full.`,
+            friendly: `Great news — the job is all finished!`
+          });
+      var p2 = t(tone, {
+        professional: `Our team has completed all agreed tasks to a high standard and has left the site clean and tidy.`,
+        formal: `Our team has carried out the works to a high standard and has ensured the site has been left in a clean and orderly condition.`,
+        friendly: `The team worked hard to get everything done properly and left the site nice and tidy before heading off.`
+      });
+      var p3 = t(tone, {
+        professional: `Please take a moment to review the completed work, and let us know if you notice anything that needs attention or if you have any questions.`,
+        formal: `Should you identify any matter requiring attention, or should you have any questions regarding the completed works, please do not hesitate to contact us.`,
+        friendly: `Have a look through when you get a chance, and give us a shout if anything needs a second look or you have any questions.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    document.execCommand(command,false,null);
+    workCommencement: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to confirm that work on ${project} is scheduled to commence shortly.`,
+            formal: `We are writing to formally advise that works in relation to ${project} are scheduled to commence in the near future.`,
+            friendly: `Just a heads up — we're getting ready to start work on ${project} soon!`
+          })
+        : t(tone, {
+            professional: `I am writing to confirm that work is scheduled to commence shortly.`,
+            formal: `We are writing to formally advise that the agreed works are scheduled to commence in the near future.`,
+            friendly: `Just a heads up — we're getting ready to start the job soon!`
+          });
+      var p2 = t(tone, {
+        professional: `Our team will arrive on site and begin work as planned, and we will ensure the work area is managed safely and tidily throughout the project.`,
+        formal: `Our team will attend the site to commence the agreed works, and all reasonable precautions will be taken to ensure the site is managed in a safe and orderly manner throughout the course of the project.`,
+        friendly: `Our team will be on site to get things underway, and we'll keep the area safe and tidy the whole way through.`
+      });
+      var p3 = t(tone, {
+        professional: `If you have any questions before we begin, or need to discuss access arrangements, please let us know.`,
+        formal: `Should you have any queries prior to commencement, or wish to discuss site access arrangements, please do not hesitate to contact us.`,
+        friendly: `If you've got any questions before we kick off, or need to sort out access, just let us know.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    document.getElementById("editor").focus();
+    projectUpdate: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to provide you with an update on the progress of ${project}.`,
+            formal: `We are writing to provide you with a formal update regarding the current progress of ${project}.`,
+            friendly: `Just wanted to give you a quick update on how ${project} is coming along.`
+          })
+        : t(tone, {
+            professional: `I am writing to provide you with an update on the progress of the work.`,
+            formal: `We are writing to provide you with a formal update regarding the current progress of the works.`,
+            friendly: `Just wanted to give you a quick update on how things are coming along.`
+          });
+      var p2 = t(tone, {
+        professional: `Work is progressing well, and our team continues to work towards completing the project to the agreed standard and timeline.`,
+        formal: `Works are proceeding in accordance with the agreed program, and our team remains committed to completing the project to the required standard.`,
+        friendly: `Things are moving along nicely, and the team's on track to get everything finished up to a great standard.`
+      });
+      var p3 = t(tone, {
+        professional: `We will keep you informed of any further developments. Please let us know if you have any questions in the meantime.`,
+        formal: `Further updates will be provided as the project progresses. Should you have any questions in the interim, please do not hesitate to contact us.`,
+        friendly: `We'll keep you posted as things progress — let us know if you have any questions in the meantime.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    updatePreview();
+    paymentReminder: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to remind you that payment for ${project} remains outstanding.`,
+            formal: `We are writing to formally remind you that payment in respect of ${project} remains outstanding as at the date of this letter.`,
+            friendly: `Just a friendly reminder that payment for ${project} is still outstanding.`
+          })
+        : t(tone, {
+            professional: `I am writing to remind you that payment for the work carried out remains outstanding.`,
+            formal: `We are writing to formally remind you that payment in respect of the works carried out remains outstanding as at the date of this letter.`,
+            friendly: `Just a friendly reminder that payment for the recent work is still outstanding.`
+          });
+      var p2 = t(tone, {
+        professional: `We would appreciate it if you could arrange payment at your earliest convenience. If payment has already been made, please disregard this letter.`,
+        formal: `We would be grateful if you could arrange for payment to be made at your earliest convenience. If payment has already been forwarded, kindly disregard this correspondence.`,
+        friendly: `If you could sort this out when you get a chance, that'd be much appreciated! And if you've already paid, no worries — just ignore this note.`
+      });
+      var p3 = t(tone, {
+        professional: `Please contact us if you have any questions regarding this invoice or would like to discuss payment arrangements.`,
+        formal: `Should you have any queries regarding this invoice, or wish to discuss alternative payment arrangements, please do not hesitate to contact us.`,
+        friendly: `Let us know if you have any questions about the invoice or need to work out a payment plan.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-}
+    quoteFollowUp: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to follow up on the quote we provided for ${project}.`,
+            formal: `We are writing further to the quotation previously provided in respect of ${project}.`,
+            friendly: `Just following up on the quote we sent over for ${project}.`
+          })
+        : t(tone, {
+            professional: `I am writing to follow up on the quote we recently provided.`,
+            formal: `We are writing further to the quotation previously provided for your consideration.`,
+            friendly: `Just following up on the quote we sent over recently.`
+          });
+      var p2 = t(tone, {
+        professional: `We would love the opportunity to work with you and wanted to check whether you had any questions about the quote or required any further information.`,
+        formal: `We would welcome the opportunity to be of service and would be pleased to clarify any aspect of the quotation or provide any additional information you may require.`,
+        friendly: `We'd love to help out with this one and wanted to check if you had any questions, or needed anything adjusted.`
+      });
+      var p3 = t(tone, {
+        professional: `Please let us know if you would like to proceed, or if there is anything we can clarify or adjust to suit your needs.`,
+        formal: `Please advise at your convenience whether you wish to proceed, or if any amendments to the quotation would be of assistance.`,
+        friendly: `Let us know if you'd like to go ahead, or if there's anything we can tweak to make it work better for you.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
+    appointmentConfirmation: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to confirm your upcoming appointment in relation to ${project}.`,
+            formal: `We are writing to formally confirm the appointment scheduled in relation to ${project}.`,
+            friendly: `Just confirming our upcoming appointment for ${project}!`
+          })
+        : t(tone, {
+            professional: `I am writing to confirm your upcoming appointment.`,
+            formal: `We are writing to formally confirm the appointment scheduled with you.`,
+            friendly: `Just confirming our upcoming appointment!`
+          });
+      var p2 = t(tone, {
+        professional: `Please let us know as soon as possible if the scheduled time no longer suits you so that we can arrange an alternative.`,
+        formal: `Should the appointed time no longer be convenient, we would ask that you advise us at your earliest opportunity so that alternative arrangements may be made.`,
+        friendly: `If the time no longer works for you, just let us know as soon as you can and we'll sort out another time.`
+      });
+      var p3 = t(tone, {
+        professional: `We look forward to seeing you and are happy to answer any questions beforehand.`,
+        formal: `We look forward to meeting with you and remain available to address any questions prior to the appointment.`,
+        friendly: `Looking forward to seeing you — feel free to reach out if you have any questions before then.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-// TEMPLATE
+    delayNotification: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to inform you of a short delay affecting ${project}.`,
+            formal: `We are writing to formally advise you of a delay affecting the progress of ${project}.`,
+            friendly: `Just wanted to let you know there's a small delay with ${project}.`
+          })
+        : t(tone, {
+            professional: `I am writing to inform you of a short delay affecting the current work.`,
+            formal: `We are writing to formally advise you of a delay affecting the progress of the works.`,
+            friendly: `Just wanted to let you know there's a small delay with the job.`
+          });
+      var p2 = t(tone, {
+        professional: `We apologise for any inconvenience this may cause and want to assure you that we are working to keep any impact to a minimum.`,
+        formal: `We sincerely apologise for any inconvenience this may cause and wish to assure you that all reasonable steps are being taken to minimise any further impact.`,
+        friendly: `Sorry about that! We're doing everything we can to keep things moving and minimise any impact.`
+      });
+      var p3 = t(tone, {
+        professional: `We will keep you updated on the revised timeline and are happy to discuss this further if needed.`,
+        formal: `We will provide a revised timeline in due course and remain available should you wish to discuss the matter further.`,
+        friendly: `We'll keep you in the loop with an updated timeline — let us know if you'd like to chat about it.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-function setTemplate(template, element){
+    customerThankYou: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to thank you for choosing TM ELEVEN for ${project}.`,
+            formal: `We are writing to express our sincere gratitude for your custom in relation to ${project}.`,
+            friendly: `Just wanted to say a big thank you for choosing us for ${project}!`
+          })
+        : t(tone, {
+            professional: `I am writing to thank you for choosing TM ELEVEN for your recent project.`,
+            formal: `We are writing to express our sincere gratitude for your recent custom.`,
+            friendly: `Just wanted to say a big thank you for choosing us for your recent project!`
+          });
+      var p2 = t(tone, {
+        professional: `We truly appreciate your business and the trust you have placed in our team.`,
+        formal: `We greatly appreciate the confidence you have placed in our organisation and look forward to the opportunity of being of further service.`,
+        friendly: `We really appreciate you trusting us with the job, it means a lot to the team.`
+      });
+      var p3 = t(tone, {
+        professional: `Should you need anything further, or have any projects in mind for the future, please do not hesitate to get in touch.`,
+        formal: `Should you require any further assistance, or wish to discuss future works, please do not hesitate to contact us.`,
+        friendly: `If you ever need anything else down the track, don't hesitate to reach out — we'd love to help again!`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    document.querySelectorAll(".template")
-        .forEach(t => t.classList.remove("active"));
+    requestForPayment: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to request payment for the work completed on ${project}.`,
+            formal: `We are writing to formally request payment in respect of works completed on ${project}.`,
+            friendly: `Hope all's well! Just reaching out to request payment for ${project}.`
+          })
+        : t(tone, {
+            professional: `I am writing to request payment for the work recently completed.`,
+            formal: `We are writing to formally request payment in respect of works recently completed.`,
+            friendly: `Hope all's well! Just reaching out to request payment for the recent work.`
+          });
+      var p2 = t(tone, {
+        professional: `Please find the relevant invoice details attached, and we would appreciate payment being made within the agreed terms.`,
+        formal: `We would be grateful if payment could be arranged in accordance with the agreed terms, and enclose the relevant invoice for your reference.`,
+        friendly: `The invoice details are attached — if you could take care of it within the usual terms, that would be great.`
+      });
+      var p3 = t(tone, {
+        professional: `Please let us know if you have any questions regarding the invoice or require any further information.`,
+        formal: `Should you have any queries in relation to the invoice, please do not hesitate to contact our office.`,
+        friendly: `Let us know if anything on the invoice needs clarifying.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    element.classList.add("active");
+    requestForApproval: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to request your approval to proceed with ${project}.`,
+            formal: `We are writing to formally seek your approval to proceed with ${project}.`,
+            friendly: `Just need your go-ahead to move forward with ${project}.`
+          })
+        : t(tone, {
+            professional: `I am writing to request your approval to proceed with the proposed work.`,
+            formal: `We are writing to formally seek your approval to proceed with the proposed works.`,
+            friendly: `Just need your go-ahead to move forward with the job.`
+          });
+      var p2 = t(tone, {
+        professional: `Once we receive your approval, we will be able to schedule the work and keep things moving according to plan.`,
+        formal: `Upon receipt of your approval, we will be in a position to schedule the works and proceed in accordance with the agreed plan.`,
+        friendly: `Once we get your approval, we can lock in the schedule and get things moving.`
+      });
+      var p3 = t(tone, {
+        professional: `Please let us know if you have any questions before providing your approval.`,
+        formal: `Should you have any queries prior to granting approval, please do not hesitate to contact us.`,
+        friendly: `Let us know if you've got any questions before giving us the green light.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    const paper = document.getElementById("paper");
+    scopeOfWork: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to outline the scope of work for ${project}.`,
+            formal: `We are writing to formally outline the scope of works in respect of ${project}.`,
+            friendly: `Here's a quick outline of the scope of work for ${project}.`
+          })
+        : t(tone, {
+            professional: `I am writing to outline the scope of work for the proposed project.`,
+            formal: `We are writing to formally outline the scope of works in respect of the proposed project.`,
+            friendly: `Here's a quick outline of the scope of work for the job.`
+          });
+      var p2 = t(tone, {
+        professional: `This letter sets out the tasks to be carried out, ensuring both parties have a clear understanding of what is included before work begins.`,
+        formal: `This correspondence sets out the works to be undertaken, so as to ensure a clear and mutual understanding between the parties prior to commencement.`,
+        friendly: `This covers what's included so we're both on the same page before getting started.`
+      });
+      var p3 = t(tone, {
+        professional: `Please review the scope and let us know if you have any questions or would like any adjustments made.`,
+        formal: `We would ask that you review the scope and advise us of any queries or amendments at your earliest convenience.`,
+        friendly: `Have a read through and let us know if anything needs tweaking or if you've got questions.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-    paper.className = "a4 " + template;
+    serviceConfirmation: function (ctx) {
+      var project = ctx.project, tone = ctx.tone;
+      var p1 = project
+        ? t(tone, {
+            professional: `I am writing to confirm the details of the service to be provided for ${project}.`,
+            formal: `We are writing to formally confirm the arrangements in respect of the service to be provided for ${project}.`,
+            friendly: `Just confirming everything for the service on ${project}!`
+          })
+        : t(tone, {
+            professional: `I am writing to confirm the details of the service to be provided.`,
+            formal: `We are writing to formally confirm the arrangements in respect of the service to be provided.`,
+            friendly: `Just confirming everything for the upcoming service!`
+          });
+      var p2 = t(tone, {
+        professional: `Everything has been scheduled as discussed, and our team will ensure the work is carried out to a high standard.`,
+        formal: `The service has been scheduled in accordance with our discussions, and our team will ensure that the works are carried out to the required standard.`,
+        friendly: `It's all locked in as discussed, and the team will make sure everything's done properly.`
+      });
+      var p3 = t(tone, {
+        professional: `Please let us know if any of the details need to change, or if you have any questions.`,
+        formal: `Should any of the arrangements require amendment, or should you have any questions, please do not hesitate to contact us.`,
+        friendly: `Let us know if anything needs to change or if you have any questions at all.`
+      });
+      return p1 + '\n\n' + p2 + '\n\n' + p3;
+    },
 
-}
+    general: function (ctx) {
+      var project = ctx.project, tone = ctx.tone, idea = ctx.idea || '';
+      var projPhrase = project ? (' regarding ' + project) : '';
+      var p1 = t(tone, {
+        professional: `I am writing to you${projPhrase}.`,
+        formal: `We are writing to you${projPhrase} to provide the following information.`,
+        friendly: `Just wanted to drop you a quick note${projPhrase}.`
+      });
+      var mid = cap(idea.trim());
+      if (mid && !/[.!?]$/.test(mid)) mid += '.';
+      var p3 = t(tone, {
+        professional: `Please let us know if you have any questions or need further information.`,
+        formal: `Should you require any further information, please do not hesitate to contact us.`,
+        friendly: `Let us know if you need anything else!`
+      });
+      return mid ? (p1 + '\n\n' + mid + '\n\n' + p3) : (p1 + '\n\n' + p3);
+    }
+  };
 
+  var KEYWORD_RULES = [
+    { id: 'paymentReminder', keywords: ['payment reminder', 'remind customer to pay', 'remind them to pay', 'outstanding payment', 'unpaid invoice', 'overdue invoice', 'overdue payment'] },
+    { id: 'requestForPayment', keywords: ['request payment', 'please pay', 'payment due', 'send invoice', 'invoice attached', 'ask for payment', 'request for payment'] },
+    { id: 'quoteFollowUp', keywords: ['quote follow', 'follow up on quote', 'following up on our quote', 'quotation follow', 'check on the quote', 'quote followup'] },
+    { id: 'appointmentConfirmation', keywords: ['confirm appointment', 'appointment confirmation', 'confirm booking', 'confirm the booking', 'confirm our meeting', 'confirm meeting'] },
+    { id: 'delayNotification', keywords: ['delay', 'postponed', 'pushed back', 'behind schedule', 'running late', 'running behind'] },
+    { id: 'customerThankYou', keywords: ['thank customer', 'thank you letter', 'thanks for their business', 'appreciate your business', 'say thanks', 'thank the customer'] },
+    { id: 'requestForApproval', keywords: ['request approval', 'need approval', 'sign off', 'get approval', 'awaiting approval', 'approve the'] },
+    { id: 'scopeOfWork', keywords: ['scope of work', 'work scope', 'outline the scope', 'define scope'] },
+    { id: 'serviceConfirmation', keywords: ['confirm service', 'service confirmation', 'confirm the service', 'confirming service'] },
+    { id: 'workCommencement', keywords: ['work starts', 'work will start', 'starting monday', 'starting on monday', 'commence work', 'begin work', 'start date', 'starts on', 'tell customer work starts'] },
+    { id: 'jobCompletion', keywords: ['job finished', 'job complete', 'job is done', 'work complete', 'work finished', 'completed the job', 'job done', 'all done', 'work is complete'] },
+    { id: 'projectUpdate', keywords: ['project update', 'progress update', 'status update', 'update on the project', 'update customer', 'update the customer'] }
+  ];
 
-// LOGO UPLOAD
+  function detectTemplate(ideaRaw) {
+    var text = ideaRaw.toLowerCase();
+    for (var i = 0; i < KEYWORD_RULES.length; i++) {
+      var rule = KEYWORD_RULES[i];
+      for (var j = 0; j < rule.keywords.length; j++) {
+        if (text.indexOf(rule.keywords[j]) !== -1) return rule.id;
+      }
+    }
+    if (/\bpay(ment)?\b/.test(text) && /\bremind/.test(text)) return 'paymentReminder';
+    if (/\bpay(ment)?\b/.test(text)) return 'requestForPayment';
+    if (/\bthank/.test(text)) return 'customerThankYou';
+    if (/\bdelay/.test(text)) return 'delayNotification';
+    if (/\bapprov/.test(text)) return 'requestForApproval';
+    if (/\bscope\b/.test(text)) return 'scopeOfWork';
+    if (/\bconfirm/.test(text) && /\bservice/.test(text)) return 'serviceConfirmation';
+    if (/\bconfirm/.test(text) || /\bappointment\b/.test(text) || /\bbooking\b/.test(text)) return 'appointmentConfirmation';
+    if (/\bupdate\b/.test(text) || /\bprogress\b/.test(text)) return 'projectUpdate';
+    if (/\bstart\b|\bcommence\b|\bbegin\b/.test(text)) return 'workCommencement';
+    if (/\bfinish|\bcomplet|\bdone\b/.test(text)) return 'jobCompletion';
+    return 'general';
+  }
 
-document.getElementById("logoInput")
-.addEventListener("change", function(){
-
-    const file = this.files[0];
-
-    if(!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        const src = e.target.result;
-
-        document.getElementById("logoPreview").src = src;
-
-        document.getElementById("logoPreview").style.display = "block";
-
-        document.getElementById("logoText").style.display = "none";
-
-        const preview =
-            document.getElementById("previewLogo");
-
-        preview.src = src;
-
-        preview.style.display =
-            document.getElementById("showLogo").checked
-            ? "block"
-            : "none";
-
-        localStorage.setItem("letterLogo",src);
-
+  function makeProfessional() {
+    var idea = $('#fIdea').value.trim();
+    if (!idea) { showToast('Type a quick idea first'); return; }
+    var templateId = detectTemplate(idea);
+    var ctx = {
+      project: $('#fProject').value.trim(),
+      tone: currentTone,
+      idea: idea
     };
+    var generated = TEMPLATES[templateId](ctx);
+    $('#fContent').value = generated;
+    renderPreview();
+    showToast('Professional letter generated — feel free to edit it');
+  }
 
-    reader.readAsDataURL(file);
+  /* ================= Custom fields ================= */
+  function addCustomField(label, value) {
+    label = label || '';
+    value = value || '';
+    customFieldCounter++;
+    var row = document.createElement('div');
+    row.className = 'custom-field-row';
+    row.dataset.id = 'cf_' + customFieldCounter;
+    row.innerHTML =
+      '<div class="field">' +
+        '<label>Field Name</label>' +
+        '<input type="text" class="cf-label" placeholder="e.g. Company" />' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Field Value</label>' +
+        '<input type="text" class="cf-value" placeholder="Value" />' +
+      '</div>' +
+      '<button type="button" class="btn-remove" aria-label="Remove field">✕</button>';
 
-});
+    row.querySelector('.cf-label').value = label;
+    row.querySelector('.cf-value').value = value;
+    row.querySelector('.btn-remove').addEventListener('click', function () {
+      row.remove();
+      renderPreview();
+    });
+    row.querySelectorAll('input').forEach(function (inp) {
+      inp.addEventListener('input', renderPreview);
+    });
+    $('#customFieldsContainer').appendChild(row);
+  }
 
+  function getCustomFieldsData() {
+    return Array.prototype.map.call(document.querySelectorAll('.custom-field-row'), function (row) {
+      return {
+        label: row.querySelector('.cf-label').value.trim(),
+        value: row.querySelector('.cf-value').value.trim()
+      };
+    });
+  }
 
-// SHOW / HIDE LOGO
+  function renderCustomFieldsPreview() {
+    var container = $('#previewCustomFields');
+    while (container.firstChild) container.removeChild(container.firstChild);
+    getCustomFieldsData().forEach(function (cf) {
+      if (!cf.value) return;
+      var row = document.createElement('div');
+      row.className = 'recipient-row';
+      var labelSpan = document.createElement('span');
+      labelSpan.className = 'r-label';
+      labelSpan.textContent = cf.label || 'Field';
+      var valSpan = document.createElement('span');
+      valSpan.textContent = ': ' + cf.value;
+      row.appendChild(labelSpan);
+      row.appendChild(valSpan);
+      container.appendChild(row);
+    });
+  }
 
-function toggleLogo(){
+  /* ================= Preview ================= */
+  function computeGreeting(name, tone) {
+    var n = name && name.trim() ? name.trim() : '';
+    if (tone === 'friendly') return n ? ('Hi ' + n + ',') : 'Hi there,';
+    return n ? ('Dear ' + n + ',') : 'Dear Sir/Madam,';
+  }
+  function computeSignoff(tone) {
+    if (tone === 'formal') return 'Yours faithfully,';
+    if (tone === 'friendly') return 'Best regards,';
+    return 'Yours sincerely,';
+  }
 
-    const show =
-        document.getElementById("showLogo").checked;
+  function renderPreview() {
+    var name = $('#fName').value;
+    var email = $('#fEmail').value;
+    var address = $('#fAddress').value;
+    var project = $('#fProject').value;
+    var date = $('#fDate').value;
+    var subject = $('#fSubject').value;
+    var content = $('#fContent').value;
 
-    const preview =
-        document.getElementById("previewLogo");
+    $('#previewName').textContent = valOrDash(name);
+    $('#previewEmail').textContent = valOrDash(email);
+    $('#previewAddress').textContent = valOrDash(address);
+    $('#previewProject').textContent = valOrDash(project);
+    $('#previewDate').textContent = date ? formatDate(date) : '—';
 
-    if(show){
-
-        preview.style.display = "block";
-
-    }else{
-
-        preview.style.display = "none";
-
+    var subjEl = $('#previewSubject');
+    var subjLine = $('#previewSubjectLine');
+    if (subject.trim()) {
+      subjEl.textContent = subject.trim();
+      subjLine.classList.remove('placeholder-text');
+    } else {
+      subjEl.textContent = '(add a subject)';
+      subjLine.classList.add('placeholder-text');
     }
 
-}
+    $('#previewGreeting').textContent = computeGreeting(name, currentTone);
+    $('#previewSignoff').textContent = computeSignoff(currentTone);
 
-
-// UPDATE PREVIEW
-
-function updatePreview(){
-
-    const company =
-        document.getElementById("companyName").value;
-
-    const address =
-        document.getElementById("companyAddress").value;
-
-    const email =
-        document.getElementById("companyEmail").value;
-
-    const phone =
-        document.getElementById("companyPhone").value;
-
-    const date =
-        document.getElementById("letterDate").value;
-
-    const recipient =
-        document.getElementById("recipientName").value;
-
-    const recipientCompany =
-        document.getElementById("recipientCompany").value;
-
-    const recipientAddress =
-        document.getElementById("recipientAddress").value;
-
-    const subject =
-        document.getElementById("subject").value;
-
-    const greeting =
-        document.getElementById("greeting").value;
-
-    const closing =
-        document.getElementById("closing").value;
-
-    const signName =
-        document.getElementById("signName").value;
-
-    const signPosition =
-        document.getElementById("signPosition").value;
-
-
-    document.getElementById("previewCompany")
-        .textContent =
-        company || "Company Name";
-
-
-    let details = "";
-
-    if(address)
-        details += address;
-
-    if(email)
-        details +=
-            (details ? " • " : "") + email;
-
-    if(phone)
-        details +=
-            (details ? " • " : "") + phone;
-
-
-    document.getElementById("previewCompanyDetails")
-        .textContent = details;
-
-
-    if(date){
-
-        const d =
-            new Date(date + "T00:00:00");
-
-        document.getElementById("previewDate")
-            .textContent =
-            d.toLocaleDateString(
-                "en-AU",
-                {
-                    day:"numeric",
-                    month:"long",
-                    year:"numeric"
-                }
-            );
-
+    var bodyEl = $('#previewBody');
+    if (content.trim()) {
+      bodyEl.textContent = content;
+      bodyEl.classList.remove('placeholder-text');
+    } else {
+      bodyEl.textContent = 'Start typing your letter on the left, or use "Make Professional" to generate a first draft.';
+      bodyEl.classList.add('placeholder-text');
     }
 
+    renderCustomFieldsPreview();
 
-    document.getElementById("previewRecipient")
-        .textContent =
-        recipient || "Recipient Name";
+    $('#watermarkEl').style.display = $('#fWatermarkToggle').checked ? 'flex' : 'none';
 
+    var sigEnabled = $('#fSignatureToggle').checked && currentSignatureDataUrl;
+    $('#previewSignatureArea').style.display = sigEnabled ? 'block' : 'none';
+    if (sigEnabled) $('#previewSignatureImg').src = currentSignatureDataUrl;
+  }
 
-    document.getElementById("previewRecipientCompany")
-        .textContent =
-        recipientCompany;
+  /* ================= Signature canvas ================= */
+  var canvas, ctx2d, drawing = false;
 
-
-    document.getElementById("previewRecipientAddress")
-        .innerHTML =
-        (recipientAddress || "")
-        .replace(/\n/g,"<br>");
-
-
-    document.getElementById("previewSubject")
-        .textContent =
-        subject || "Letter Subject";
-
-
-    document.getElementById("previewGreeting")
-        .textContent =
-        greeting;
-
-
-    document.getElementById("previewBody")
-        .innerHTML =
-        document.getElementById("editor").innerHTML;
-
-
-    document.getElementById("previewClosing")
-        .textContent =
-        closing;
-
-
-    document.getElementById("previewSignName")
-        .textContent =
-        signName;
-
-
-    document.getElementById("previewSignPosition")
-        .textContent =
-        signPosition;
-
-
-    toggleLogo();
-
-}
-
-
-// SAVE DRAFT
-
-function saveDraft(){
-
-    const data = {
-
-        companyName:
-            document.getElementById("companyName").value,
-
-        companyAddress:
-            document.getElementById("companyAddress").value,
-
-        companyEmail:
-            document.getElementById("companyEmail").value,
-
-        companyPhone:
-            document.getElementById("companyPhone").value,
-
-        letterDate:
-            document.getElementById("letterDate").value,
-
-        reference:
-            document.getElementById("reference").value,
-
-        subject:
-            document.getElementById("subject").value,
-
-        recipientName:
-            document.getElementById("recipientName").value,
-
-        recipientCompany:
-            document.getElementById("recipientCompany").value,
-
-        recipientAddress:
-            document.getElementById("recipientAddress").value,
-
-        greeting:
-            document.getElementById("greeting").value,
-
-        editor:
-            document.getElementById("editor").innerHTML,
-
-        closing:
-            document.getElementById("closing").value,
-
-        signName:
-            document.getElementById("signName").value,
-
-        signPosition:
-            document.getElementById("signPosition").value,
-
-        showLogo:
-            document.getElementById("showLogo").checked
-
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+  }
+  function startDraw(e) {
+    drawing = true;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    var pos = getPos(e);
+    ctx2d.beginPath();
+    ctx2d.moveTo(pos.x, pos.y);
+    e.preventDefault();
+  }
+  function moveDraw(e) {
+    if (!drawing) return;
+    var pos = getPos(e);
+    ctx2d.lineTo(pos.x, pos.y);
+    ctx2d.stroke();
+    e.preventDefault();
+  }
+  function endDraw() {
+    if (!drawing) return;
+    drawing = false;
+    currentSignatureDataUrl = canvas.toDataURL('image/png');
+    renderPreview();
+  }
+  function clearSignature() {
+    ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+    currentSignatureDataUrl = null;
+    renderPreview();
+  }
+  function setupSignatureCanvas() {
+    canvas = $('#signatureCanvas');
+    ctx2d = canvas.getContext('2d');
+    ctx2d.lineWidth = 2.2;
+    ctx2d.lineCap = 'round';
+    ctx2d.lineJoin = 'round';
+    ctx2d.strokeStyle = '#1a1f2e';
+    canvas.addEventListener('pointerdown', startDraw);
+    canvas.addEventListener('pointermove', moveDraw);
+    window.addEventListener('pointerup', endDraw);
+    window.addEventListener('pointercancel', endDraw);
+    $('#clearSigBtn').addEventListener('click', clearSignature);
+  }
+  function drawSignatureFromDataUrl(dataUrl) {
+    var img = new Image();
+    img.onload = function () {
+      ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+      ctx2d.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
+    img.src = dataUrl;
+  }
 
+  /* ================= Toast ================= */
+  var toastTimer;
+  function showToast(msg) {
+    var el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+  }
 
-    localStorage.setItem(
-        "tmElevenLetterDraft",
-        JSON.stringify(data)
-    );
+  /* ================= Tone ================= */
+  function setTone(tone) {
+    currentTone = tone;
+    document.querySelectorAll('.tone-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tone === tone);
+    });
+    renderPreview();
+  }
 
+  /* ================= Save / restore / clear ================= */
+  function collectState() {
+    return {
+      name: $('#fName').value,
+      email: $('#fEmail').value,
+      address: $('#fAddress').value,
+      project: $('#fProject').value,
+      date: $('#fDate').value,
+      subject: $('#fSubject').value,
+      content: $('#fContent').value,
+      tone: currentTone,
+      customFields: getCustomFieldsData(),
+      signatureEnabled: $('#fSignatureToggle').checked,
+      signatureData: currentSignatureDataUrl || null,
+      watermarkEnabled: $('#fWatermarkToggle').checked
+    };
+  }
 
-    alert("Letter draft saved successfully.");
+  function saveDraft() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+      showToast('Draft saved successfully');
+    } catch (e) {
+      showToast('Could not save draft on this browser');
+    }
+  }
 
-}
+  function toggleSignatureSection() {
+    $('#signatureSection').style.display = $('#fSignatureToggle').checked ? 'block' : 'none';
+  }
 
+  function restoreDraft() {
+    var raw;
+    try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { return; }
+    if (!raw) return;
+    var data;
+    try { data = JSON.parse(raw); } catch (e) { return; }
 
-// LOAD DRAFT
+    $('#fName').value = data.name || '';
+    $('#fEmail').value = data.email || '';
+    $('#fAddress').value = data.address || '';
+    $('#fProject').value = data.project || '';
+    $('#fDate').value = data.date || todayISO();
+    $('#fSubject').value = data.subject || '';
+    $('#fContent').value = data.content || '';
 
-function loadDraft(){
+    currentTone = data.tone || 'professional';
+    setTone(currentTone);
 
-    const saved =
-        localStorage.getItem("tmElevenLetterDraft");
+    if (Array.isArray(data.customFields)) {
+      data.customFields.forEach(function (cf) { addCustomField(cf.label, cf.value); });
+      suggestionIndex = Math.min(data.customFields.length, suggestedLabels.length);
+    }
 
-    if(!saved) return;
+    $('#fSignatureToggle').checked = !!data.signatureEnabled;
+    toggleSignatureSection();
+    if (data.signatureData) {
+      currentSignatureDataUrl = data.signatureData;
+      drawSignatureFromDataUrl(data.signatureData);
+    }
 
-    const data =
-        JSON.parse(saved);
+    $('#fWatermarkToggle').checked = !!data.watermarkEnabled;
+  }
 
-    Object.keys(data).forEach(key => {
+  function clearAll() {
+    if (!confirm('Are you sure you want to clear all letter details? This cannot be undone.')) return;
+    $('#fName').value = '';
+    $('#fEmail').value = '';
+    $('#fAddress').value = '';
+    $('#fProject').value = '';
+    $('#fDate').value = todayISO();
+    $('#fSubject').value = '';
+    $('#fIdea').value = '';
+    $('#fContent').value = '';
+    while ($('#customFieldsContainer').firstChild) {
+      $('#customFieldsContainer').removeChild($('#customFieldsContainer').firstChild);
+    }
+    suggestionIndex = 0;
+    setTone('professional');
+    $('#fSignatureToggle').checked = false;
+    toggleSignatureSection();
+    clearSignature();
+    $('#fWatermarkToggle').checked = false;
+    renderPreview();
+    showToast('All fields cleared');
+  }
 
-        const el =
-            document.getElementById(key);
+  /* ================= Print / PDF ================= */
+  function printLetter() { window.print(); }
 
-        if(!el) return;
+  function downloadPdf() {
+    if (typeof html2pdf === 'undefined') {
+      alert('The PDF library failed to load. Please check your internet connection and try again.');
+      return;
+    }
+    var el = $('#letterPreview');
+    el.classList.add('pdf-mode');
+    var nameForFile = ($('#fName').value.trim() || 'Letter').replace(/[^a-z0-9]+/gi, '_');
+    var opt = {
+      margin: 0,
+      filename: 'TM_ELEVEN_Letter_' + nameForFile + '.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(el).save().then(function () {
+      el.classList.remove('pdf-mode');
+    }).catch(function () {
+      el.classList.remove('pdf-mode');
+      showToast('Could not generate the PDF');
+    });
+  }
 
-        if(key === "editor"){
+  /* ================= Init ================= */
+  document.addEventListener('DOMContentLoaded', function () {
+    $('#fDate').value = todayISO();
+    setupSignatureCanvas();
+    restoreDraft();
 
-            el.innerHTML =
-                data[key];
-
-        }else if(key === "showLogo"){
-
-            el.checked =
-                data[key];
-
-        }else{
-
-            el.value =
-                data[key];
-
-        }
-
+    ['fName', 'fEmail', 'fAddress', 'fProject', 'fDate', 'fSubject', 'fContent'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', renderPreview);
+      document.getElementById(id).addEventListener('change', renderPreview);
     });
 
-    updatePreview();
+    $('#fSignatureToggle').addEventListener('change', function () {
+      toggleSignatureSection();
+      renderPreview();
+    });
+    $('#fWatermarkToggle').addEventListener('change', renderPreview);
 
-}
+    $('#addFieldBtn').addEventListener('click', function () {
+      var label = suggestionIndex < suggestedLabels.length ? suggestedLabels[suggestionIndex++] : '';
+      addCustomField(label, '');
+      renderPreview();
+    });
 
+    $('#makeProBtn').addEventListener('click', makeProfessional);
+    $('#saveDraftBtn').addEventListener('click', saveDraft);
+    $('#clearAllBtn').addEventListener('click', clearAll);
+    $('#printBtn').addEventListener('click', printLetter);
+    $('#downloadPdfBtn').addEventListener('click', downloadPdf);
 
-// START
+    document.querySelectorAll('.tone-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { setTone(btn.dataset.tone); });
+    });
 
-window.addEventListener("load",function(){
-
-    const savedLogo =
-        localStorage.getItem("letterLogo");
-
-
-    /*
-       FIRST:
-       Automatically use logo.png
-       from the same folder.
-    */
-
-    const previewLogo =
-        document.getElementById("previewLogo");
-
-    const headerLogo =
-        document.getElementById("headerLogo");
-
-
-    if(savedLogo){
-
-        previewLogo.src =
-            savedLogo;
-
-        previewLogo.style.display =
-            document.getElementById("showLogo").checked
-            ? "block"
-            : "none";
-
-        document.getElementById("logoPreview").src =
-            savedLogo;
-
-        document.getElementById("logoPreview").style.display =
-            "block";
-
-        document.getElementById("logoText").style.display =
-            "none";
-
-    }else{
-
-        /*
-           No uploaded logo?
-           Automatically use logo.png.
-        */
-
-        previewLogo.src =
-            "logo.png";
-
-        previewLogo.style.display =
-            document.getElementById("showLogo").checked
-            ? "block"
-            : "none";
-
-        document.getElementById("logoPreview").src =
-            "logo.png";
-
-        document.getElementById("logoPreview").style.display =
-            "block";
-
-        document.getElementById("logoText").style.display =
-            "none";
-
-    }
-
-
-    loadDraft();
-
-    updatePreview();
-
-});
-
+    renderPreview();
+  });
+})();
 </script>
-
 </body>
 </html>
