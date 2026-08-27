@@ -289,6 +289,96 @@
     color:var(--gold);
     font-size:13px;
   }
+
+  .other-detail-head{
+    margin-top:14px;
+    padding:11px 12px;
+    border:1px solid #ead8c7;
+    background:#fffaf5;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .other-detail-title{
+    font-size:12px;
+    font-weight:900;
+    color:#8b4d15;
+  }
+  .other-detail-title span{
+    color:#999;
+    font-size:9px;
+    font-weight:700;
+    margin-left:5px;
+    text-transform:uppercase;
+  }
+  .other-detail-sub{
+    font-size:9px;
+    color:#777;
+    margin-top:3px;
+  }
+  .mini-add{
+    border:1px solid var(--gold);
+    background:#fff;
+    color:var(--gold-dark);
+    border-radius:7px;
+    padding:7px 10px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  .other-detail-row{
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    gap:7px;
+    align-items:end;
+    margin-top:8px;
+  }
+  .other-detail-row label{margin:0}
+  .other-detail-row .remove-detail{
+    height:35px;
+    border:0;
+    border-radius:7px;
+    background:#fff0f0;
+    color:#b42318;
+    padding:0 9px;
+    cursor:pointer;
+    font-weight:800;
+  }
+  .display-card{
+    border:1px solid #e3e3e3;
+    border-radius:10px;
+    padding:10px;
+    background:#fafafa;
+  }
+  .display-card-title{
+    font-size:10px;
+    color:#777;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .check-option{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:0;
+    padding:9px 6px;
+    border-bottom:1px solid #eee;
+    cursor:pointer;
+  }
+  .check-option:last-child{border-bottom:0}
+  .check-option input{
+    width:16px;
+    height:16px;
+    accent-color:var(--gold);
+  }
+  .check-option span{display:flex;flex-direction:column;gap:2px}
+  .check-option b{font-size:11px}
+  .check-option small{font-size:9px;color:#888}
+  .totals .hidden-total{display:none}
+
   .empty-msg{color:#777;font-weight:600}
   .optional-preview{font-style:italic}
   .hint{
@@ -308,6 +398,8 @@
     .toolbar h1{width:100%;margin-bottom:3px}
     .grid2,.item-fields{grid-template-columns:1fr 1fr}
     .item-fields .wide{grid-column:1/-1}
+    .other-detail-row{grid-template-columns:1fr auto}
+    .other-detail-row > div:first-child{grid-column:1/-1}
     .paper{
       transform-origin:top left;
       width:794px;
@@ -364,33 +456,18 @@
       <label>Project</label>
       <input id="project" placeholder="Project description / project name">
 
+      <div class="other-detail-head">
+        <div>
+          <div class="other-detail-title">Other Detail <span>Optional</span></div>
+          <div class="other-detail-sub">Add details such as Company, ABN, Contact, etc.</div>
+        </div>
+        <button class="mini-add" type="button" onclick="addOtherDetail()">+ Add</button>
+      </div>
+      <div id="otherDetailsEditor"></div>
+
       <div class="section-title">Items</div>
       <div id="itemsEditor" class="items-editor"></div>
       <button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="addItem()">+ Add Item</button>
-
-      <div class="section-title">Optional Extra</div>
-      <label>Additional Charge Description</label>
-      <input id="extraDesc" placeholder="e.g. Waste removal / Delivery / Other">
-
-      <div class="grid2">
-        <div>
-          <label>Amount</label>
-          <input id="extraAmount" type="number" min="0" step="0.01" value="0">
-        </div>
-        <div>
-          <label>GST Rate %</label>
-          <input id="extraGstRate" type="number" min="0" step="0.01" value="10">
-        </div>
-      </div>
-      <div class="gst-row">
-        <input id="extraGst" type="checkbox">
-        <label for="extraGst" style="margin:0">Apply +GST</label>
-      </div>
-
-      <div class="hint">
-        Tick <b>+GST</b> for any item or the optional extra. GST rate can be changed individually.
-        The quote automatically calculates subtotal, GST and grand total.
-      </div>
     </div>
 
     <div class="quote-wrap">
@@ -412,11 +489,11 @@
 
         <div class="to-box">
           <div class="to-title">To</div>
-          <div class="to-grid">
+          <div class="to-grid" id="toGrid">
             <div>Name</div><div class="value" id="pName"></div>
             <div>Email</div><div class="value" id="pEmail"></div>
             <div>Project</div><div class="value" id="pProject"></div>
-            <div>Address</div><div class="value" id="pAddress"></div>
+            <div id="addressLabel">Address</div><div class="value" id="pAddress"></div>
           </div>
         </div>
 
@@ -435,11 +512,7 @@
           </tbody>
         </table>
 
-        <div class="totals">
-          <div class="total-row"><span>Subtotal</span><span id="pSubtotal">$0.00</span></div>
-          <div class="total-row"><span>GST</span><span id="pGst">$0.00</span></div>
-          <div class="total-row grand"><span>TOTAL</span><span id="pTotal">$0.00</span></div>
-        </div>
+        <div class="totals" id="totalsPreview"></div>
 
         <div class="footer">
           <strong>TM ELEVEN PTY LTD</strong><br>
@@ -461,12 +534,17 @@ const defaultItems = [
 ];
 
 let items = structuredClone(defaultItems);
+let otherDetails = [];
 
 function money(n){
-  return new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:2}).format(Number(n)||0);
+  return new Intl.NumberFormat('en-AU',{
+    style:'currency',currency:'AUD',minimumFractionDigits:2
+  }).format(Number(n)||0);
 }
 function esc(s){
-  return String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(s ?? '').replace(/[&<>"']/g,m=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+  }[m]));
 }
 function todayISO(){
   const d=new Date();
@@ -478,6 +556,7 @@ function formatDate(v){
   const d=new Date(v+'T00:00:00');
   return d.toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'});
 }
+
 function addItem(){
   items.push({desc:"",note:"",unit:"",price:"",qty:"",gst:false,gstRate:10});
   renderEditor(); updatePreview();
@@ -488,9 +567,7 @@ function removeItem(i){
   renderEditor(); updatePreview();
 }
 function updateItem(i,key,value){
-  if(key==='gst') items[i][key]=value;
-  else if(key==='price'||key==='qty'||key==='gstRate') items[i][key]=value;
-  else items[i][key]=value;
+  items[i][key]=value;
   updatePreview();
 }
 function renderEditor(){
@@ -504,7 +581,7 @@ function renderEditor(){
       <label>Description</label>
       <input value="${esc(it.desc)}" placeholder="e.g. Fencing" oninput="updateItem(${i},'desc',this.value)">
       <label>Small note (optional)</label>
-      <input value="${esc(it.note)}" placeholder="e.g. Gate charges will be applied for extra posts" oninput="updateItem(${i},'note',this.value)">
+      <input value="${esc(it.note)}" placeholder="e.g. Extra posts may incur additional charges" oninput="updateItem(${i},'note',this.value)">
       <div class="item-fields">
         <div class="mini wide"><label>Unit</label><input value="${esc(it.unit)}" placeholder="1m / One Gate" oninput="updateItem(${i},'unit',this.value)"></div>
         <div class="mini"><label>Unit Price</label><input type="number" min="0" step="0.01" value="${esc(it.price)}" placeholder="0" oninput="updateItem(${i},'price',this.value)"></div>
@@ -519,17 +596,59 @@ function renderEditor(){
     </div>
   `).join('');
 }
-function getExtra(){
-  const amount=Number(document.getElementById('extraAmount').value)||0;
-  const gst=document.getElementById('extraGst').checked;
-  const rate=Number(document.getElementById('extraGstRate').value)||0;
-  return {desc:document.getElementById('extraDesc').value.trim(),amount,gst,rate};
+
+function addOtherDetail(){
+  otherDetails.push({label:"Company",value:""});
+  renderOtherDetails();
+  updatePreview();
 }
+function removeOtherDetail(i){
+  otherDetails.splice(i,1);
+  renderOtherDetails();
+  updatePreview();
+}
+function updateOtherDetail(i,key,value){
+  otherDetails[i][key]=value;
+  updatePreview();
+}
+function renderOtherDetails(){
+  const box=document.getElementById('otherDetailsEditor');
+  box.innerHTML=otherDetails.map((d,i)=>`
+    <div class="other-detail-row">
+      <div>
+        <label>Label</label>
+        <input value="${esc(d.label)}" placeholder="Company" oninput="updateOtherDetail(${i},'label',this.value)">
+      </div>
+      <div>
+        <label>Detail</label>
+        <input value="${esc(d.value)}" placeholder="Enter detail" oninput="updateOtherDetail(${i},'value',this.value)">
+      </div>
+      <button class="remove-detail" type="button" onclick="removeOtherDetail(${i})">×</button>
+    </div>
+  `).join('');
+}
+
 function updatePreview(){
   document.getElementById('previewDate').textContent=formatDate(document.getElementById('quoteDate').value);
   document.getElementById('pName').textContent=document.getElementById('customerName').value;
   document.getElementById('pEmail').textContent=document.getElementById('customerEmail').value;
   document.getElementById('pProject').textContent=document.getElementById('project').value;
+
+  const toGrid=document.getElementById('toGrid');
+  document.querySelectorAll('.dynamic-detail').forEach(el=>el.remove());
+  const addressLabel=document.getElementById('addressLabel');
+  otherDetails.forEach(d=>{
+    if(d.label || d.value){
+      const label=document.createElement('div');
+      label.className='dynamic-detail';
+      label.textContent=d.label || 'Detail';
+      const value=document.createElement('div');
+      value.className='value dynamic-detail';
+      value.textContent=d.value || '';
+      toGrid.insertBefore(label,addressLabel);
+      toGrid.insertBefore(value,addressLabel);
+    }
+  });
   document.getElementById('pAddress').textContent=document.getElementById('customerAddress').value;
 
   const tbody=document.getElementById('previewItems');
@@ -545,7 +664,7 @@ function updatePreview(){
     gstTotal+=gstAmount;
     rows.push(`
       <tr>
-        <td class="desc">${esc(it.desc || '—')} ${it.note?`<span class="item-note">${esc(it.note)}</span>`:''}</td>
+        <td class="desc">${esc(it.desc || '—')}${it.note?`<span class="item-note">${esc(it.note)}</span>`:''}</td>
         <td>${esc(it.unit || '—')}</td>
         <td>${money(price)}</td>
         <td>${esc(it.qty || '—')}</td>
@@ -553,26 +672,20 @@ function updatePreview(){
       </tr>`);
   });
 
-  const ex=getExtra();
-  if(ex.amount || ex.desc){
-    subtotal+=ex.amount;
-    const eg=ex.gst ? ex.amount*ex.rate/100 : 0;
-    gstTotal+=eg;
-    rows.push(`
-      <tr>
-        <td class="desc">${esc(ex.desc || 'Additional Charge')}<span class="item-note optional-preview">Optional extra</span></td>
-        <td>—</td>
-        <td>${money(ex.amount)}</td>
-        <td>1</td>
-        <td>${money(ex.amount)}${ex.gst?' + GST':''}</td>
-      </tr>`);
-  }
-
   tbody.innerHTML=rows.length?rows.join(''):`<tr><td colspan="5" class="empty-msg">No items added</td></tr>`;
-  document.getElementById('pSubtotal').textContent=money(subtotal);
-  document.getElementById('pGst').textContent=money(gstTotal);
-  document.getElementById('pTotal').textContent=money(subtotal+gstTotal);
+
+  const showSubtotal=document.getElementById('showSubtotal').checked;
+  const showGst=document.getElementById('showGst').checked;
+  const showTotal=document.getElementById('showTotal').checked;
+  const totals=document.getElementById('totalsPreview');
+
+  totals.innerHTML=`
+    ${showSubtotal?`<div class="total-row"><span>Subtotal</span><span>${money(subtotal)}</span></div>`:''}
+    ${showGst?`<div class="total-row"><span>GST</span><span>${money(gstTotal)}</span></div>`:''}
+    ${showTotal?`<div class="total-row grand"><span>TOTAL</span><span>${money(subtotal+gstTotal)}</span></div>`:''}
+  `;
 }
+
 function getState(){
   return {
     date:document.getElementById('quoteDate').value,
@@ -581,10 +694,10 @@ function getState(){
     address:document.getElementById('customerAddress').value,
     project:document.getElementById('project').value,
     items,
-    extraDesc:document.getElementById('extraDesc').value,
-    extraAmount:document.getElementById('extraAmount').value,
-    extraGst:document.getElementById('extraGst').checked,
-    extraGstRate:document.getElementById('extraGstRate').value
+    otherDetails,
+    showSubtotal:document.getElementById('showSubtotal').checked,
+    showGst:document.getElementById('showGst').checked,
+    showTotal:document.getElementById('showTotal').checked
   };
 }
 function setState(s){
@@ -594,11 +707,13 @@ function setState(s){
   document.getElementById('customerAddress').value=s.address||'';
   document.getElementById('project').value=s.project||'';
   items=s.items||structuredClone(defaultItems);
-  document.getElementById('extraDesc').value=s.extraDesc||'';
-  document.getElementById('extraAmount').value=s.extraAmount||0;
-  document.getElementById('extraGst').checked=!!s.extraGst;
-  document.getElementById('extraGstRate').value=s.extraGstRate??10;
-  renderEditor();updatePreview();
+  otherDetails=s.otherDetails||[];
+  document.getElementById('showSubtotal').checked=s.showSubtotal!==false;
+  document.getElementById('showGst').checked=s.showGst!==false;
+  document.getElementById('showTotal').checked=s.showTotal!==false;
+  renderEditor();
+  renderOtherDetails();
+  updatePreview();
 }
 function saveDraft(){
   localStorage.setItem('tmElevenQuoteDraft',JSON.stringify(getState()));
@@ -619,6 +734,7 @@ function convertPDF(){
   updatePreview();
   window.print();
 }
+
 document.querySelectorAll('input,textarea').forEach(el=>{
   el.addEventListener('input',updatePreview);
   el.addEventListener('change',updatePreview);
@@ -626,6 +742,7 @@ document.querySelectorAll('input,textarea').forEach(el=>{
 
 document.getElementById('quoteDate').value=todayISO();
 renderEditor();
+renderOtherDetails();
 updatePreview();
 </script>
 </body>
