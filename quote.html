@@ -3,1207 +3,2532 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TM ELEVEN — Quote Generator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<title>TM ELEVEN - Quote Generator</title>
+
+<!-- PDF Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-  :root{
-    --bg:#0b0d10;
-    --bg-soft:#0f1216;
-    --surface:#151920;
-    --surface-2:#1b2029;
-    --surface-3:#20262f;
-    --border:#272d38;
-    --border-soft:#1e232b;
-    --text:#eef1f5;
-    --text-dim:#96a0af;
-    --text-faint:#5c6472;
-    --accent:#d9a054;
-    --accent-2:#b9803a;
-    --accent-soft:rgba(217,160,84,0.12);
-    --accent-soft-2:rgba(217,160,84,0.22);
-    --danger:#e2685a;
-    --danger-soft:rgba(226,104,90,0.12);
-    --success:#57b686;
-    --radius:14px;
-    --radius-sm:9px;
-    --font-display:'Space Grotesk', sans-serif;
-    --font-body:'Inter', sans-serif;
-    --font-mono:'JetBrains Mono', monospace;
-  }
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--font-body);
-    font-size:14px;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-  ::selection{background:var(--accent-soft-2);color:var(--text);}
+html {
+    scroll-behavior: smooth;
+}
 
-  ::-webkit-scrollbar{width:10px;height:10px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:10px;border:2px solid var(--bg);}
-  ::-webkit-scrollbar-thumb:hover{background:var(--border);}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #111315;
+    color: #f4f4f4;
+    min-height: 100vh;
+    padding-bottom: 100px;
+}
 
-  a{color:inherit;}
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
 
-  /* ---------- Top bar ---------- */
-  .topbar{
-    position:sticky;top:0;z-index:50;
-    background:var(--bg-soft);
-    border-bottom:1px solid var(--border-soft);
-  }
-  .topbar-inner{
-    max-width:1600px;margin:0 auto;
-    display:flex;align-items:center;gap:16px;
-    padding:14px 24px;
-  }
-  .topbar-brand{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
-  .topbar-brand img{height:34px;width:auto;display:block;}
-  .topbar-brand .tb-text{display:flex;flex-direction:column;line-height:1.15;min-width:0;}
-  .topbar-brand .tb-text b{
-    font-family:var(--font-display);font-size:15px;font-weight:700;
-    letter-spacing:0.02em;white-space:nowrap;
-  }
-  .topbar-brand .tb-text span{
-    font-size:11.5px;color:var(--text-faint);letter-spacing:0.03em;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
-  .hazard-strip{
-    height:4px;width:100%;
-    background:repeating-linear-gradient(135deg, var(--accent) 0 14px, #0b0d10 14px 28px);
-    opacity:0.55;
-  }
-  .topbar-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+button {
+    cursor: pointer;
+}
 
-  /* ---------- Buttons ---------- */
-  .btn{
-    appearance:none;border:1px solid var(--border);
-    background:var(--surface-2);color:var(--text);
-    font-family:var(--font-body);font-size:13px;font-weight:600;
-    padding:9px 16px;border-radius:var(--radius-sm);
-    cursor:pointer;display:inline-flex;align-items:center;gap:8px;
-    transition:background .15s ease, border-color .15s ease, transform .05s ease;
-    white-space:nowrap;
-  }
-  .btn:hover{background:var(--surface-3);border-color:#333a46;}
-  .btn:active{transform:translateY(1px);}
-  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-  .btn-primary{
-    background:linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
-    border-color:var(--accent-2);color:#1a1204;
-  }
-  .btn-primary:hover{filter:brightness(1.06);}
-  .btn-danger{background:transparent;border-color:var(--border);color:var(--danger);}
-  .btn-danger:hover{background:var(--danger-soft);border-color:var(--danger);}
-  .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim);padding:8px 10px;}
-  .btn-ghost:hover{background:var(--surface-2);color:var(--text);}
-  .btn-sm{padding:6px 12px;font-size:12.5px;border-radius:8px;}
-  .btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px;}
-  .btn svg{width:15px;height:15px;flex-shrink:0;}
+/* =========================================================
+   HEADER
+========================================================= */
 
-  /* ---------- Layout ---------- */
-  .app{
-    max-width:1600px;margin:0 auto;
-    display:grid;grid-template-columns:minmax(340px,460px) 1fr;
-    gap:22px;padding:22px 24px 60px;
-    align-items:start;
-  }
-  @media (max-width:980px){
-    .app{grid-template-columns:1fr;}
-  }
+.top-header {
+    background: #0b0c0d;
+    border-bottom: 1px solid #292b2d;
+    padding: 18px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-  .panel{
-    background:var(--surface);
-    border:1px solid var(--border-soft);
-    border-radius:var(--radius);
-    position:sticky;top:76px;
-    max-height:calc(100vh - 96px);
-    overflow-y:auto;
-  }
-  @media (max-width:980px){
-    .panel{position:static;max-height:none;}
-  }
-  .panel-scroll{padding:20px 20px 26px;}
+.header-inner {
+    max-width: 1500px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
 
-  .card{
-    background:var(--surface-2);
-    border:1px solid var(--border-soft);
-    border-radius:12px;
-    padding:16px 16px 18px;
-    margin-bottom:16px;
-  }
-  .card:last-child{margin-bottom:0;}
-  .card-head{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:12px;
-  }
-  .card-title{
-    font-family:var(--font-display);font-size:13px;font-weight:600;
-    letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);
-    display:flex;align-items:center;gap:8px;
-  }
-  .card-title .num{
-    font-family:var(--font-mono);color:var(--text-faint);font-size:11px;
-  }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
 
-  .field{margin-bottom:12px;}
-  .field:last-child{margin-bottom:0;}
-  .field label{
-    display:block;font-size:12px;font-weight:600;color:var(--text-dim);
-    margin-bottom:6px;letter-spacing:0.01em;
-  }
-  .field input[type="text"],
-  .field input[type="email"],
-  .field input[type="number"],
-  .field input[type="date"],
-  .field textarea{
-    width:100%;background:var(--bg-soft);
-    border:1px solid var(--border);color:var(--text);
-    font-family:var(--font-body);font-size:13.5px;
-    padding:9px 11px;border-radius:8px;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  .field textarea{resize:vertical;min-height:56px;}
-  .field input:focus,.field textarea:focus{
-    outline:none;border-color:var(--accent);background:#12151a;
-  }
-  .field input::placeholder,.field textarea::placeholder{color:var(--text-faint);}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
 
-  .custom-field-row{
-    display:grid;grid-template-columns:1fr 1fr auto;gap:8px;
-    margin-bottom:8px;align-items:center;
-  }
-  .custom-field-row input{width:100%;}
+.brand-text h1 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #d9a441;
+}
 
-  .checkline{
-    display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
-  }
-  .checkline input[type="checkbox"]{
-    -webkit-appearance:none;appearance:none;
-    width:18px;height:18px;flex-shrink:0;
-    border:1.5px solid var(--border);border-radius:5px;
-    background:var(--bg-soft);cursor:pointer;position:relative;
-    transition:border-color .15s, background .15s;
-  }
-  .checkline input[type="checkbox"]:checked{
-    background:var(--accent);border-color:var(--accent);
-  }
-  .checkline input[type="checkbox"]:checked::after{
-    content:"";position:absolute;left:5px;top:1px;
-    width:5px;height:9px;border:solid #1a1204;
-    border-width:0 2px 2px 0;transform:rotate(45deg);
-  }
-  .checkline span{font-size:13px;font-weight:600;color:var(--text);}
-  .checkline .hint{font-weight:400;color:var(--text-faint);font-size:11.5px;}
+.brand-text span {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+}
 
-  .subrow{
-    margin-top:10px;padding:10px 12px;
-    background:var(--bg-soft);border:1px dashed var(--border);
-    border-radius:8px;
-  }
+.header-label {
+    font-size: 13px;
+    color: #aaa;
+}
 
-  /* ---------- Items table (editor) ---------- */
-  .items-editor{display:flex;flex-direction:column;gap:12px;}
-  .item-card{
-    background:var(--bg-soft);border:1px solid var(--border);
-    border-radius:10px;padding:12px;position:relative;
-  }
-  .item-card-top{display:flex;gap:8px;margin-bottom:8px;}
-  .item-card-top input{flex:1;}
-  .item-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .item-grid .field{margin-bottom:0;}
-  .item-amount-line{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft);
-  }
-  .item-amount-line .amt{
-    font-family:var(--font-mono);font-weight:600;font-size:14.5px;color:var(--text);
-  }
-  .item-gst-row{
-    display:flex;align-items:center;justify-content:space-between;margin-top:10px;
-  }
-  .gst-rate-wrap{display:flex;align-items:center;gap:8px;margin-top:8px;}
-  .gst-rate-wrap input{width:80px;text-align:right;}
-  .gst-rate-wrap span{font-size:12px;color:var(--text-faint);}
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
 
-  .add-item-btn{
-    width:100%;padding:11px;border:1.5px dashed var(--border);
-    background:transparent;color:var(--text-dim);border-radius:10px;
-    font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:border-color .15s, color .15s, background .15s;
-  }
-  .add-item-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.app {
+    max-width: 1500px;
+    margin: auto;
+    padding: 25px;
+}
 
-  /* ---------- Signature pad ---------- */
-  .sig-wrap{margin-top:10px;}
-  .sig-canvas-box{
-    background:#fff;border-radius:8px;overflow:hidden;
-    border:1px solid var(--border);touch-action:none;
-  }
-  .sig-canvas-box canvas{display:block;width:100%;height:150px;cursor:crosshair;}
-  .sig-actions{display:flex;gap:8px;margin-top:8px;}
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(400px, 0.85fr) minmax(500px, 1.15fr);
+    gap: 25px;
+    align-items: start;
+}
 
-  .status-toast{
-    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
-    background:var(--surface-3);border:1px solid var(--accent);
-    color:var(--text);padding:11px 20px;border-radius:10px;
-    font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;
-    z-index:200;display:flex;align-items:center;gap:8px;
-  }
-  .status-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-  .status-toast svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;}
+/* =========================================================
+   EDITOR
+========================================================= */
 
-  /* ---------- Preview (document) ---------- */
-  .preview-wrap{min-width:0;}
-  .preview-toolbar{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:12px;padding:0 2px;
-  }
-  .preview-toolbar h2{
-    font-family:var(--font-display);font-size:14px;font-weight:600;
-    color:var(--text-dim);letter-spacing:0.04em;text-transform:uppercase;margin:0;
-  }
-  .zoom-note{font-size:11.5px;color:var(--text-faint);}
+.editor {
+    background: #191b1d;
+    border: 1px solid #2b2e31;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 15px 45px rgba(0,0,0,.3);
+}
 
-  .doc-shell{
-    background:#e8e6e1;
-    border-radius:var(--radius);
-    padding:26px;
-    display:flex;justify-content:center;
-    border:1px solid var(--border-soft);
-  }
-  @media (max-width:600px){ .doc-shell{padding:14px;} }
+.editor-title {
+    margin-bottom: 22px;
+}
 
-  #document{
-    position:relative;
-    background:#ffffff;
-    color:#20242b;
-    width:100%;
-    max-width:794px;
-    min-height:1050px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.35);
-    font-family:'Inter', Arial, sans-serif;
-    padding:56px 56px 40px;
-    overflow:hidden;
-  }
-  @media (max-width:600px){
-    #document{padding:26px 20px 24px;}
-  }
+.editor-title h2 {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 5px;
+}
 
-  .doc-topline{height:5px;background:#20242b;margin:-56px -56px 28px;}
-  @media (max-width:600px){ .doc-topline{margin:-26px -20px 22px;} }
+.editor-title p {
+    font-size: 13px;
+    color: #888;
+}
 
-  .doc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;}
-  .doc-brand{display:flex;gap:14px;align-items:flex-start;}
-  .doc-brand img{height:56px;width:auto;display:block;}
-  .doc-brand-text b{
-    display:block;font-family:'Space Grotesk',Arial,sans-serif;
-    color:#c07f2f;font-size:19px;font-weight:700;letter-spacing:0.01em;
-  }
-  .doc-brand-text .tagline{font-size:10.5px;font-weight:700;letter-spacing:0.06em;color:#20242b;margin-top:3px;}
-  .doc-brand-text .loc{font-size:11px;color:#5a6270;margin-top:5px;}
-  .doc-brand-text .abn{font-size:10px;color:#8a8f99;margin-top:2px;}
+.section {
+    background: #121416;
+    border: 1px solid #292c2f;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
 
-  .doc-doctype{text-align:right;}
-  .doc-doctype .label{
-    font-family:'Space Grotesk',Arial,sans-serif;font-size:34px;font-weight:700;
-    color:#e9cfa4;letter-spacing:0.02em;line-height:1;
-  }
-  .doc-doctype .date{font-size:12px;font-weight:700;color:#20242b;margin-top:8px;}
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+}
 
-  .doc-to-box{
-    margin-top:28px;border:1.5px solid #c07f2f;border-radius:12px;
-    padding:16px 20px;
-  }
-  .doc-to-box .to-label{
-    color:#c07f2f;font-weight:700;font-size:13px;margin-bottom:8px;
-    font-family:'Space Grotesk',Arial,sans-serif;
-  }
-  .doc-to-row{display:flex;font-size:12.5px;margin-bottom:4px;}
-  .doc-to-row .k{width:88px;flex-shrink:0;color:#20242b;font-weight:600;}
-  .doc-to-row .k::after{content:":";float:right;}
-  .doc-to-row .v{color:#3a4049;white-space:pre-wrap;word-break:break-word;}
+.section-title h3 {
+    font-size: 15px;
+    color: #d9a441;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-  .doc-items{margin-top:26px;}
-  table.doc-table{width:100%;border-collapse:collapse;}
-  table.doc-table thead th{
-    background:#c07f2f;color:#fff;text-align:left;
-    font-size:11.5px;font-weight:700;letter-spacing:0.03em;
-    padding:10px 12px;font-family:'Space Grotesk',Arial,sans-serif;
-  }
-  table.doc-table thead th.num{text-align:right;}
-  table.doc-table tbody td{
-    padding:12px 12px;font-size:12.5px;border-bottom:1px solid #eee2d0;
-    vertical-align:top;
-  }
-  table.doc-table tbody tr:nth-child(odd) td{background:#fbf6ee;}
-  table.doc-table tbody td.num{text-align:right;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
-  .doc-item-desc b{display:block;font-size:13px;color:#20242b;}
-  .doc-item-desc .sub{display:block;font-size:10.5px;color:#8a8f99;margin-top:2px;}
-  .gst-tag{font-size:10px;color:#c07f2f;font-weight:700;margin-left:4px;}
+/* =========================================================
+   FORM
+========================================================= */
 
-  .doc-totals{
-    margin-top:6px;margin-left:auto;width:280px;
-    display:flex;flex-direction:column;gap:6px;
-  }
-  .doc-totals .t-row{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;}
-  .doc-totals .t-row.sub{color:#5a6270;}
-  .doc-totals .t-row .num{font-family:'JetBrains Mono',monospace;}
-  .doc-totals .t-row.total{
-    border-top:2px solid #20242b;margin-top:4px;padding-top:9px;
-    font-size:15px;font-weight:700;color:#20242b;
-  }
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
 
-  .doc-custom{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;}
-  .doc-custom .cf{font-size:12px;color:#3a4049;}
-  .doc-custom .cf b{color:#20242b;}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
 
-  .doc-sig{margin-top:34px;display:flex;justify-content:flex-end;}
-  .doc-sig-box{text-align:center;}
-  .doc-sig-box img{height:70px;display:block;margin:0 auto 6px;}
-  .doc-sig-box .line{border-top:1px solid #20242b;padding-top:5px;font-size:10.5px;color:#5a6270;min-width:180px;}
+.form-group.full {
+    grid-column: 1 / -1;
+}
 
-  .doc-footer{
-    position:absolute;left:56px;right:56px;bottom:28px;
-    border-top:1px solid #ece5d8;padding-top:14px;
-  }
-  .doc-footer b{
-    display:block;font-family:'Space Grotesk',Arial,sans-serif;color:#c07f2f;font-size:13px;
-  }
-  .doc-footer .tag{font-size:9.5px;font-weight:700;color:#20242b;letter-spacing:0.04em;margin-top:2px;}
-  .doc-footer .contact{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:#5a6270;}
+.form-group label {
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
 
-  .doc-watermark{
-    position:absolute;top:0;left:0;right:0;bottom:0;
-    display:flex;align-items:center;justify-content:center;
-    pointer-events:none;overflow:hidden;z-index:0;
-  }
-  .doc-watermark span{
-    font-family:'Space Grotesk',Arial,sans-serif;
-    font-size:96px;font-weight:700;color:#c07f2f;
-    opacity:0.08;transform:rotate(-28deg);white-space:nowrap;
-    letter-spacing:0.02em;
-  }
-  .doc-header,.doc-to-box,.doc-items,.doc-custom,.doc-sig,.doc-footer{position:relative;z-index:1;}
+input,
+textarea,
+select {
+    width: 100%;
+    background: #1d2023;
+    color: #fff;
+    border: 1px solid #35393d;
+    border-radius: 8px;
+    padding: 11px 12px;
+    outline: none;
+    transition: .2s;
+    font-size: 13px;
+}
 
-  .empty-note{font-size:12px;color:#b7bcc4;font-style:italic;text-align:center;padding:18px 0;}
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #d9a441;
+    box-shadow: 0 0 0 2px rgba(217,164,65,.08);
+}
 
-  /* footer credit */
-  .app-footer{
-    text-align:center;color:var(--text-faint);font-size:11.5px;
-    padding:20px 0 30px;
-  }
+textarea {
+    min-height: 75px;
+    resize: vertical;
+}
 
-  @media print{
-    body *{visibility:hidden;}
-  }
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #d9a441, #b77c20);
+    color: #111;
+}
+
+.btn-gold:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(217,164,65,.2);
+}
+
+.btn-dark {
+    background: #272a2d;
+    border: 1px solid #393d40;
+    color: #ddd;
+}
+
+.btn-dark:hover {
+    border-color: #d9a441;
+    color: #fff;
+}
+
+.btn-danger {
+    background: #3a2020;
+    border: 1px solid #643333;
+    color: #ffb0b0;
+}
+
+.btn-small {
+    padding: 7px 10px;
+    font-size: 11px;
+}
+
+/* =========================================================
+   CUSTOM FIELDS
+========================================================= */
+
+.custom-field {
+    display: grid;
+    grid-template-columns: 140px 1fr 36px;
+    gap: 8px;
+    margin-bottom: 9px;
+}
+
+.remove-field {
+    border: 1px solid #493333;
+    background: #28191a;
+    color: #ff9d9d;
+    border-radius: 8px;
+}
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+.items-wrapper {
+    overflow-x: auto;
+}
+
+.item-editor {
+    min-width: 720px;
+}
+
+.item-head,
+.item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr .8fr 1.15fr 38px;
+    gap: 7px;
+    align-items: center;
+}
+
+.item-head {
+    padding: 0 3px 8px;
+}
+
+.item-head div {
+    color: #777;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+.item-row {
+    margin-bottom: 9px;
+}
+
+.item-row input {
+    min-width: 0;
+}
+
+.item-total-editor {
+    background: #1d2023;
+    border: 1px solid #35393d;
+    min-height: 39px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    font-size: 12px;
+    color: #fff;
+    overflow: hidden;
+}
+
+.gst-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    font-size: 10px;
+    color: #d9a441;
+}
+
+.gst-box input {
+    width: 14px;
+    height: 14px;
+    accent-color: #d9a441;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.option-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px 0;
+    border-bottom: 1px solid #282b2d;
+}
+
+.option-row:last-child {
+    border-bottom: 0;
+}
+
+.option-info strong {
+    display: block;
+    font-size: 13px;
+    color: #eee;
+}
+
+.option-info span {
+    display: block;
+    font-size: 10px;
+    color: #777;
+    margin-top: 3px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.checkbox-label input {
+    width: 17px;
+    height: 17px;
+    accent-color: #d9a441;
+}
+
+.watermark-controls {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #35393d;
+    border-radius: 9px;
+    background: #1b1e20;
+}
+
+.watermark-controls.active {
+    display: block;
+}
+
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-row input[type="range"] {
+    padding: 0;
+    accent-color: #d9a441;
+}
+
+/* =========================================================
+   PREVIEW AREA
+========================================================= */
+
+.preview-area {
+    position: sticky;
+    top: 95px;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.preview-header h2 {
+    font-size: 15px;
+    color: #ddd;
+}
+
+.preview-header span {
+    font-size: 10px;
+    color: #777;
+}
+
+.preview-scroll {
+    background: #27292b;
+    border-radius: 18px;
+    padding: 25px;
+    overflow: auto;
+    max-height: calc(100vh - 140px);
+}
+
+/* =========================================================
+   QUOTE DOCUMENT
+========================================================= */
+
+.quote-page {
+    width: 794px;
+    min-height: 1123px;
+    background: #fff;
+    color: #222;
+    margin: auto;
+    position: relative;
+    padding: 50px 48px 70px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.35);
+    overflow: hidden;
+}
+
+.quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #d49b35;
+    padding-bottom: 22px;
+}
+
+.company-left {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+}
+
+.company-logo {
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+}
+
+.company-details h2 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #171717;
+    margin-top: 3px;
+}
+
+.company-details .services {
+    font-size: 8px;
+    color: #a06e16;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 6px;
+}
+
+.company-details .location {
+    font-size: 9px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.quote-heading {
+    text-align: right;
+}
+
+.quote-heading h1 {
+    font-size: 34px;
+    letter-spacing: 3px;
+    color: #1b1b1b;
+    font-weight: 800;
+}
+
+.quote-heading .quote-date {
+    font-size: 10px;
+    color: #777;
+    margin-top: 8px;
+}
+
+.quote-body {
+    padding-top: 28px;
+}
+
+.to-box {
+    border: 1px solid #ddd;
+    border-left: 4px solid #d49b35;
+    padding: 14px 16px;
+    min-height: 100px;
+}
+
+.to-title {
+    font-size: 9px;
+    color: #a06e16;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.to-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 20px;
+}
+
+.to-line {
+    font-size: 10px;
+    color: #444;
+}
+
+.to-line strong {
+    color: #171717;
+}
+
+.quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 27px;
+    font-size: 9px;
+}
+
+.quote-table thead th {
+    background: #1d1d1d;
+    color: #fff;
+    padding: 10px 7px;
+    text-align: left;
+    font-size: 8px;
+    letter-spacing: .4px;
+}
+
+.quote-table thead th:last-child,
+.quote-table tbody td:last-child {
+    text-align: right;
+}
+
+.quote-table tbody td {
+    padding: 10px 7px;
+    border-bottom: 1px solid #e4e4e4;
+    vertical-align: top;
+}
+
+.quote-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.gst-tag {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 7px;
+    color: #a06e16;
+    font-weight: bold;
+}
+
+.totals-area {
+    width: 310px;
+    margin-left: auto;
+    margin-top: 20px;
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 7px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 10px;
+}
+
+.total-line strong {
+    color: #111;
+}
+
+.grand-total {
+    background: #1d1d1d;
+    color: #fff;
+    padding: 12px;
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.grand-total .gold {
+    color: #e1ad4c;
+}
+
+.quote-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 48px;
+    right: 48px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.quote-footer div {
+    font-size: 7px;
+    color: #777;
+}
+
+.quote-footer strong {
+    color: #333;
+}
+
+/* =========================================================
+   WATERMARK
+========================================================= */
+
+.quote-watermark {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    transform: translate(-50%, -50%) rotate(-32deg);
+    font-size: 85px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: #d49b35;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.quote-page.watermark-active .quote-watermark {
+    display: block;
+}
+
+.quote-page > *:not(.quote-watermark) {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   FIXED ACTION BAR
+========================================================= */
+
+.action-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    background: rgba(10,11,12,.96);
+    border-top: 1px solid #343638;
+    backdrop-filter: blur(10px);
+    padding: 13px 20px;
+}
+
+.action-inner {
+    max-width: 1500px;
+    margin: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.action-btn {
+    min-width: 145px;
+    padding: 12px 18px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    top: 80px;
+    right: 25px;
+    background: #242729;
+    border: 1px solid #d49b35;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    z-index: 5000;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: .3s;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-area {
+        position: static;
+    }
+
+    .preview-scroll {
+        max-height: none;
+    }
+
+    .quote-page {
+        transform-origin: top center;
+    }
+}
+
+@media (max-width: 700px) {
+
+    body {
+        padding-bottom: 85px;
+    }
+
+    .top-header {
+        padding: 14px 16px;
+    }
+
+    .header-label {
+        display: none;
+    }
+
+    .app {
+        padding: 12px;
+    }
+
+    .editor {
+        padding: 14px;
+        border-radius: 13px;
+    }
+
+    .section {
+        padding: 13px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .custom-field {
+        grid-template-columns: 1fr 1fr 36px;
+    }
+
+    .preview-scroll {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .quote-page {
+        width: 794px;
+        transform: scale(.76);
+        transform-origin: top left;
+        margin-bottom: -270px;
+    }
+
+    .action-inner {
+        justify-content: center;
+    }
+
+    .action-btn {
+        min-width: 0;
+        flex: 1;
+        padding: 11px 8px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .quote-page {
+        transform: scale(.58);
+        margin-bottom: -470px;
+    }
+
+    .brand-text h1 {
+        font-size: 17px;
+    }
+
+    .action-bar {
+        padding: 10px;
+    }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    body {
+        background: #fff;
+        padding: 0;
+    }
+
+    .top-header,
+    .editor,
+    .preview-header,
+    .action-bar {
+        display: none !important;
+    }
+
+    .app,
+    .workspace,
+    .preview-area,
+    .preview-scroll {
+        display: block;
+        padding: 0;
+        margin: 0;
+        background: #fff;
+        max-height: none;
+    }
+
+    .quote-page {
+        box-shadow: none;
+        margin: 0;
+        width: 794px;
+        min-height: 1123px;
+    }
+}
 </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-brand">
-      <img src="logo.png" alt="TM Eleven logo">
-      <div class="tb-text">
-        <b>TM ELEVEN</b>
-        <span>Quote &amp; Invoice Generator</span>
-      </div>
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header class="top-header">
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <img src="logo.png" alt="TM Eleven Logo">
+
+            <div class="brand-text">
+                <h1>TM ELEVEN</h1>
+                <span>QUOTE GENERATOR</span>
+            </div>
+
+        </div>
+
+        <div class="header-label">
+            Professional Quote Management
+        </div>
+
     </div>
-    <div class="topbar-actions">
-      <button class="btn" id="btnSaveDraft" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
-        Save Draft
-      </button>
-      <button class="btn btn-danger" id="btnClearAll" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        Clear All
-      </button>
-      <button class="btn btn-primary" id="btnDownloadPdf" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-        Download PDF
-      </button>
+
+</header>
+
+
+<main class="app">
+
+<div class="workspace">
+
+<!-- =====================================================
+     LEFT EDITOR
+====================================================== -->
+
+<div class="editor">
+
+    <div class="editor-title">
+        <h2>Create Quote</h2>
+        <p>Enter your quote information below.</p>
     </div>
-  </div>
-  <div class="hazard-strip"></div>
+
+
+    <!-- CUSTOMER -->
+    <div class="section">
+
+        <div class="section-title">
+
+            <h3>Customer / To</h3>
+
+            <button
+                class="btn btn-gold btn-small"
+                onclick="addCustomField()">
+                + Add More
+            </button>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Name</label>
+                <input
+                    id="customerName"
+                    type="text"
+                    placeholder="Customer name">
+            </div>
+
+
+            <div class="form-group">
+                <label>Email</label>
+                <input
+                    id="customerEmail"
+                    type="email"
+                    placeholder="customer@email.com">
+            </div>
+
+
+            <div class="form-group full">
+                <label>Address</label>
+                <textarea
+                    id="customerAddress"
+                    placeholder="Customer address"></textarea>
+            </div>
+
+
+            <div class="form-group full">
+                <label>Project</label>
+                <input
+                    id="project"
+                    type="text"
+                    placeholder="Project name / description">
+            </div>
+
+        </div>
+
+
+        <div id="customFields"></div>
+
+    </div>
+
+
+    <!-- DATE -->
+    <div class="section">
+
+        <div class="section-title">
+            <h3>Quote Details</h3>
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Quote Date</label>
+                <input id="quoteDate" type="date">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ITEMS -->
+    <div class="section">
+
+        <div class="section-title">
+
+            <h3>Quote Items</h3>
+
+            <button
+                class="btn btn-gold btn-small"
+                onclick="addItem()">
+                + Add Item
+            </button>
+
+        </div>
+
+
+        <div class="items-wrapper">
+
+            <div class="item-editor">
+
+                <div class="item-head">
+
+                    <div>Description</div>
+                    <div>Unit</div>
+                    <div>Unit Price</div>
+                    <div>Quantity</div>
+                    <div>Item Total</div>
+                    <div></div>
+
+                </div>
+
+                <div id="items"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOTAL SETTINGS -->
+    <div class="section">
+
+        <div class="section-title">
+            <h3>Total Settings</h3>
+        </div>
+
+
+        <div class="option-row">
+
+            <div class="option-info">
+
+                <strong>Show All Total</strong>
+
+                <span>
+                    Show the overall quote total on the final quote.
+                </span>
+
+            </div>
+
+            <label class="checkbox-label">
+
+                <input
+                    type="checkbox"
+                    id="showAllTotal">
+
+                Show All Total
+
+            </label>
+
+        </div>
+
+
+        <div
+            class="option-row"
+            id="allGstOption"
+            style="display:none;">
+
+            <div class="option-info">
+
+                <strong>+ GST on All Total</strong>
+
+                <span>
+                    Add GST to the overall total.
+                </span>
+
+            </div>
+
+            <label class="checkbox-label">
+
+                <input
+                    type="checkbox"
+                    id="allTotalGST">
+
+                + GST
+
+            </label>
+
+        </div>
+
+    </div>
+
+
+    <!-- WATERMARK -->
+    <div class="section">
+
+        <div class="section-title">
+            <h3>Watermark</h3>
+        </div>
+
+
+        <div class="option-row">
+
+            <div class="option-info">
+
+                <strong>Show Watermark</strong>
+
+                <span>
+                    Add TM ELEVEN watermark to the quote.
+                </span>
+
+            </div>
+
+            <label class="checkbox-label">
+
+                <input
+                    type="checkbox"
+                    id="showWatermark">
+
+                TM ELEVEN
+
+            </label>
+
+        </div>
+
+
+        <div
+            class="watermark-controls"
+            id="watermarkControls">
+
+            <div class="form-group">
+
+                <label>Watermark Text</label>
+
+                <input
+                    id="watermarkText"
+                    type="text"
+                    value="TM ELEVEN">
+
+            </div>
+
+
+            <br>
+
+
+            <div class="form-group">
+
+                <label>
+                    Watermark Opacity
+                    <span id="opacityValue">0.08</span>
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        id="watermarkOpacity"
+                        type="range"
+                        min="0.02"
+                        max="0.20"
+                        step="0.01"
+                        value="0.08">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="app">
 
-  <!-- ============ LEFT: INPUT PANEL ============ -->
-  <div class="panel">
-    <div class="panel-scroll">
+<!-- =====================================================
+     RIGHT PREVIEW
+====================================================== -->
 
-      <!-- Customer / Project -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title"><span class="num">01</span> Customer &amp; Project</div>
-        </div>
-        <div class="field">
-          <label for="inpName">Name</label>
-          <input type="text" id="inpName" placeholder="Client or company name">
-        </div>
-        <div class="field">
-          <label for="inpEmail">Email</label>
-          <input type="email" id="inpEmail" placeholder="client@email.com.au">
-        </div>
-        <div class="field">
-          <label for="inpAddress">Address</label>
-          <textarea id="inpAddress" placeholder="Site / billing address"></textarea>
-        </div>
-        <div class="field">
-          <label for="inpProject">Project</label>
-          <input type="text" id="inpProject" placeholder="Project name or description">
+<div class="preview-area">
+
+    <div class="preview-header">
+
+        <h2>Quote Output</h2>
+
+        <span>Live Preview</span>
+
+    </div>
+
+
+    <div class="preview-scroll">
+
+        <div
+            class="quote-page"
+            id="quotePage">
+
+
+            <!-- WATERMARK -->
+
+            <div
+                class="quote-watermark"
+                id="quoteWatermark">
+                TM ELEVEN
+            </div>
+
+
+            <!-- HEADER -->
+
+            <div class="quote-header">
+
+                <div class="company-left">
+
+                    <img
+                        src="logo.png"
+                        class="company-logo"
+                        alt="TM Eleven">
+
+                    <div class="company-details">
+
+                        <h2>TM ELEVEN PTY LTD</h2>
+
+                        <div class="services">
+                            CONCRETING | LANDSCAPING | FENCING
+                        </div>
+
+                        <div class="location">
+                            Melbourne | VIC
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quote-heading">
+
+                    <h1>QUOTE</h1>
+
+                    <div class="quote-date">
+                        Date:
+                        <span id="previewDate">--/--/----</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BODY -->
+
+            <div class="quote-body">
+
+
+                <!-- CUSTOMER -->
+
+                <div class="to-box">
+
+                    <div class="to-title">
+                        TO
+                    </div>
+
+                    <div
+                        class="to-grid"
+                        id="previewCustomer">
+
+                    </div>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <table class="quote-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width:38%;">
+                                Description
+                            </th>
+
+                            <th style="width:13%;">
+                                Unit
+                            </th>
+
+                            <th style="width:15%;">
+                                Unit Price
+                            </th>
+
+                            <th style="width:12%;">
+                                Quantity
+                            </th>
+
+                            <th style="width:22%;">
+                                Item Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="previewItems"></tbody>
+
+                </table>
+
+
+                <!-- TOTALS -->
+
+                <div class="totals-area">
+
+                    <div
+                        class="total-line">
+
+                        <strong>Item Totals</strong>
+
+                        <span
+                            id="previewItemTotals">
+                            $0.00
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="total-line"
+                        id="previewGSTLine"
+                        style="display:none;">
+
+                        <strong>GST</strong>
+
+                        <span id="previewGST">
+                            $0.00
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="grand-total"
+                        id="previewGrandTotal"
+                        style="display:none;">
+
+                        <span>
+                            ALL TOTAL
+                        </span>
+
+                        <span class="gold">
+                            <span id="previewAllTotal">
+                                $0.00
+                            </span>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="quote-footer">
+
+                <div>
+                    <strong>TM ELEVEN PTY LTD</strong><br>
+                    Melbourne | VIC
+                </div>
+
+                <div style="text-align:right;">
+                    Concreting | Landscaping | Fencing<br>
+                    Professional & Reliable Services
+                </div>
+
+            </div>
+
+
         </div>
 
-        <div id="customFieldsList"></div>
+    </div>
 
-        <button class="add-item-btn" id="btnAddField" type="button" style="margin-top:4px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
-          Add New Field
+</div>
+
+</div>
+
+</main>
+
+
+<!-- =====================================================
+     FIXED ACTION BAR
+====================================================== -->
+
+<div class="action-bar">
+
+    <div class="action-inner">
+
+        <button
+            class="btn btn-dark action-btn"
+            onclick="saveDraft()">
+            💾 Save Draft
         </button>
-      </div>
 
-      <!-- Date -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title"><span class="num">02</span> Date</div>
-        </div>
-        <div class="field" style="margin-bottom:0;">
-          <label for="inpDate">Document Date</label>
-          <input type="date" id="inpDate">
-        </div>
-      </div>
 
-      <!-- Items -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title"><span class="num">03</span> Items &amp; Pricing</div>
-        </div>
-        <div class="items-editor" id="itemsEditor"></div>
-        <button class="add-item-btn" id="btnAddItem" type="button" style="margin-top:12px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
-          Add Item
+        <button
+            class="btn btn-dark action-btn"
+            onclick="restoreDraft()">
+            ↻ Restore Draft
         </button>
 
-        <div class="subrow" style="margin-top:16px;">
-          <label class="checkline">
-            <input type="checkbox" id="chkShowTotal">
-            <span>Show Overall Total</span>
-          </label>
 
-          <div id="overallTotalOptions" style="display:none;">
-            <div class="item-gst-row" style="margin-top:12px;">
-              <label class="checkline">
-                <input type="checkbox" id="chkOverallGst">
-                <span>+ GST <span class="hint">(overall)</span></span>
-              </label>
-            </div>
-            <div class="gst-rate-wrap" id="overallGstRateWrap" style="display:none;">
-              <label style="margin:0;" for="inpOverallGstRate"></label>
-              <input type="number" id="inpOverallGstRate" min="0" step="0.01" placeholder="e.g. 10">
-              <span>% &nbsp;GST Rate (optional)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Signature -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title"><span class="num">04</span> Signature</div>
-        </div>
-        <label class="checkline">
-          <input type="checkbox" id="chkAddSignature">
-          <span>Add Signature</span>
-        </label>
-        <div class="sig-wrap" id="sigWrap" style="display:none;">
-          <div class="sig-canvas-box">
-            <canvas id="sigCanvas"></canvas>
-          </div>
-          <div class="sig-actions">
-            <button class="btn btn-sm" id="btnClearSig" type="button">Clear Signature</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Watermark -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title"><span class="num">05</span> Watermark</div>
-        </div>
-        <label class="checkline">
-          <input type="checkbox" id="chkWatermark">
-          <span>Add Watermark <span class="hint">— "TM ELEVEN"</span></span>
-        </label>
-      </div>
+        <button
+            class="btn btn-gold action-btn"
+            onclick="convertToPDF()">
+            📄 Convert to PDF
+        </button>
 
     </div>
-  </div>
-
-  <!-- ============ RIGHT: LIVE PREVIEW ============ -->
-  <div class="preview-wrap">
-    <div class="preview-toolbar">
-      <h2>Live Preview</h2>
-      <span class="zoom-note">Updates automatically</span>
-    </div>
-    <div class="doc-shell">
-      <div id="document">
-        <div class="doc-topline"></div>
-        <div class="doc-watermark" id="docWatermark" style="display:none;"><span>TM ELEVEN</span></div>
-
-        <div class="doc-header">
-          <div class="doc-brand">
-            <img src="logo.png" alt="TM Eleven">
-            <div class="doc-brand-text">
-              <b>TM ELEVEN PTY LTD</b>
-              <div class="tagline">CONCRETING&nbsp;|&nbsp;LANDSCAPING&nbsp;|&nbsp;FENCING</div>
-              <div class="loc">Melbourne VIC</div>
-              <div class="abn">ACN : 692 149 045</div>
-            </div>
-          </div>
-          <div class="doc-doctype">
-            <div class="label">QUOTE</div>
-            <div class="date" id="docDate">Date : —</div>
-          </div>
-        </div>
-
-        <div class="doc-to-box">
-          <div class="to-label">To</div>
-          <div class="doc-to-row"><div class="k">Name</div><div class="v" id="docName">—</div></div>
-          <div class="doc-to-row"><div class="k">Email</div><div class="v" id="docEmail">—</div></div>
-          <div class="doc-to-row"><div class="k">Project</div><div class="v" id="docProject">—</div></div>
-          <div class="doc-to-row"><div class="k">Address</div><div class="v" id="docAddress">—</div></div>
-        </div>
-
-        <div class="doc-custom" id="docCustomFields"></div>
-
-        <div class="doc-items">
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th style="width:44%;">Description</th>
-                <th class="num" style="width:12%;">Qty</th>
-                <th class="num" style="width:20%;">Unit Price</th>
-                <th class="num" style="width:24%;">Amount</th>
-              </tr>
-            </thead>
-            <tbody id="docItemsBody"></tbody>
-          </table>
-        </div>
-
-        <div class="doc-totals" id="docTotals" style="display:none;"></div>
-
-        <div class="doc-sig" id="docSigWrap" style="display:none;">
-          <div class="doc-sig-box">
-            <img id="docSigImg" src="" alt="Signature">
-            <div class="line">Authorised Signature</div>
-          </div>
-        </div>
-
-        <div class="doc-footer">
-          <b>TM ELEVEN PTY LTD</b>
-          <div class="tag">CONCRETING&nbsp;|&nbsp;LANDSCAPING&nbsp;|&nbsp;FENCING</div>
-          <div class="contact">
-            <span>+61 451 160 058</span>
-            <span>tmeleven111@gmail.com</span>
-            <span>tmeleven.com.au</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="app-footer">This document is generated locally in your browser. No data leaves your device.</div>
-  </div>
 
 </div>
 
-<div class="status-toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-  <span id="toastMsg">Saved</span>
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
 </div>
+
 
 <script>
-(function(){
-  "use strict";
 
-  /* ---------------------------------------------------------------
-     STATE
-  ----------------------------------------------------------------*/
-  var uidCounter = 1;
-  function uid(prefix){ return prefix + (uidCounter++) + '_' + Math.random().toString(36).slice(2,7); }
+/* =========================================================
+   GLOBAL DATA
+========================================================= */
 
-  var state = {
-    name: '',
-    email: '',
-    address: '',
-    project: '',
-    date: todayISO(),
-    customFields: [],           // {id, key, value}
-    items: [],                  // {id, desc, sub, qty, price, gstEnabled, gstRate}
-    showOverallTotal: false,
-    overallGstEnabled: false,
-    overallGstRate: '',
-    addSignature: false,
-    signatureData: null,        // dataURL
-    addWatermark: false
-  };
+let customFields = [];
+let items = [];
 
-  function todayISO(){
-    var d = new Date();
-    var m = String(d.getMonth()+1).padStart(2,'0');
-    var day = String(d.getDate()).padStart(2,'0');
-    return d.getFullYear() + '-' + m + '-' + day;
-  }
 
-  function formatDateHuman(iso){
-    if(!iso) return '—';
-    var parts = iso.split('-');
-    if(parts.length !== 3) return iso;
-    var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
-    if(isNaN(d.getTime())) return iso;
-    return d.toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
-  }
+/* =========================================================
+   START
+========================================================= */
 
-  function currency(n){
-    if(isNaN(n)) n = 0;
-    return new Intl.NumberFormat('en-AU', { style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:2 }).format(n);
-  }
+document.addEventListener("DOMContentLoaded", function () {
 
-  function escapeHtml(str){
-    if(str === null || str === undefined) return '';
-    return String(str)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
+    const today = new Date();
 
-  function newItem(desc, sub, qty, price){
-    return { id: uid('item'), desc: desc || '', sub: sub || '', qty: (qty!==undefined?qty:1), price: (price!==undefined?price:0), gstEnabled:false, gstRate:'' };
-  }
+    const formatted =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(today.getDate()).padStart(2, "0");
 
-  /* ---------------------------------------------------------------
-     INIT DEFAULT DATA
-  ----------------------------------------------------------------*/
-  function seedDefaults(){
-    state.items = [ newItem('', '', 1, 0) ];
-  }
+    document.getElementById("quoteDate").value = formatted;
 
-  /* ---------------------------------------------------------------
-     DOM REFS
-  ----------------------------------------------------------------*/
-  var $ = function(id){ return document.getElementById(id); };
 
-  var inpName = $('inpName'), inpEmail = $('inpEmail'), inpAddress = $('inpAddress'),
-      inpProject = $('inpProject'), inpDate = $('inpDate');
-  var customFieldsList = $('customFieldsList');
-  var itemsEditor = $('itemsEditor');
-  var chkShowTotal = $('chkShowTotal'), overallTotalOptions = $('overallTotalOptions');
-  var chkOverallGst = $('chkOverallGst'), overallGstRateWrap = $('overallGstRateWrap'), inpOverallGstRate = $('inpOverallGstRate');
-  var chkAddSignature = $('chkAddSignature'), sigWrap = $('sigWrap');
-  var chkWatermark = $('chkWatermark');
+    /* Default item */
 
-  /* ---------------------------------------------------------------
-     RENDER: LEFT PANEL (dynamic bits only — static inputs bind directly)
-  ----------------------------------------------------------------*/
-  function renderCustomFields(){
-    customFieldsList.innerHTML = '';
-    state.customFields.forEach(function(cf){
-      var row = document.createElement('div');
-      row.className = 'custom-field-row';
-      row.innerHTML =
-        '<input type="text" placeholder="Field Name" data-cf="' + cf.id + '" data-part="key" value="' + escapeHtml(cf.key) + '">' +
-        '<input type="text" placeholder="Value" data-cf="' + cf.id + '" data-part="value" value="' + escapeHtml(cf.value) + '">' +
-        '<button class="btn btn-icon btn-danger" type="button" data-remove-field="' + cf.id + '" title="Remove field">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
-        '</button>';
-      customFieldsList.appendChild(row);
-    });
-  }
+    addItem();
 
-  function renderItemsEditor(){
-    itemsEditor.innerHTML = '';
-    state.items.forEach(function(item, idx){
-      var amount = (parseFloat(item.qty)||0) * (parseFloat(item.price)||0);
-      var card = document.createElement('div');
-      card.className = 'item-card';
-      card.dataset.itemId = item.id;
 
-      var gstRateHtml = '';
-      var rateDisplayStyle = item.gstEnabled ? '' : 'display:none;';
+    /* Inputs */
 
-      card.innerHTML =
-        '<div class="item-card-top">' +
-          '<input type="text" placeholder="Description / Item ' + (idx+1) + '" data-item="' + item.id + '" data-part="desc" value="' + escapeHtml(item.desc) + '">' +
-          '<button class="btn btn-icon btn-danger" type="button" data-remove-item="' + item.id + '" title="Remove item">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
-          '</button>' +
-        '</div>' +
-        '<div class="field" style="margin-bottom:8px;">' +
-          '<input type="text" placeholder="Extra note (optional, shown under description)" data-item="' + item.id + '" data-part="sub" value="' + escapeHtml(item.sub) + '">' +
-        '</div>' +
-        '<div class="item-grid">' +
-          '<div class="field"><label>Quantity</label><input type="number" min="0" step="any" data-item="' + item.id + '" data-part="qty" value="' + escapeHtml(item.qty) + '"></div>' +
-          '<div class="field"><label>Unit Price ($)</label><input type="number" min="0" step="0.01" data-item="' + item.id + '" data-part="price" value="' + escapeHtml(item.price) + '"></div>' +
-        '</div>' +
-        '<div class="item-gst-row">' +
-          '<label class="checkline">' +
-            '<input type="checkbox" data-item="' + item.id + '" data-part="gstEnabled" ' + (item.gstEnabled?'checked':'') + '>' +
-            '<span>+ GST</span>' +
-          '</label>' +
-          '<span class="amt" data-amt-for="' + item.id + '">' + currency(amount) + '</span>' +
-        '</div>' +
-        '<div class="gst-rate-wrap" data-gstwrap="' + item.id + '" style="' + rateDisplayStyle + '">' +
-          '<input type="number" min="0" step="0.01" placeholder="e.g. 10" data-item="' + item.id + '" data-part="gstRate" value="' + escapeHtml(item.gstRate) + '">' +
-          '<span>% &nbsp;GST Rate (optional)</span>' +
-        '</div>';
-      itemsEditor.appendChild(card);
-    });
-  }
+    document
+        .querySelectorAll(
+            "#customerName, #customerEmail, #customerAddress, #project, #quoteDate"
+        )
+        .forEach(input => {
 
-  function syncStaticInputs(){
-    inpName.value = state.name;
-    inpEmail.value = state.email;
-    inpAddress.value = state.address;
-    inpProject.value = state.project;
-    inpDate.value = state.date;
-    chkShowTotal.checked = state.showOverallTotal;
-    overallTotalOptions.style.display = state.showOverallTotal ? '' : 'none';
-    chkOverallGst.checked = state.overallGstEnabled;
-    overallGstRateWrap.style.display = state.overallGstEnabled ? '' : 'none';
-    inpOverallGstRate.value = state.overallGstRate;
-    chkAddSignature.checked = state.addSignature;
-    sigWrap.style.display = state.addSignature ? '' : 'none';
-    chkWatermark.checked = state.addWatermark;
-  }
+            input.addEventListener("input", updatePreview);
 
-  /* ---------------------------------------------------------------
-     RENDER: RIGHT PREVIEW / DOCUMENT
-  ----------------------------------------------------------------*/
-  function renderPreview(){
-    $('docDate').textContent = 'Date : ' + formatDateHuman(state.date);
-    $('docName').textContent = state.name || '—';
-    $('docEmail').textContent = state.email || '—';
-    $('docProject').textContent = state.project || '—';
-    $('docAddress').textContent = state.address || '—';
-
-    // custom fields
-    var cfWrap = $('docCustomFields');
-    cfWrap.innerHTML = '';
-    var validCf = state.customFields.filter(function(cf){ return (cf.key && cf.key.trim()) || (cf.value && cf.value.trim()); });
-    if(validCf.length){
-      validCf.forEach(function(cf){
-        var d = document.createElement('div');
-        d.className = 'cf';
-        d.innerHTML = '<b>' + escapeHtml(cf.key || 'Field') + ':</b> ' + escapeHtml(cf.value || '—');
-        cfWrap.appendChild(d);
-      });
-    }
-
-    // items
-    var tbody = $('docItemsBody');
-    tbody.innerHTML = '';
-    var subtotal = 0;
-    var hasAnyItem = false;
-
-    state.items.forEach(function(item){
-      var desc = (item.desc || '').trim();
-      var hasContent = desc || (parseFloat(item.qty)||0) > 0 || (parseFloat(item.price)||0) > 0;
-      if(!hasContent) return;
-      hasAnyItem = true;
-
-      var qty = parseFloat(item.qty) || 0;
-      var price = parseFloat(item.price) || 0;
-      var amount = qty * price;
-      subtotal += amount;
-
-      var amountCellHtml = currency(amount);
-      if(item.gstEnabled){
-        var rate = parseFloat(item.gstRate);
-        if(!isNaN(rate) && item.gstRate !== ''){
-          var gstAmt = amount * (rate/100);
-          amountCellHtml = currency(amount) + '<span class="gst-tag">+GST(' + rate + '%)</span><br>' + currency(amount+gstAmt);
-        } else {
-          amountCellHtml = currency(amount) + '<span class="gst-tag">+ GST</span>';
-        }
-      }
-
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td class="doc-item-desc"><b>' + escapeHtml(desc || 'Item') + '</b>' + (item.sub ? '<span class="sub">' + escapeHtml(item.sub) + '</span>' : '') + '</td>' +
-        '<td class="num">' + (qty % 1 === 0 ? qty : qty) + '</td>' +
-        '<td class="num">' + currency(price) + '</td>' +
-        '<td class="num">' + amountCellHtml + '</td>';
-      tbody.appendChild(tr);
-    });
-
-    if(!hasAnyItem){
-      var trEmpty = document.createElement('tr');
-      trEmpty.innerHTML = '<td colspan="4" class="empty-note">No items added yet</td>';
-      tbody.appendChild(trEmpty);
-    }
-
-    // overall totals
-    var totalsWrap = $('docTotals');
-    if(state.showOverallTotal){
-      totalsWrap.style.display = '';
-      var rowsHtml = '<div class="t-row sub"><span>Subtotal</span><span class="num">' + currency(subtotal) + '</span></div>';
-      var grandTotal = subtotal;
-      if(state.overallGstEnabled){
-        var oRate = parseFloat(state.overallGstRate);
-        if(!isNaN(oRate) && state.overallGstRate !== ''){
-          var gstVal = subtotal * (oRate/100);
-          grandTotal = subtotal + gstVal;
-          rowsHtml += '<div class="t-row sub"><span>GST (' + oRate + '%)</span><span class="num">' + currency(gstVal) + '</span></div>';
-          rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(grandTotal) + '</span></div>';
-        } else {
-          rowsHtml += '<div class="t-row sub"><span>GST</span><span class="num">To be advised</span></div>';
-          rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(subtotal) + ' + GST</span></div>';
-        }
-      } else {
-        rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(grandTotal) + '</span></div>';
-      }
-      totalsWrap.innerHTML = rowsHtml;
-    } else {
-      totalsWrap.style.display = 'none';
-      totalsWrap.innerHTML = '';
-    }
-
-    // signature
-    var docSigWrap = $('docSigWrap');
-    if(state.addSignature && state.signatureData){
-      docSigWrap.style.display = '';
-      $('docSigImg').src = state.signatureData;
-    } else {
-      docSigWrap.style.display = 'none';
-    }
-
-    // watermark
-    $('docWatermark').style.display = state.addWatermark ? '' : 'none';
-  }
-
-  function renderAll(){
-    renderCustomFields();
-    renderItemsEditor();
-    syncStaticInputs();
-    renderPreview();
-  }
-
-  /* ---------------------------------------------------------------
-     EVENT WIRING — static top-level fields
-  ----------------------------------------------------------------*/
-  inpName.addEventListener('input', function(){ state.name = this.value; renderPreview(); });
-  inpEmail.addEventListener('input', function(){ state.email = this.value; renderPreview(); });
-  inpAddress.addEventListener('input', function(){ state.address = this.value; renderPreview(); });
-  inpProject.addEventListener('input', function(){ state.project = this.value; renderPreview(); });
-  inpDate.addEventListener('input', function(){ state.date = this.value; renderPreview(); });
-
-  chkShowTotal.addEventListener('change', function(){
-    state.showOverallTotal = this.checked;
-    overallTotalOptions.style.display = this.checked ? '' : 'none';
-    renderPreview();
-  });
-  chkOverallGst.addEventListener('change', function(){
-    state.overallGstEnabled = this.checked;
-    overallGstRateWrap.style.display = this.checked ? '' : 'none';
-    renderPreview();
-  });
-  inpOverallGstRate.addEventListener('input', function(){ state.overallGstRate = this.value; renderPreview(); });
-
-  chkAddSignature.addEventListener('change', function(){
-    state.addSignature = this.checked;
-    sigWrap.style.display = this.checked ? '' : 'none';
-    if(this.checked){ setTimeout(setupSignatureCanvas, 0); }
-    renderPreview();
-  });
-
-  chkWatermark.addEventListener('change', function(){
-    state.addWatermark = this.checked;
-    renderPreview();
-  });
-
-  /* ---------------------------------------------------------------
-     EVENT WIRING — custom fields (delegated)
-  ----------------------------------------------------------------*/
-  $('btnAddField').addEventListener('click', function(){
-    state.customFields.push({ id: uid('cf'), key:'', value:'' });
-    renderCustomFields();
-    renderPreview();
-    var lastInput = customFieldsList.querySelector('.custom-field-row:last-child input');
-    if(lastInput) lastInput.focus();
-  });
-
-  customFieldsList.addEventListener('input', function(e){
-    var t = e.target;
-    if(t.dataset.cf){
-      var cf = state.customFields.find(function(c){ return c.id === t.dataset.cf; });
-      if(cf){ cf[t.dataset.part] = t.value; renderPreview(); }
-    }
-  });
-  customFieldsList.addEventListener('click', function(e){
-    var btn = e.target.closest('[data-remove-field]');
-    if(btn){
-      var id = btn.getAttribute('data-remove-field');
-      state.customFields = state.customFields.filter(function(c){ return c.id !== id; });
-      renderCustomFields();
-      renderPreview();
-    }
-  });
-
-  /* ---------------------------------------------------------------
-     EVENT WIRING — items (delegated)
-  ----------------------------------------------------------------*/
-  $('btnAddItem').addEventListener('click', function(){
-    state.items.push(newItem());
-    renderItemsEditor();
-    renderPreview();
-    var lastInput = itemsEditor.querySelector('.item-card:last-child input[data-part="desc"]');
-    if(lastInput) lastInput.focus();
-  });
-
-  itemsEditor.addEventListener('input', function(e){
-    var t = e.target;
-    if(t.dataset.item && t.dataset.part){
-      var item = state.items.find(function(i){ return i.id === t.dataset.item; });
-      if(!item) return;
-      var part = t.dataset.part;
-      if(part === 'gstEnabled') return; // handled by change
-      item[part] = t.value;
-
-      if(part === 'qty' || part === 'price'){
-        var amt = (parseFloat(item.qty)||0) * (parseFloat(item.price)||0);
-        var amtEl = itemsEditor.querySelector('[data-amt-for="' + item.id + '"]');
-        if(amtEl) amtEl.textContent = currency(amt);
-      }
-      renderPreview();
-    }
-  });
-
-  itemsEditor.addEventListener('change', function(e){
-    var t = e.target;
-    if(t.dataset.item && t.dataset.part === 'gstEnabled'){
-      var item = state.items.find(function(i){ return i.id === t.dataset.item; });
-      if(!item) return;
-      item.gstEnabled = t.checked;
-      var wrap = itemsEditor.querySelector('[data-gstwrap="' + item.id + '"]');
-      if(wrap) wrap.style.display = t.checked ? '' : 'none';
-      renderPreview();
-    }
-  });
-
-  itemsEditor.addEventListener('click', function(e){
-    var btn = e.target.closest('[data-remove-item]');
-    if(btn){
-      var id = btn.getAttribute('data-remove-item');
-      state.items = state.items.filter(function(i){ return i.id !== id; });
-      renderItemsEditor();
-      renderPreview();
-    }
-  });
-
-  /* ---------------------------------------------------------------
-     SIGNATURE PAD
-  ----------------------------------------------------------------*/
-  var sigCanvas, sigCtx, sigDrawing = false, sigHasStroke = false;
-
-  function setupSignatureCanvas(){
-    sigCanvas = $('sigCanvas');
-    if(!sigCanvas) return;
-    var box = sigCanvas.parentElement;
-    var ratio = window.devicePixelRatio || 1;
-    var w = box.clientWidth, h = 150;
-    sigCanvas.width = w * ratio;
-    sigCanvas.height = h * ratio;
-    sigCanvas.style.width = w + 'px';
-    sigCanvas.style.height = h + 'px';
-    sigCtx = sigCanvas.getContext('2d');
-    sigCtx.scale(ratio, ratio);
-    sigCtx.lineJoin = 'round';
-    sigCtx.lineCap = 'round';
-    sigCtx.lineWidth = 2.2;
-    sigCtx.strokeStyle = '#20242b';
-    sigCtx.fillStyle = '#ffffff';
-    sigCtx.fillRect(0,0,w,h);
-    sigHasStroke = false;
-
-    // if we have saved signature data, redraw it
-    if(state.signatureData){
-      var img = new Image();
-      img.onload = function(){ sigCtx.drawImage(img, 0, 0, w, h); };
-      img.src = state.signatureData;
-      sigHasStroke = true;
-    }
-
-    function getPos(evt){
-      var rect = sigCanvas.getBoundingClientRect();
-      var clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-      var clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
-      return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-    function start(evt){
-      evt.preventDefault();
-      sigDrawing = true;
-      var p = getPos(evt);
-      sigCtx.beginPath();
-      sigCtx.moveTo(p.x, p.y);
-    }
-    function move(evt){
-      if(!sigDrawing) return;
-      evt.preventDefault();
-      var p = getPos(evt);
-      sigCtx.lineTo(p.x, p.y);
-      sigCtx.stroke();
-      sigHasStroke = true;
-    }
-    function end(evt){
-      if(!sigDrawing) return;
-      sigDrawing = false;
-      state.signatureData = sigHasStroke ? sigCanvas.toDataURL('image/png') : null;
-      renderPreview();
-    }
-
-    sigCanvas.onmousedown = start;
-    sigCanvas.onmousemove = move;
-    window.addEventListener('mouseup', end);
-    sigCanvas.addEventListener('touchstart', start, { passive:false });
-    sigCanvas.addEventListener('touchmove', move, { passive:false });
-    sigCanvas.addEventListener('touchend', end);
-  }
-
-  $('btnClearSig').addEventListener('click', function(){
-    if(!sigCtx) return;
-    var w = sigCanvas.clientWidth, h = sigCanvas.clientHeight;
-    sigCtx.fillStyle = '#ffffff';
-    sigCtx.fillRect(0,0,w,h);
-    sigHasStroke = false;
-    state.signatureData = null;
-    renderPreview();
-  });
-
-  window.addEventListener('resize', function(){
-    if(state.addSignature) setupSignatureCanvas();
-  });
-
-  /* ---------------------------------------------------------------
-     TOAST
-  ----------------------------------------------------------------*/
-  var toastTimer;
-  function showToast(msg){
-    var toast = $('toast');
-    $('toastMsg').textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
-  }
-
-  /* ---------------------------------------------------------------
-     SAVE / LOAD / CLEAR (localStorage)
-  ----------------------------------------------------------------*/
-  var STORAGE_KEY = 'tmeleven_quote_draft_v1';
-
-  function saveDraft(){
-    try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      showToast('Draft Saved');
-    }catch(err){
-      showToast('Could not save draft');
-    }
-  }
-
-  function loadDraft(){
-    try{
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return false;
-      var saved = JSON.parse(raw);
-      if(saved && typeof saved === 'object'){
-        Object.keys(state).forEach(function(k){
-          if(saved.hasOwnProperty(k)) state[k] = saved[k];
         });
-        if(!Array.isArray(state.items) || state.items.length === 0){
-          state.items = [ newItem() ];
+
+
+    document
+        .getElementById("showAllTotal")
+        .addEventListener("change", function () {
+
+            document.getElementById("allGstOption").style.display =
+                this.checked ? "flex" : "none";
+
+            updatePreview();
+
+        });
+
+
+    document
+        .getElementById("allTotalGST")
+        .addEventListener("change", updatePreview);
+
+
+    document
+        .getElementById("showWatermark")
+        .addEventListener("change", function () {
+
+            document
+                .getElementById("watermarkControls")
+                .classList.toggle("active", this.checked);
+
+            updateWatermark();
+
+        });
+
+
+    document
+        .getElementById("watermarkText")
+        .addEventListener("input", updateWatermark);
+
+
+    document
+        .getElementById("watermarkOpacity")
+        .addEventListener("input", function () {
+
+            document.getElementById("opacityValue").textContent =
+                this.value;
+
+            updateWatermark();
+
+        });
+
+
+    updatePreview();
+
+});
+
+
+/* =========================================================
+   CUSTOM FIELDS
+========================================================= */
+
+function addCustomField(
+    label = "",
+    value = ""
+) {
+
+    const id = Date.now() + Math.random();
+
+    customFields.push({
+        id: id,
+        label: label,
+        value: value
+    });
+
+    renderCustomFields();
+
+    updatePreview();
+}
+
+
+function renderCustomFields() {
+
+    const container =
+        document.getElementById("customFields");
+
+    container.innerHTML = "";
+
+
+    customFields.forEach((field, index) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "custom-field";
+
+        row.innerHTML = `
+
+            <input
+                type="text"
+                placeholder="Field name"
+                value="${escapeAttribute(field.label)}"
+                oninput="updateCustomField(${index}, 'label', this.value)"
+            >
+
+            <input
+                type="text"
+                placeholder="Value"
+                value="${escapeAttribute(field.value)}"
+                oninput="updateCustomField(${index}, 'value', this.value)"
+            >
+
+            <button
+                class="remove-field"
+                onclick="removeCustomField(${index})">
+                ×
+            </button>
+
+        `;
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+function updateCustomField(index, key, value) {
+
+    customFields[index][key] = value;
+
+    updatePreview();
+}
+
+
+function removeCustomField(index) {
+
+    customFields.splice(index, 1);
+
+    renderCustomFields();
+
+    updatePreview();
+}
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+function addItem(
+    description = "",
+    unit = "",
+    price = 0,
+    quantity = 1,
+    gst = false
+) {
+
+    items.push({
+
+        id: Date.now() + Math.random(),
+
+        description: description,
+
+        unit: unit,
+
+        price: Number(price) || 0,
+
+        quantity: Number(quantity) || 1,
+
+        gst: gst
+
+    });
+
+
+    renderItems();
+
+    updatePreview();
+}
+
+
+function removeItem(index) {
+
+    items.splice(index, 1);
+
+    renderItems();
+
+    updatePreview();
+}
+
+
+function renderItems() {
+
+    const container =
+        document.getElementById("items");
+
+    container.innerHTML = "";
+
+
+    items.forEach((item, index) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "item-row";
+
+        const total =
+            item.price * item.quantity;
+
+
+        row.innerHTML = `
+
+            <input
+                type="text"
+                placeholder="Description"
+                value="${escapeAttribute(item.description)}"
+                oninput="updateItem(${index}, 'description', this.value)"
+            >
+
+
+            <div>
+
+                <input
+                    type="text"
+                    placeholder="e.g. m², Each, Hour"
+                    value="${escapeAttribute(item.unit)}"
+                    oninput="updateItem(${index}, 'unit', this.value)"
+                >
+
+                <label class="gst-box">
+
+                    <input
+                        type="checkbox"
+                        ${item.gst ? "checked" : ""}
+                        onchange="updateItemGST(${index}, this.checked)"
+                    >
+
+                    + GST
+
+                </label>
+
+            </div>
+
+
+            <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value="${item.price}"
+                oninput="updateItem(${index}, 'price', this.value)"
+            >
+
+
+            <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="1"
+                value="${item.quantity}"
+                oninput="updateItem(${index}, 'quantity', this.value)"
+            >
+
+
+            <div class="item-total-editor">
+
+                ${formatMoney(total)}
+
+            </div>
+
+
+            <button
+                class="btn btn-danger btn-small"
+                onclick="removeItem(${index})">
+                ×
+            </button>
+
+        `;
+
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+function updateItem(index, key, value) {
+
+    if (
+        key === "price" ||
+        key === "quantity"
+    ) {
+
+        value = Number(value) || 0;
+
+    }
+
+    items[index][key] = value;
+
+    renderItems();
+
+    updatePreview();
+}
+
+
+function updateItemGST(index, value) {
+
+    items[index].gst = value;
+
+    updatePreview();
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function updatePreview() {
+
+    updateDate();
+
+    updateCustomer();
+
+    updateItems();
+
+    updateTotals();
+
+    updateWatermark();
+
+}
+
+
+function updateDate() {
+
+    const value =
+        document.getElementById("quoteDate").value;
+
+    if (!value) {
+
+        document.getElementById("previewDate").textContent =
+            "--/--/----";
+
+        return;
+    }
+
+
+    const date =
+        new Date(value + "T00:00:00");
+
+
+    const formatted =
+        String(date.getDate()).padStart(2, "0") +
+        "/" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "/" +
+        date.getFullYear();
+
+
+    document.getElementById("previewDate").textContent =
+        formatted;
+
+}
+
+
+function updateCustomer() {
+
+    const container =
+        document.getElementById("previewCustomer");
+
+    container.innerHTML = "";
+
+
+    const fields = [
+
+        [
+            "Name",
+            document.getElementById("customerName").value
+        ],
+
+        [
+            "Email",
+            document.getElementById("customerEmail").value
+        ],
+
+        [
+            "Address",
+            document.getElementById("customerAddress").value
+        ],
+
+        [
+            "Project",
+            document.getElementById("project").value
+        ]
+
+    ];
+
+
+    customFields.forEach(field => {
+
+        if (field.label || field.value) {
+
+            fields.push([
+                field.label,
+                field.value
+            ]);
+
         }
-        if(!Array.isArray(state.customFields)) state.customFields = [];
-        return true;
-      }
-    }catch(err){ /* ignore corrupt draft */ }
-    return false;
-  }
 
-  $('btnSaveDraft').addEventListener('click', saveDraft);
+    });
 
-  $('btnClearAll').addEventListener('click', function(){
-    var ok = window.confirm('This will clear all entered data and cannot be undone. Continue?');
-    if(!ok) return;
-    try{ localStorage.removeItem(STORAGE_KEY); }catch(err){}
-    state.name = ''; state.email = ''; state.address = ''; state.project = '';
-    state.date = todayISO();
-    state.customFields = [];
-    state.items = [ newItem() ];
-    state.showOverallTotal = false;
-    state.overallGstEnabled = false;
-    state.overallGstRate = '';
-    state.addSignature = false;
-    state.signatureData = null;
-    state.addWatermark = false;
-    renderAll();
-    showToast('All Data Cleared');
-  });
 
-  /* ---------------------------------------------------------------
-     PDF GENERATION
-  ----------------------------------------------------------------*/
-  $('btnDownloadPdf').addEventListener('click', function(){
-    var el = $('document');
-    var filename = 'TM-Eleven-Quote-' + (state.project ? state.project.replace(/[^a-z0-9]+/gi,'-').replace(/(^-|-$)/g,'') + '-' : '') + state.date + '.pdf';
+    fields.forEach(field => {
 
-    var opt = {
-      margin: 0,
-      filename: filename,
-      image: { type:'jpeg', quality:0.98 },
-      html2canvas: { scale:2, useCORS:true, backgroundColor:'#ffffff' },
-      jsPDF: { unit:'pt', format:'a4', orientation:'portrait' }
+        if (!field[0] && !field[1]) {
+            return;
+        }
+
+
+        const div =
+            document.createElement("div");
+
+        div.className = "to-line";
+
+
+        div.innerHTML =
+            `<strong>${escapeHTML(field[0])}:</strong>
+             ${escapeHTML(field[1])}`;
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+function updateItems() {
+
+    const container =
+        document.getElementById("previewItems");
+
+    container.innerHTML = "";
+
+
+    items.forEach(item => {
+
+        const total =
+            item.price * item.quantity;
+
+
+        const tr =
+            document.createElement("tr");
+
+
+        tr.innerHTML = `
+
+            <td>
+                ${escapeHTML(item.description || "-")}
+            </td>
+
+            <td>
+                ${escapeHTML(item.unit || "-")}
+            </td>
+
+            <td>
+                ${formatMoney(item.price)}
+            </td>
+
+            <td>
+                ${escapeHTML(String(item.quantity))}
+            </td>
+
+            <td>
+
+                ${formatMoney(total)}
+
+                ${
+                    item.gst
+                    ? `<div class="gst-tag">+ GST</div>`
+                    : ""
+                }
+
+            </td>
+
+        `;
+
+
+        container.appendChild(tr);
+
+    });
+
+
+    if (items.length === 0) {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.innerHTML = `
+
+            <td colspan="5"
+                style="text-align:center;color:#999;padding:25px;">
+                No quote items
+            </td>
+
+        `;
+
+        container.appendChild(tr);
+
+    }
+
+}
+
+
+/* =========================================================
+   TOTALS
+========================================================= */
+
+function calculateTotals() {
+
+    let subtotal = 0;
+
+    let itemGST = 0;
+
+
+    items.forEach(item => {
+
+        const total =
+            Number(item.price || 0) *
+            Number(item.quantity || 0);
+
+
+        subtotal += total;
+
+
+        if (item.gst) {
+
+            itemGST += total * 0.10;
+
+        }
+
+    });
+
+
+    return {
+
+        subtotal: subtotal,
+
+        itemGST: itemGST
+
     };
 
-    var btn = $('btnDownloadPdf');
-    var originalHtml = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = 'Generating…';
+}
 
-    html2pdf().set(opt).from(el).save().then(function(){
-      btn.disabled = false;
-      btn.innerHTML = originalHtml;
-      showToast('PDF Downloaded');
-    }).catch(function(){
-      btn.disabled = false;
-      btn.innerHTML = originalHtml;
-      showToast('PDF generation failed');
-    });
-  });
 
-  /* ---------------------------------------------------------------
-     BOOT
-  ----------------------------------------------------------------*/
-  function boot(){
-    var restored = loadDraft();
-    if(!restored){
-      seedDefaults();
+function updateTotals() {
+
+    const totals =
+        calculateTotals();
+
+
+    document.getElementById("previewItemTotals").textContent =
+        formatMoney(totals.subtotal);
+
+
+    const showAll =
+        document.getElementById("showAllTotal").checked;
+
+
+    const allGST =
+        document.getElementById("allTotalGST").checked;
+
+
+    const gstLine =
+        document.getElementById("previewGSTLine");
+
+
+    const grand =
+        document.getElementById("previewGrandTotal");
+
+
+    if (!showAll) {
+
+        gstLine.style.display = "none";
+
+        grand.style.display = "none";
+
+        return;
+
     }
-    renderAll();
-    if(state.addSignature){ setTimeout(setupSignatureCanvas, 0); }
-  }
 
-  boot();
 
-})();
+    let gst = totals.itemGST;
+
+
+    let allTotal =
+        totals.subtotal + gst;
+
+
+    if (allGST && totals.itemGST === 0) {
+
+        gst =
+            totals.subtotal * 0.10;
+
+        allTotal =
+            totals.subtotal + gst;
+
+    }
+
+
+    if (gst > 0) {
+
+        gstLine.style.display = "flex";
+
+        document.getElementById("previewGST").textContent =
+            formatMoney(gst);
+
+    } else {
+
+        gstLine.style.display = "none";
+
+    }
+
+
+    document.getElementById("previewAllTotal").textContent =
+        formatMoney(allTotal);
+
+
+    grand.style.display = "flex";
+
+}
+
+
+/* =========================================================
+   WATERMARK
+========================================================= */
+
+function updateWatermark() {
+
+    const enabled =
+        document.getElementById("showWatermark").checked;
+
+
+    const page =
+        document.getElementById("quotePage");
+
+
+    const watermark =
+        document.getElementById("quoteWatermark");
+
+
+    page.classList.toggle(
+        "watermark-active",
+        enabled
+    );
+
+
+    watermark.textContent =
+        document.getElementById("watermarkText").value ||
+        "TM ELEVEN";
+
+
+    const opacity =
+        document.getElementById("watermarkOpacity").value;
+
+
+    watermark.style.opacity =
+        enabled ? opacity : "0";
+
+}
+
+
+/* =========================================================
+   SAVE DRAFT
+========================================================= */
+
+function saveDraft() {
+
+    const data = {
+
+        customerName:
+            document.getElementById("customerName").value,
+
+        customerEmail:
+            document.getElementById("customerEmail").value,
+
+        customerAddress:
+            document.getElementById("customerAddress").value,
+
+        project:
+            document.getElementById("project").value,
+
+        quoteDate:
+            document.getElementById("quoteDate").value,
+
+        customFields:
+            customFields,
+
+        items:
+            items,
+
+        showAllTotal:
+            document.getElementById("showAllTotal").checked,
+
+        allTotalGST:
+            document.getElementById("allTotalGST").checked,
+
+        showWatermark:
+            document.getElementById("showWatermark").checked,
+
+        watermarkText:
+            document.getElementById("watermarkText").value,
+
+        watermarkOpacity:
+            document.getElementById("watermarkOpacity").value
+
+    };
+
+
+    localStorage.setItem(
+        "tmElevenQuoteDraft",
+        JSON.stringify(data)
+    );
+
+
+    showToast("Draft saved successfully.");
+}
+
+
+/* =========================================================
+   RESTORE DRAFT
+========================================================= */
+
+function restoreDraft() {
+
+    const saved =
+        localStorage.getItem(
+            "tmElevenQuoteDraft"
+        );
+
+
+    if (!saved) {
+
+        showToast("No saved draft found.");
+
+        return;
+
+    }
+
+
+    try {
+
+        const data =
+            JSON.parse(saved);
+
+
+        document.getElementById("customerName").value =
+            data.customerName || "";
+
+
+        document.getElementById("customerEmail").value =
+            data.customerEmail || "";
+
+
+        document.getElementById("customerAddress").value =
+            data.customerAddress || "";
+
+
+        document.getElementById("project").value =
+            data.project || "";
+
+
+        document.getElementById("quoteDate").value =
+            data.quoteDate || "";
+
+
+        customFields =
+            data.customFields || [];
+
+
+        items =
+            data.items || [];
+
+
+        document.getElementById("showAllTotal").checked =
+            !!data.showAllTotal;
+
+
+        document.getElementById("allTotalGST").checked =
+            !!data.allTotalGST;
+
+
+        document.getElementById("showWatermark").checked =
+            !!data.showWatermark;
+
+
+        document.getElementById("watermarkText").value =
+            data.watermarkText || "TM ELEVEN";
+
+
+        document.getElementById("watermarkOpacity").value =
+            data.watermarkOpacity || "0.08";
+
+
+        document.getElementById("opacityValue").textContent =
+            document.getElementById("watermarkOpacity").value;
+
+
+        document.getElementById("allGstOption").style.display =
+            data.showAllTotal ? "flex" : "none";
+
+
+        document
+            .getElementById("watermarkControls")
+            .classList.toggle(
+                "active",
+                !!data.showWatermark
+            );
+
+
+        renderCustomFields();
+
+        renderItems();
+
+        updatePreview();
+
+
+        showToast("Draft restored successfully.");
+
+    } catch (error) {
+
+        showToast("Unable to restore draft.");
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================================
+   PDF
+========================================================= */
+
+async function convertToPDF() {
+
+    const quote =
+        document.getElementById("quotePage");
+
+
+    const button =
+        document.querySelector(
+            ".action-btn.btn-gold"
+        );
+
+
+    const oldText =
+        button.innerHTML;
+
+
+    button.innerHTML =
+        "Generating PDF...";
+
+
+    button.disabled = true;
+
+
+    try {
+
+        const canvas =
+            await html2canvas(
+                quote,
+                {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff"
+                }
+            );
+
+
+        const imgData =
+            canvas.toDataURL(
+                "image/png",
+                1.0
+            );
+
+
+        const {
+            jsPDF
+        } = window.jspdf;
+
+
+        const pdf =
+            new jsPDF(
+                "p",
+                "mm",
+                "a4"
+            );
+
+
+        const pageWidth =
+            210;
+
+
+        const pageHeight =
+            297;
+
+
+        const imgWidth =
+            pageWidth;
+
+
+        const imgHeight =
+            canvas.height *
+            imgWidth /
+            canvas.width;
+
+
+        let heightLeft =
+            imgHeight;
+
+
+        let position = 0;
+
+
+        pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            position,
+            imgWidth,
+            imgHeight
+        );
+
+
+        heightLeft -= pageHeight;
+
+
+        while (heightLeft > 0) {
+
+            position =
+                heightLeft -
+                imgHeight;
+
+            pdf.addPage();
+
+            pdf.addImage(
+                imgData,
+                "PNG",
+                0,
+                position,
+                imgWidth,
+                imgHeight
+            );
+
+            heightLeft -= pageHeight;
+
+        }
+
+
+        const date =
+            document.getElementById("quoteDate").value ||
+            "quote";
+
+
+        pdf.save(
+            "TM-ELEVEN-Quote-" +
+            date +
+            ".pdf"
+        );
+
+
+        showToast(
+            "PDF created successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "PDF generation failed."
+        );
+
+    }
+
+
+    button.innerHTML =
+        oldText;
+
+    button.disabled = false;
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatMoney(value) {
+
+    return "$" +
+        Number(value || 0).toLocaleString(
+            "en-AU",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
+
+}
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add("show");
+
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2500);
+
+}
+
 </script>
+
 </body>
 </html>
