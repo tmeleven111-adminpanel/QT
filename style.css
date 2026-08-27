@@ -1,0 +1,1149 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+
+    --bg: #0c1017;
+    --bg2: #121924;
+
+    --card: #151d29;
+    --card2: #1b2431;
+
+    --border: #2b3747;
+
+    --gold: #c98a34;
+    --gold-light: #e8b96d;
+
+    --white: #f4f4f4;
+    --muted: #8e99a8;
+
+    --danger: #e25c5c;
+    --green: #47b881;
+
+}
+
+body {
+
+    font-family: "Poppins", sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #1a2635,
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--white);
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================
+   FIXED TOP BAR
+========================= */
+
+.top-actions {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    height: 76px;
+
+    background:
+        rgba(12, 16, 23, .92);
+
+    backdrop-filter:
+        blur(15px);
+
+    border-bottom:
+        1px solid var(--border);
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 40px;
+
+}
+
+.action-brand {
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: var(--gold-light);
+
+}
+
+.action-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+.btn {
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding:
+        11px 18px;
+
+    font-family: inherit;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s;
+
+}
+
+.btn:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+.btn-outline {
+
+    background: transparent;
+
+    border:
+        1px solid var(--border);
+
+    color: white;
+
+}
+
+.btn-save {
+
+    background:
+        #243548;
+
+    color: white;
+
+}
+
+.btn-pdf {
+
+    background:
+        var(--gold);
+
+    color:
+        #111;
+
+}
+
+
+/* =========================
+   MAIN EDITOR
+========================= */
+
+.editor-wrapper {
+
+    width: min(1600px, 100%);
+
+    margin: auto;
+
+    padding:
+        115px 30px 60px;
+
+    display: grid;
+
+    grid-template-columns:
+        380px 1fr;
+
+    gap: 30px;
+
+    align-items: start;
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+.editor-settings {
+
+    position: sticky;
+
+    top: 100px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+}
+
+.settings-card {
+
+    background:
+        linear-gradient(
+            145deg,
+            #18212e,
+            #121923
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.15);
+
+}
+
+.settings-card h3 {
+
+    font-size: 15px;
+
+    margin-bottom: 15px;
+
+    color:
+        var(--gold-light);
+
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+}
+
+.input-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+label {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color:
+        var(--muted);
+
+}
+
+input,
+textarea {
+
+    width: 100%;
+
+    background:
+        #0d141e;
+
+    border:
+        1px solid #2a3747;
+
+    border-radius: 7px;
+
+    padding:
+        10px 11px;
+
+    color:
+        white;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition: .2s;
+
+}
+
+input:focus {
+
+    border-color:
+        var(--gold);
+
+}
+
+
+/* =========================
+   CLIENT FIELDS
+========================= */
+
+.section-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+
+}
+
+.section-heading h3 {
+
+    margin-bottom: 0;
+
+}
+
+.small-btn {
+
+    border: none;
+
+    background:
+        rgba(201,138,52,.14);
+
+    border:
+        1px solid rgba(201,138,52,.35);
+
+    color:
+        var(--gold-light);
+
+    padding:
+        7px 10px;
+
+    border-radius: 6px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+}
+
+.client-field {
+
+    display: grid;
+
+    grid-template-columns:
+        100px 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 9px;
+
+}
+
+.client-label {
+
+    color:
+        var(--gold-light);
+
+    font-weight: 700;
+
+}
+
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.check-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    margin: 10px 0;
+
+}
+
+.check-row input {
+
+    width: 17px;
+
+    height: 17px;
+
+    accent-color:
+        var(--gold);
+
+}
+
+.nested-option {
+
+    display: none;
+
+    margin-left: 20px;
+
+    padding-left: 15px;
+
+    border-left:
+        1px solid var(--border);
+
+}
+
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch {
+
+    position: relative;
+
+    width: 45px;
+
+    height: 23px;
+
+}
+
+.switch input {
+
+    opacity: 0;
+
+    width: 0;
+
+    height: 0;
+
+}
+
+.slider {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        #334050;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+.slider:before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 17px;
+
+    height: 17px;
+
+    left: 3px;
+
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: .3s;
+
+}
+
+.switch input:checked + .slider {
+
+    background:
+        var(--gold);
+
+}
+
+.switch input:checked + .slider:before {
+
+    transform:
+        translateX(22px);
+
+}
+
+
+/* =========================
+   QUOTE PAPER
+========================= */
+
+.quote-paper {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #f2f1ee;
+
+    color:
+        #252525;
+
+    width: 100%;
+
+    min-height: 1120px;
+
+    padding:
+        42px 42px 55px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35);
+
+}
+
+
+/* WATERMARK */
+
+.quote-watermark {
+
+    display: none;
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(-35deg);
+
+    font-family:
+        "Anton", sans-serif;
+
+    font-size:
+        clamp(70px, 12vw, 170px);
+
+    white-space: nowrap;
+
+    color:
+        rgba(201,138,52,.09);
+
+    pointer-events: none;
+
+    z-index: 1;
+
+}
+
+.quote-paper > *:not(.quote-watermark) {
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.quote-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 55px;
+
+}
+
+.company-area {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+.company-logo {
+
+    width: 65px;
+
+    max-height: 65px;
+
+    object-fit: contain;
+
+}
+
+.company-info h1 {
+
+    font-size: 19px;
+
+    letter-spacing: .5px;
+
+    color:
+        #b57b28;
+
+}
+
+.company-info p {
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+.company-info span {
+
+    display: block;
+
+    font-size: 10px;
+
+}
+
+.company-info small {
+
+    display: block;
+
+    font-size: 7px;
+
+    margin-top: 5px;
+
+}
+
+.quote-title-area {
+
+    text-align: right;
+
+}
+
+.quote-title-area h2 {
+
+    font-family:
+        "Anton", sans-serif;
+
+    font-size:
+        clamp(55px, 8vw, 90px);
+
+    line-height: .85;
+
+    color:
+        #e1c796;
+
+    letter-spacing: 2px;
+
+}
+
+.quote-title-area p {
+
+    margin-top: 10px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================
+   TO BOX
+========================= */
+
+.to-box {
+
+    border:
+        1px solid #c89046;
+
+    border-radius: 15px;
+
+    padding:
+        20px 25px;
+
+    margin-bottom: 45px;
+
+}
+
+.to-box h3 {
+
+    color:
+        #b57b28;
+
+    font-size: 14px;
+
+    margin-bottom: 10px;
+
+}
+
+.preview-client-row {
+
+    display: grid;
+
+    grid-template-columns:
+        120px 1fr;
+
+    gap: 5px;
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+
+}
+
+.preview-client-label {
+
+    font-weight: 700;
+
+}
+
+.preview-client-value {
+
+    font-weight: 600;
+
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+thead {
+
+    background:
+        #bb7523;
+
+    color: white;
+
+}
+
+th {
+
+    padding:
+        10px 8px;
+
+    font-size: 12px;
+
+    text-align: left;
+
+}
+
+td {
+
+    padding:
+        8px;
+
+    border-bottom:
+        7px solid #ddd8d0;
+
+    vertical-align: middle;
+
+}
+
+.item-input {
+
+    width: 100%;
+
+    background: transparent;
+
+    border: none;
+
+    padding: 4px;
+
+    color:
+        #222;
+
+    font-size: 12px;
+
+    border-radius: 0;
+
+}
+
+.item-input:focus {
+
+    border-bottom:
+        1px solid #b57b28;
+
+}
+
+.description-cell input {
+
+    font-weight: 700;
+
+}
+
+.item-total {
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+
+}
+
+.item-gst-control {
+
+    margin-top: 5px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+.item-gst-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    font-size: 8px;
+
+    color: #555;
+
+}
+
+.item-gst-label input {
+
+    width: 11px;
+
+    height: 11px;
+
+}
+
+.item-gst-nested {
+
+    display: none;
+
+    margin-left: 14px;
+
+}
+
+.delete-item {
+
+    border: none;
+
+    background:
+        #f5dada;
+
+    color:
+        #b52c2c;
+
+    border-radius: 5px;
+
+    padding:
+        6px 8px;
+
+    cursor: pointer;
+
+}
+
+.add-item-btn {
+
+    margin-top: 15px;
+
+    border:
+        1px dashed #b57b28;
+
+    background: transparent;
+
+    color:
+        #9b621d;
+
+    padding:
+        9px 16px;
+
+    border-radius: 6px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   GRAND TOTAL
+========================= */
+
+.grand-total-section {
+
+    display: none;
+
+    justify-content: flex-end;
+
+    margin-top: 30px;
+
+}
+
+.total-box {
+
+    width: min(340px, 100%);
+
+    background:
+        #ece9e4;
+
+    border-top:
+        3px solid #bb7523;
+
+    padding:
+        15px;
+
+}
+
+.total-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding:
+        7px 0;
+
+    font-size: 13px;
+
+}
+
+.final-total {
+
+    margin-top: 7px;
+
+    padding-top: 12px;
+
+    border-top:
+        1px solid #bbb;
+
+    color:
+        #a5651c;
+
+    font-size: 17px;
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.quote-footer {
+
+    margin-top: 90px;
+
+}
+
+.quote-footer h3 {
+
+    font-size: 16px;
+
+    color:
+        #b57b28;
+
+}
+
+.quote-footer p {
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    margin-top: 2px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 1100px) {
+
+    .editor-wrapper {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .editor-settings {
+
+        position: relative;
+
+        top: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media(max-width: 700px) {
+
+    .top-actions {
+
+        height: auto;
+
+        min-height: 65px;
+
+        padding:
+            10px 15px;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+    }
+
+    .action-brand {
+
+        font-size: 12px;
+
+    }
+
+    .btn {
+
+        padding:
+            8px 10px;
+
+        font-size: 11px;
+
+    }
+
+    .editor-wrapper {
+
+        padding:
+            135px 10px 30px;
+
+    }
+
+    .editor-settings {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .quote-paper {
+
+        padding:
+            25px 15px 40px;
+
+        min-height: 900px;
+
+    }
+
+    .quote-header {
+
+        margin-bottom: 35px;
+
+    }
+
+    .company-area {
+
+        gap: 8px;
+
+    }
+
+    .company-logo {
+
+        width: 48px;
+
+    }
+
+    .company-info h1 {
+
+        font-size: 12px;
+
+    }
+
+    .company-info p {
+
+        font-size: 7px;
+
+    }
+
+    .quote-title-area h2 {
+
+        font-size: 50px;
+
+    }
+
+    .quote-title-area p {
+
+        font-size: 9px;
+
+    }
+
+    .to-box {
+
+        padding:
+            15px;
+
+    }
+
+    .preview-client-row {
+
+        grid-template-columns:
+            85px 1fr;
+
+        font-size: 10px;
+
+    }
+
+    .table-scroll {
+
+        overflow-x: auto;
+
+    }
+
+    table {
+
+        min-width: 680px;
+
+    }
+
+}
