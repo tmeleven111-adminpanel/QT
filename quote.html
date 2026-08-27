@@ -1,1 +1,2769 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>TM ELEVEN — Quote Generator</title>
+
+<style>
+
+/* =========================================================
+   DARK UI
+========================================================= */
+
+:root{
+  --gold:#d8872f;
+  --gold-dark:#b9681c;
+  --gold-light:#5a3a20;
+
+  --bg:#0d0f12;
+  --panel:#15181c;
+  --panel2:#1b1f24;
+  --input:#20252b;
+
+  --ink:#f4f4f4;
+  --muted:#9da3aa;
+
+  --border:#30353b;
+  --danger:#351b1b;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+  max-width:1450px;
+  margin:auto;
+  padding:24px;
+}
+
+
+/* =========================================================
+   STICKY TOOLBAR
+========================================================= */
+
+.toolbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  background:rgba(21,24,28,.96);
+  backdrop-filter:blur(12px);
+
+  border:1px solid var(--border);
+  border-radius:14px;
+
+  padding:13px 15px;
+
+  display:flex;
+  gap:9px;
+  align-items:center;
+  flex-wrap:wrap;
+
+  margin-bottom:20px;
+
+  box-shadow:0 8px 25px rgba(0,0,0,.35);
+}
+
+.toolbar h1{
+  font-size:17px;
+  margin:0 auto 0 0;
+  letter-spacing:.4px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+  border:0;
+  border-radius:8px;
+
+  padding:10px 14px;
+
+  cursor:pointer;
+  font-weight:700;
+
+  transition:.15s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-light{
+  background:#292e34;
+  color:#fff;
+}
+
+.btn-dark{
+  background:#090a0b;
+  color:#fff;
+  border:1px solid #34383d;
+}
+
+.btn-danger{
+  background:var(--danger);
+  color:#ffb5b5;
+}
+
+
+/* =========================================================
+   PDF ICON BUTTON
+========================================================= */
+
+.pdf-btn{
+  width:42px;
+  height:42px;
+
+  padding:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:var(--gold);
+  color:#fff;
+
+  border:0;
+  border-radius:9px;
+
+  cursor:pointer;
+
+  box-shadow:0 4px 14px rgba(216,135,47,.25);
+}
+
+.pdf-btn:hover{
+  background:#e4933c;
+  transform:translateY(-1px);
+}
+
+.pdf-btn svg{
+  width:21px;
+  height:21px;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(310px,420px) 1fr;
+  gap:24px;
+  align-items:start;
+}
+
+
+/* =========================================================
+   EDITOR PANEL
+========================================================= */
+
+.panel{
+  background:var(--panel);
+
+  border:1px solid var(--border);
+  border-radius:14px;
+
+  padding:20px;
+
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+
+  position:sticky;
+  top:78px;
+
+  max-height:calc(100vh - 95px);
+  overflow:auto;
+}
+
+.panel h2{
+  margin:0 0 16px;
+  font-size:17px;
+}
+
+
+/* =========================================================
+   SECTION TITLES
+========================================================= */
+
+.section-title{
+  margin:20px 0 10px;
+
+  padding-bottom:7px;
+
+  border-bottom:2px solid var(--gold-light);
+
+  font-size:13px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.8px;
+
+  color:#e39a51;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+label{
+  display:block;
+
+  font-size:12px;
+  font-weight:700;
+
+  margin:9px 0 5px;
+}
+
+input,
+textarea{
+  width:100%;
+
+  border:1px solid var(--border);
+
+  border-radius:7px;
+
+  padding:9px 10px;
+
+  outline:none;
+
+  background:var(--input);
+
+  color:#fff;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:#777d84;
+}
+
+input:focus,
+textarea:focus{
+  border-color:var(--gold);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(216,135,47,.10);
+}
+
+textarea{
+  min-height:70px;
+  resize:vertical;
+}
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+.items-editor{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.item-editor{
+  border:1px solid var(--border);
+
+  border-radius:9px;
+
+  padding:10px;
+
+  background:var(--panel2);
+}
+
+.item-top{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+}
+
+.item-fields{
+  display:grid;
+  grid-template-columns:1.4fr .7fr .8fr;
+  gap:7px;
+  margin-top:7px;
+}
+
+.mini label{
+  font-size:10px;
+}
+
+.mini input{
+  padding:7px;
+  font-size:12px;
+}
+
+.gst-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  margin-top:8px;
+
+  font-size:12px;
+}
+
+.gst-row input[type=checkbox]{
+  width:auto;
+}
+
+.gst-rate{
+  width:80px!important;
+}
+
+
+/* =========================================================
+   OTHER DETAILS
+========================================================= */
+
+.other-detail-head{
+  margin-top:14px;
+
+  padding:11px 12px;
+
+  border:1px solid #51371f;
+
+  background:#211a14;
+
+  border-radius:10px;
+
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  gap:10px;
+}
+
+.other-detail-title{
+  font-size:12px;
+
+  font-weight:900;
+
+  color:#e49a50;
+}
+
+.other-detail-title span{
+  color:#777;
+
+  font-size:9px;
+
+  font-weight:700;
+
+  margin-left:5px;
+
+  text-transform:uppercase;
+}
+
+.other-detail-sub{
+  font-size:9px;
+
+  color:#888;
+
+  margin-top:3px;
+}
+
+.mini-add{
+  border:1px solid var(--gold);
+
+  background:#211a14;
+
+  color:#e6a05a;
+
+  border-radius:7px;
+
+  padding:7px 10px;
+
+  cursor:pointer;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  white-space:nowrap;
+}
+
+.other-detail-row{
+  display:grid;
+
+  grid-template-columns:24px 105px 1fr auto;
+
+  gap:7px;
+
+  align-items:end;
+
+  margin-top:8px;
+}
+
+.check-detail{
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  height:35px;
+
+  margin:0;
+}
+
+.check-detail input{
+  width:16px;
+  height:16px;
+
+  accent-color:var(--gold);
+
+  cursor:pointer;
+}
+
+.remove-detail{
+  height:35px;
+
+  border:0;
+
+  border-radius:7px;
+
+  background:#351b1b;
+
+  color:#ffaaaa;
+
+  padding:0 9px;
+
+  cursor:pointer;
+
+  font-weight:800;
+}
+
+
+/* =========================================================
+   INVOICE OPTIONS
+========================================================= */
+
+.display-card{
+  border:1px solid var(--border);
+
+  border-radius:10px;
+
+  padding:4px 10px;
+
+  background:var(--panel2);
+}
+
+.check-option{
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  margin:0;
+
+  padding:9px 6px;
+
+  border-bottom:1px solid var(--border);
+
+  cursor:pointer;
+}
+
+.check-option:last-child{
+  border-bottom:0;
+}
+
+.check-option input{
+  width:16px;
+  height:16px;
+
+  accent-color:var(--gold);
+
+  cursor:pointer;
+}
+
+.check-option span{
+  display:flex;
+
+  flex-direction:column;
+
+  gap:2px;
+}
+
+.check-option b{
+  font-size:11px;
+}
+
+.check-option small{
+  font-size:9px;
+
+  color:#888;
+}
+
+.hint{
+  font-size:11px;
+
+  color:var(--muted);
+
+  line-height:1.4;
+
+  margin-top:8px;
+}
+
+
+/* =========================================================
+   QUOTE PREVIEW
+========================================================= */
+
+.quote-wrap{
+  display:flex;
+
+  justify-content:center;
+
+  overflow:auto;
+
+  padding:0 0 40px;
+}
+
+
+/* =========================================================
+   A4 PAPER
+========================================================= */
+
+.paper{
+  width:794px;
+
+  min-width:794px;
+
+  min-height:1123px;
+
+  background:#fff;
+
+  color:#111;
+
+  box-shadow:
+    0 8px 35px rgba(0,0,0,.30);
+
+  padding:45px 38px 50px;
+
+  position:relative;
+}
+
+.paper:before{
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height:2px;
+
+  background:#222;
+}
+
+
+/* =========================================================
+   QUOTE HEADER
+========================================================= */
+
+.quote-header{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:flex-start;
+
+  gap:30px;
+}
+
+.brand{
+  display:flex;
+
+  align-items:flex-start;
+
+  gap:12px;
+}
+
+.brand img{
+  width:48px;
+  height:48px;
+
+  object-fit:contain;
+}
+
+.company-name{
+  font-size:16px;
+
+  font-weight:900;
+
+  color:var(--gold);
+
+  line-height:1.1;
+}
+
+.company-sub{
+  font-size:8px;
+
+  font-weight:900;
+
+  margin-top:3px;
+}
+
+.company-acn{
+  font-size:7px;
+
+  font-weight:700;
+
+  margin-top:4px;
+}
+
+.quote-heading{
+  text-align:right;
+}
+
+.quote-heading h2{
+  margin:0;
+
+  color:#eed19f;
+
+  font-size:52px;
+
+  line-height:.85;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+}
+
+.quote-date{
+  font-size:10px;
+
+  font-weight:800;
+
+  margin-top:13px;
+}
+
+
+/* =========================================================
+   CUSTOMER BOX
+========================================================= */
+
+.to-box{
+  border:1.5px solid var(--gold);
+
+  border-radius:13px;
+
+  margin-top:38px;
+
+  padding:15px 18px;
+
+  min-height:118px;
+}
+
+.to-title{
+  color:var(--gold-dark);
+
+  font-size:10px;
+
+  font-weight:900;
+
+  margin-bottom:8px;
+}
+
+.to-grid{
+  display:grid;
+
+  grid-template-columns:95px 1fr;
+
+  gap:5px 0;
+
+  font-size:10px;
+
+  font-weight:700;
+}
+
+.to-grid .value{
+  font-weight:600;
+
+  white-space:pre-line;
+}
+
+.dynamic-detail{
+  min-width:0;
+}
+
+
+/* =========================================================
+   ITEMS TABLE
+========================================================= */
+
+.items-table{
+  width:100%;
+
+  border-collapse:collapse;
+
+  margin-top:31px;
+
+  font-size:10px;
+}
+
+.items-table th{
+  background:#d9822b;
+
+  color:#fff;
+
+  text-align:left;
+
+  padding:7px 10px;
+
+  font-size:10px;
+
+  font-weight:900;
+}
+
+.items-table th:not(:first-child),
+.items-table td:not(:first-child){
+  text-align:center;
+}
+
+.items-table td{
+  padding:7px 8px 5px;
+
+  font-weight:800;
+
+  border-bottom:5px solid #f3e5d5;
+
+  vertical-align:top;
+}
+
+.items-table .desc{
+  text-align:left!important;
+}
+
+.item-note{
+  display:block;
+
+  font-size:6px;
+
+  font-weight:600;
+
+  margin-top:2px;
+
+  color:#333;
+}
+
+.empty-msg{
+  color:#777;
+
+  font-weight:600;
+}
+
+
+/* =========================================================
+   TOTALS
+========================================================= */
+
+.totals{
+  margin-top:12px;
+
+  margin-left:auto;
+
+  width:315px;
+
+  font-size:10px;
+}
+
+.total-row{
+  display:flex;
+
+  justify-content:space-between;
+
+  padding:5px 8px;
+
+  border-bottom:1px solid #ddd;
+
+  font-weight:700;
+}
+
+.total-row.grand{
+  background:#f2dfca;
+
+  border-bottom:0;
+
+  font-size:12px;
+
+  font-weight:900;
+
+  margin-top:4px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+  position:absolute;
+
+  left:38px;
+
+  bottom:55px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  font-size:8px;
+
+  line-height:1.45;
+}
+
+.footer-logo{
+  width:48px;
+  height:48px;
+
+  object-fit:contain;
+
+  flex-shrink:0;
+}
+
+.footer-info strong{
+  color:var(--gold);
+
+  font-size:13px;
+}
+
+.footer-info b{
+  font-size:8px;
+}
+
+.footer-info span{
+  font-size:8px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:950px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    position:static;
+
+    max-height:none;
+  }
+
+  .quote-wrap{
+    justify-content:flex-start;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .app{
+    padding:10px;
+  }
+
+  .toolbar{
+    padding:11px;
+  }
+
+  .toolbar h1{
+    width:100%;
+
+    margin-bottom:3px;
+
+    font-size:15px;
+  }
+
+  .item-fields{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .item-fields > div:first-child{
+    grid-column:1/-1;
+  }
+
+  .other-detail-row{
+    grid-template-columns:24px 1fr auto;
+  }
+
+  .other-detail-row > div:nth-child(2){
+    grid-column:2/-1;
+  }
+
+  .other-detail-row > div:nth-child(3){
+    grid-column:2/-1;
+  }
+
+  .paper{
+    transform-origin:top left;
+
+    width:794px;
+
+    min-width:794px;
+  }
+
+}
+
+
+/* =========================================================
+   PRINT / PDF
+========================================================= */
+
+@media print{
+
+  html,
+  body{
+    background:#fff!important;
+  }
+
+  body{
+    color:#111!important;
+  }
+
+  .no-print{
+    display:none!important;
+  }
+
+  .app{
+    padding:0!important;
+  }
+
+  .layout{
+    display:block;
+  }
+
+  .quote-wrap{
+    padding:0;
+
+    display:block;
+
+    overflow:visible;
+  }
+
+  .paper{
+    box-shadow:none;
+
+    margin:0;
+
+    width:210mm;
+
+    min-width:210mm;
+
+    min-height:297mm;
+
+    padding:12mm 10mm 13mm;
+
+    background:#fff!important;
+
+    color:#111!important;
+  }
+
+  .footer{
+    left:10mm;
+
+    bottom:18mm;
+  }
+
+  @page{
+    size:A4 portrait;
+
+    margin:0;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+  <!-- =====================================================
+       TOOLBAR
+  ====================================================== -->
+
+  <div class="toolbar no-print">
+
+    <h1>
+      TM ELEVEN — Professional Quote Generator
+    </h1>
+
+
+    <button
+      class="btn btn-light"
+      onclick="saveDraft()"
+    >
+      Save Draft
+    </button>
+
+
+    <button
+      class="btn btn-light"
+      onclick="loadDraft()"
+    >
+      Load Draft
+    </button>
+
+
+    <button
+      class="btn btn-dark"
+      onclick="clearDraft()"
+    >
+      Clear Draft
+    </button>
+
+
+    <!-- PDF ICON ONLY -->
+
+    <button
+      class="pdf-btn"
+      onclick="convertPDF()"
+      title="Convert to PDF / Print"
+      aria-label="Convert to PDF"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+
+        <polyline points="14 2 14 8 20 8"/>
+
+        <path d="M8 13h2a1.5 1.5 0 0 1 0 3H8z"/>
+
+        <path d="M13 16v-3h1.5a1.5 1.5 0 0 1 0 3H13z"/>
+
+        <path d="M18 13h-2v3"/>
+
+      </svg>
+
+    </button>
+
+  </div>
+
+
+
+  <div class="layout">
+
+
+    <!-- =================================================
+         EDITOR
+    ================================================== -->
+
+    <div class="panel no-print">
+
+
+      <h2>
+        Quote Details
+      </h2>
+
+
+      <!-- DATE -->
+
+      <div class="section-title">
+        Date
+      </div>
+
+
+      <label for="quoteDate">
+        Quote Date
+      </label>
+
+
+      <input
+        id="quoteDate"
+        type="date"
+      >
+
+
+
+      <!-- CUSTOMER -->
+
+      <div class="section-title">
+        Customer
+      </div>
+
+
+      <label>
+        Name
+      </label>
+
+
+      <input
+        id="customerName"
+        placeholder="Customer name"
+      >
+
+
+      <label>
+        Email
+      </label>
+
+
+      <input
+        id="customerEmail"
+        type="email"
+        placeholder="customer@email.com"
+      >
+
+
+      <label>
+        Address
+      </label>
+
+
+      <textarea
+        id="customerAddress"
+        placeholder="Customer / project address"
+      ></textarea>
+
+
+      <label>
+        Project
+      </label>
+
+
+      <input
+        id="project"
+        placeholder="Project description / project name"
+      >
+
+
+
+      <!-- OTHER DETAILS -->
+
+      <div class="other-detail-head">
+
+        <div>
+
+          <div class="other-detail-title">
+
+            Other Detail
+
+            <span>
+              Optional
+            </span>
+
+          </div>
+
+          <div class="other-detail-sub">
+            Add more
+          </div>
+
+        </div>
+
+
+        <button
+          class="mini-add"
+          type="button"
+          onclick="addOtherDetail()"
+        >
+          + Add
+        </button>
+
+      </div>
+
+
+      <div id="otherDetailsEditor"></div>
+
+
+
+      <!-- ITEMS -->
+
+      <div class="section-title">
+        Items
+      </div>
+
+
+      <div
+        id="itemsEditor"
+        class="items-editor"
+      ></div>
+
+
+      <button
+        class="btn btn-light"
+        style="margin-top:10px;width:100%;border:1px solid #3a3f45"
+        onclick="addItem()"
+      >
+        + Add Item
+      </button>
+
+
+
+      <!-- OPTIONS -->
+
+      <div class="section-title">
+        Invoice Options
+      </div>
+
+
+      <div class="display-card">
+
+
+        <label class="check-option">
+
+          <input
+            id="showSubtotal"
+            type="checkbox"
+            checked
+            onchange="updatePreview()"
+          >
+
+          <span>
+
+            <b>
+              Show Subtotal
+            </b>
+
+            <small>
+              Display subtotal on quote
+            </small>
+
+          </span>
+
+        </label>
+
+
+
+        <label class="check-option">
+
+          <input
+            id="showGst"
+            type="checkbox"
+            checked
+            onchange="updatePreview()"
+          >
+
+          <span>
+
+            <b>
+              Show GST
+            </b>
+
+            <small>
+              Display GST amount
+            </small>
+
+          </span>
+
+        </label>
+
+
+
+        <label class="check-option">
+
+          <input
+            id="showTotal"
+            type="checkbox"
+            checked
+            onchange="updatePreview()"
+          >
+
+          <span>
+
+            <b>
+              Show Total
+            </b>
+
+            <small>
+              Display final total
+            </small>
+
+          </span>
+
+        </label>
+
+
+      </div>
+
+
+      <div class="hint">
+        Tick the options you want to display on the quote.
+      </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         QUOTE
+    ================================================== -->
+
+    <div class="quote-wrap">
+
+
+      <div
+        class="paper"
+        id="quotePaper"
+      >
+
+
+        <!-- HEADER -->
+
+        <div class="quote-header">
+
+
+          <div class="brand">
+
+
+            <img
+              src="logo.png"
+              alt="TM Eleven Logo"
+              onerror="this.style.display='none'"
+            >
+
+
+            <div>
+
+
+              <div class="company-name">
+                TM ELEVEN PTY LTD
+              </div>
+
+
+              <div class="company-sub">
+                CONCRETING | LANDSCAPING | FENCING
+              </div>
+
+
+              <div class="company-acn">
+                ACN : 692 149 045
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="quote-heading">
+
+
+            <h2>
+              QUOTE
+            </h2>
+
+
+            <div class="quote-date">
+
+              Date :
+
+              <span id="previewDate"></span>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- CUSTOMER -->
+
+        <div class="to-box">
+
+
+          <div class="to-title">
+            To
+          </div>
+
+
+          <div
+            class="to-grid"
+            id="toGrid"
+          >
+
+
+            <div>
+              Name
+            </div>
+
+
+            <div
+              class="value"
+              id="pName"
+            ></div>
+
+
+
+            <div>
+              Email
+            </div>
+
+
+            <div
+              class="value"
+              id="pEmail"
+            ></div>
+
+
+
+            <div>
+              Project
+            </div>
+
+
+            <div
+              class="value"
+              id="pProject"
+            ></div>
+
+
+
+            <div id="addressLabel">
+              Address
+            </div>
+
+
+            <div
+              class="value"
+              id="pAddress"
+            ></div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- ITEMS TABLE -->
+
+        <table class="items-table">
+
+
+          <thead>
+
+            <tr>
+
+              <th style="width:37%">
+                Description
+              </th>
+
+              <th style="width:14%">
+                Unit
+              </th>
+
+              <th style="width:15%">
+                Unit Price
+              </th>
+
+              <th style="width:13%">
+                Quantity
+              </th>
+
+              <th style="width:21%">
+                Item Total
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="previewItems">
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="empty-msg"
+              >
+                No items added
+              </td>
+
+            </tr>
+
+          </tbody>
+
+
+        </table>
+
+
+
+        <!-- TOTALS -->
+
+        <div
+          class="totals"
+          id="totalsPreview"
+        ></div>
+
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+
+          <img
+            src="logo.png"
+            alt="TM Eleven Logo"
+            class="footer-logo"
+            onerror="this.style.display='none'"
+          >
+
+
+          <div class="footer-info">
+
+
+            <strong>
+              TM ELEVEN PTY LTD
+            </strong>
+
+
+            <br>
+
+
+            <b>
+              CONCRETING | LANDSCAPING | FENCING
+            </b>
+
+
+            <br>
+
+
+            <span>
+              ACN : 692 149 045
+            </span>
+
+
+            <br>
+
+
+            <span>
+              +61 451 160 058
+            </span>
+
+
+            <br>
+
+
+            <span>
+              tmeleven111@gmail.com
+            </span>
+
+
+            <br>
+
+
+            <span>
+              tmeleven.com.au
+            </span>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   DEFAULT ITEMS
+========================================================= */
+
+const defaultItems = [
+
+  {
+    desc:"",
+    note:"",
+    unit:"",
+    price:"",
+    qty:"",
+    gst:false,
+    gstRate:10
+  },
+
+  {
+    desc:"",
+    note:"",
+    unit:"",
+    price:"",
+    qty:"",
+    gst:false,
+    gstRate:10
+  },
+
+  {
+    desc:"",
+    note:"",
+    unit:"",
+    price:"",
+    qty:"",
+    gst:false,
+    gstRate:10
+  }
+
+];
+
+
+let items =
+  structuredClone(defaultItems);
+
+
+let otherDetails = [];
+
+
+
+/* =========================================================
+   MONEY
+========================================================= */
+
+function money(n){
+
+  return new Intl.NumberFormat(
+    'en-AU',
+    {
+      style:'currency',
+      currency:'AUD',
+      minimumFractionDigits:2
+    }
+  ).format(
+    Number(n)||0
+  );
+
+}
+
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function esc(s){
+
+  return String(
+    s ?? ''
+  ).replace(
+    /[&<>"']/g,
+
+    m => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m])
+  );
+
+}
+
+
+
+/* =========================================================
+   TODAY
+========================================================= */
+
+function todayISO(){
+
+  const d = new Date();
+
+  const local =
+    new Date(
+      d.getTime() -
+      d.getTimezoneOffset()*60000
+    );
+
+  return local
+    .toISOString()
+    .slice(0,10);
+
+}
+
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(v){
+
+  if(!v){
+    return '';
+  }
+
+  const d =
+    new Date(
+      v + 'T00:00:00'
+    );
+
+  return d.toLocaleDateString(
+    'en-AU',
+    {
+      day:'2-digit',
+      month:'long',
+      year:'numeric'
+    }
+  );
+
+}
+
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+function addItem(){
+
+  items.push({
+
+    desc:"",
+    note:"",
+    unit:"",
+    price:"",
+    qty:"",
+    gst:false,
+    gstRate:10
+
+  });
+
+  renderEditor();
+
+  updatePreview();
+
+}
+
+
+function removeItem(i){
+
+  items.splice(i,1);
+
+  if(!items.length){
+
+    items.push({
+
+      desc:"",
+      note:"",
+      unit:"",
+      price:"",
+      qty:"",
+      gst:false,
+      gstRate:10
+
+    });
+
+  }
+
+  renderEditor();
+
+  updatePreview();
+
+}
+
+
+function updateItem(
+  i,
+  key,
+  value
+){
+
+  items[i][key] =
+    value;
+
+  updatePreview();
+
+}
+
+
+
+/* =========================================================
+   RENDER ITEMS
+========================================================= */
+
+function renderEditor(){
+
+  const box =
+    document.getElementById(
+      'itemsEditor'
+    );
+
+  box.innerHTML =
+    items.map(
+      (it,i) => `
+
+        <div class="item-editor">
+
+          <div class="item-top">
+
+            <b style="font-size:12px">
+              Item ${i+1}
+            </b>
+
+            <button
+              class="btn btn-danger"
+              style="padding:5px 8px"
+              onclick="removeItem(${i})"
+            >
+              Remove
+            </button>
+
+          </div>
+
+
+          <label>
+            Description
+          </label>
+
+          <input
+            value="${esc(it.desc)}"
+            placeholder="e.g. Fencing"
+            oninput="updateItem(${i},'desc',this.value)"
+          >
+
+
+          <label>
+            Small note (optional)
+          </label>
+
+          <input
+            value="${esc(it.note)}"
+            placeholder="e.g. Extra posts may incur additional charges"
+            oninput="updateItem(${i},'note',this.value)"
+          >
+
+
+          <div class="item-fields">
+
+
+            <div class="mini">
+
+              <label>
+                Unit
+              </label>
+
+              <input
+                value="${esc(it.unit)}"
+                placeholder="1m / One Gate"
+                oninput="updateItem(${i},'unit',this.value)"
+              >
+
+            </div>
+
+
+            <div class="mini">
+
+              <label>
+                Unit Price
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value="${esc(it.price)}"
+                placeholder="0"
+                oninput="updateItem(${i},'price',this.value)"
+              >
+
+            </div>
+
+
+            <div class="mini">
+
+              <label>
+                Quantity
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value="${esc(it.qty)}"
+                placeholder="0"
+                oninput="updateItem(${i},'qty',this.value)"
+              >
+
+            </div>
+
+
+          </div>
+
+
+          <div class="gst-row">
+
+            <input
+              type="checkbox"
+              ${it.gst?'checked':''}
+              onchange="updateItem(${i},'gst',this.checked)"
+            >
+
+            <span>
+              +GST
+            </span>
+
+
+            <input
+              class="gst-rate"
+              type="number"
+              min="0"
+              step="0.01"
+              value="${it.gstRate ?? 10}"
+              oninput="updateItem(${i},'gstRate',this.value)"
+            >
+
+            <span>
+              %
+            </span>
+
+          </div>
+
+
+        </div>
+
+      `
+    ).join('');
+
+}
+
+
+
+/* =========================================================
+   OTHER DETAILS
+========================================================= */
+
+function addOtherDetail(){
+
+  otherDetails.push({
+
+    label:"",
+    value:"",
+    enabled:true
+
+  });
+
+  renderOtherDetails();
+
+  updatePreview();
+
+}
+
+
+function removeOtherDetail(i){
+
+  otherDetails.splice(i,1);
+
+  renderOtherDetails();
+
+  updatePreview();
+
+}
+
+
+function updateOtherDetail(
+  i,
+  key,
+  value
+){
+
+  otherDetails[i][key] =
+    value;
+
+  updatePreview();
+
+}
+
+
+
+/* =========================================================
+   RENDER OTHER DETAILS
+========================================================= */
+
+function renderOtherDetails(){
+
+  const box =
+    document.getElementById(
+      'otherDetailsEditor'
+    );
+
+
+  box.innerHTML =
+    otherDetails.map(
+      (d,i) => `
+
+        <div class="other-detail-row">
+
+
+          <label class="check-detail">
+
+            <input
+              type="checkbox"
+              ${d.enabled !== false ? 'checked' : ''}
+              onchange="updateOtherDetail(${i},'enabled',this.checked)"
+            >
+
+          </label>
+
+
+          <div>
+
+            <label>
+              Label
+            </label>
+
+            <input
+              value="${esc(d.label)}"
+              placeholder="Company"
+              oninput="updateOtherDetail(${i},'label',this.value)"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Detail
+            </label>
+
+            <input
+              value="${esc(d.value)}"
+              placeholder="Enter detail"
+              oninput="updateOtherDetail(${i},'value',this.value)"
+            >
+
+          </div>
+
+
+          <button
+            class="remove-detail"
+            type="button"
+            onclick="removeOtherDetail(${i})"
+          >
+            ×
+          </button>
+
+
+        </div>
+
+      `
+    ).join('');
+
+}
+
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function updatePreview(){
+
+
+  /* DATE */
+
+  document.getElementById(
+    'previewDate'
+  ).textContent =
+    formatDate(
+      document.getElementById(
+        'quoteDate'
+      ).value
+    );
+
+
+
+  /* CUSTOMER */
+
+  document.getElementById(
+    'pName'
+  ).textContent =
+    document.getElementById(
+      'customerName'
+    ).value;
+
+
+  document.getElementById(
+    'pEmail'
+  ).textContent =
+    document.getElementById(
+      'customerEmail'
+    ).value;
+
+
+  document.getElementById(
+    'pProject'
+  ).textContent =
+    document.getElementById(
+      'project'
+    ).value;
+
+
+
+  /* REMOVE OLD DYNAMIC DETAILS */
+
+  document
+    .querySelectorAll(
+      '.dynamic-detail'
+    )
+    .forEach(
+      el => el.remove()
+    );
+
+
+  const toGrid =
+    document.getElementById(
+      'toGrid'
+    );
+
+
+  const addressLabel =
+    document.getElementById(
+      'addressLabel'
+    );
+
+
+
+  /* ADD DETAILS ABOVE ADDRESS */
+
+  otherDetails.forEach(
+    d => {
+
+      if(
+        d.enabled !== false &&
+        (d.label || d.value)
+      ){
+
+        const label =
+          document.createElement(
+            'div'
+          );
+
+        label.className =
+          'dynamic-detail';
+
+        label.textContent =
+          d.label || 'Detail';
+
+
+        const value =
+          document.createElement(
+            'div'
+          );
+
+        value.className =
+          'value dynamic-detail';
+
+        value.textContent =
+          d.value || '';
+
+
+        toGrid.insertBefore(
+          label,
+          addressLabel
+        );
+
+
+        toGrid.insertBefore(
+          value,
+          addressLabel
+        );
+
+      }
+
+    );
+
+
+
+  /* ADDRESS */
+
+  document.getElementById(
+    'pAddress'
+  ).textContent =
+    document.getElementById(
+      'customerAddress'
+    ).value;
+
+
+
+  /* ITEMS */
+
+  const tbody =
+    document.getElementById(
+      'previewItems'
+    );
+
+
+  let subtotal = 0;
+
+  let gstTotal = 0;
+
+  const rows = [];
+
+
+  items.forEach(
+    it => {
+
+      const price =
+        Number(it.price)||0;
+
+      const qty =
+        Number(it.qty)||0;
+
+      const base =
+        price * qty;
+
+
+      if(
+        !it.desc &&
+        !it.unit &&
+        !it.price &&
+        !it.qty
+      ){
+
+        return;
+
+      }
+
+
+      subtotal += base;
+
+
+      const gstAmount =
+        it.gst
+        ? base *
+          (Number(it.gstRate)||0) /
+          100
+        : 0;
+
+
+      gstTotal += gstAmount;
+
+
+      rows.push(`
+
+        <tr>
+
+          <td class="desc">
+
+            ${esc(
+              it.desc || '—'
+            )}
+
+            ${
+              it.note
+              ? `
+                <span class="item-note">
+                  ${esc(it.note)}
+                </span>
+              `
+              : ''
+            }
+
+          </td>
+
+
+          <td>
+            ${esc(it.unit || '—')}
+          </td>
+
+
+          <td>
+            ${money(price)}
+          </td>
+
+
+          <td>
+            ${esc(it.qty || '—')}
+          </td>
+
+
+          <td>
+            ${money(base)}
+            ${it.gst ? ' + GST' : ''}
+          </td>
+
+        </tr>
+
+      `);
+
+    }
+  );
+
+
+  tbody.innerHTML =
+    rows.length
+    ? rows.join('')
+    : `
+
+      <tr>
+
+        <td
+          colspan="5"
+          class="empty-msg"
+        >
+          No items added
+        </td>
+
+      </tr>
+
+    `;
+
+
+
+  /* TOTAL OPTIONS */
+
+  const showSubtotal =
+    document.getElementById(
+      'showSubtotal'
+    ).checked;
+
+
+  const showGst =
+    document.getElementById(
+      'showGst'
+    ).checked;
+
+
+  const showTotal =
+    document.getElementById(
+      'showTotal'
+    ).checked;
+
+
+  const totals =
+    document.getElementById(
+      'totalsPreview'
+    );
+
+
+  totals.innerHTML = `
+
+
+    ${
+      showSubtotal
+      ? `
+
+        <div class="total-row">
+
+          <span>
+            Subtotal
+          </span>
+
+          <span>
+            ${money(subtotal)}
+          </span>
+
+        </div>
+
+      `
+      : ''
+    }
+
+
+    ${
+      showGst
+      ? `
+
+        <div class="total-row">
+
+          <span>
+            GST
+          </span>
+
+          <span>
+            ${money(gstTotal)}
+          </span>
+
+        </div>
+
+      `
+      : ''
+    }
+
+
+    ${
+      showTotal
+      ? `
+
+        <div class="total-row grand">
+
+          <span>
+            TOTAL
+          </span>
+
+          <span>
+            ${money(
+              subtotal + gstTotal
+            )}
+          </span>
+
+        </div>
+
+      `
+      : ''
+    }
+
+  `;
+
+}
+
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+function getState(){
+
+  return {
+
+    date:
+      document.getElementById(
+        'quoteDate'
+      ).value,
+
+    name:
+      document.getElementById(
+        'customerName'
+      ).value,
+
+    email:
+      document.getElementById(
+        'customerEmail'
+      ).value,
+
+    address:
+      document.getElementById(
+        'customerAddress'
+      ).value,
+
+    project:
+      document.getElementById(
+        'project'
+      ).value,
+
+    items,
+
+    otherDetails,
+
+    showSubtotal:
+      document.getElementById(
+        'showSubtotal'
+      ).checked,
+
+    showGst:
+      document.getElementById(
+        'showGst'
+      ).checked,
+
+    showTotal:
+      document.getElementById(
+        'showTotal'
+      ).checked
+
+  };
+
+}
+
+
+
+/* =========================================================
+   SET STATE
+========================================================= */
+
+function setState(s){
+
+  document.getElementById(
+    'quoteDate'
+  ).value =
+    s.date || todayISO();
+
+
+  document.getElementById(
+    'customerName'
+  ).value =
+    s.name || '';
+
+
+  document.getElementById(
+    'customerEmail'
+  ).value =
+    s.email || '';
+
+
+  document.getElementById(
+    'customerAddress'
+  ).value =
+    s.address || '';
+
+
+  document.getElementById(
+    'project'
+  ).value =
+    s.project || '';
+
+
+  items =
+    s.items ||
+    structuredClone(
+      defaultItems
+    );
+
+
+  otherDetails =
+    s.otherDetails || [];
+
+
+  document.getElementById(
+    'showSubtotal'
+  ).checked =
+    s.showSubtotal !== false;
+
+
+  document.getElementById(
+    'showGst'
+  ).checked =
+    s.showGst !== false;
+
+
+  document.getElementById(
+    'showTotal'
+  ).checked =
+    s.showTotal !== false;
+
+
+  renderEditor();
+
+  renderOtherDetails();
+
+  updatePreview();
+
+}
+
+
+
+/* =========================================================
+   SAVE DRAFT
+========================================================= */
+
+function saveDraft(){
+
+  localStorage.setItem(
+    'tmElevenQuoteDraft',
+
+    JSON.stringify(
+      getState()
+    )
+  );
+
+
+  alert(
+    'Draft saved on this device.'
+  );
+
+}
+
+
+
+/* =========================================================
+   LOAD DRAFT
+========================================================= */
+
+function loadDraft(){
+
+  const raw =
+    localStorage.getItem(
+      'tmElevenQuoteDraft'
+    );
+
+
+  if(!raw){
+
+    alert(
+      'No saved draft found.'
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    setState(
+      JSON.parse(raw)
+    );
+
+
+    alert(
+      'Draft loaded.'
+    );
+
+  }catch(e){
+
+    alert(
+      'Could not load the draft.'
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   CLEAR DRAFT
+========================================================= */
+
+function clearDraft(){
+
+  if(
+    confirm(
+      'Clear the saved draft?'
+    )
+  ){
+
+    localStorage.removeItem(
+      'tmElevenQuoteDraft'
+    );
+
+
+    alert(
+      'Saved draft cleared.'
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   PDF
+========================================================= */
+
+function convertPDF(){
+
+  updatePreview();
+
+  window.print();
+
+}
+
+
+
+/* =========================================================
+   LIVE UPDATE
+========================================================= */
+
+document
+  .querySelectorAll(
+    'input,textarea'
+  )
+  .forEach(
+    el => {
+
+      el.addEventListener(
+        'input',
+        updatePreview
+      );
+
+      el.addEventListener(
+        'change',
+        updatePreview
+      );
+
+    }
+  );
+
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.getElementById(
+  'quoteDate'
+).value =
+  todayISO();
+
+
+renderEditor();
+
+renderOtherDetails();
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
+```
