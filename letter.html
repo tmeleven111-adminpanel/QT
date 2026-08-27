@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,9 +37,15 @@
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+
     background:
-        radial-gradient(circle at top right, rgba(197,138,42,.08), transparent 30%),
+        radial-gradient(
+            circle at top right,
+            rgba(197,138,42,.08),
+            transparent 30%
+        ),
         var(--bg);
+
     color: var(--text);
     padding-bottom: 90px;
 }
@@ -47,9 +54,13 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+
     padding: 20px 30px;
+
     background: rgba(11,16,23,.97);
+
     border-bottom: 1px solid var(--border);
+
     backdrop-filter: blur(10px);
 }
 
@@ -72,34 +83,49 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: minmax(400px, 1fr) minmax(600px, 1fr);
+
+    grid-template-columns:
+        minmax(400px, 1fr)
+        minmax(600px, 1fr);
+
     gap: 22px;
+
     align-items: start;
 }
 
 .panel {
     background: var(--panel);
+
     border: 1px solid var(--border);
+
     border-radius: 14px;
+
     padding: 20px;
+
     margin-bottom: 20px;
 }
 
 .panel h2 {
     margin: 0 0 18px;
+
     color: var(--gold-light);
+
     font-size: 17px;
 }
 
 .form-grid {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 12px;
 }
 
 .form-group {
     display: flex;
+
     flex-direction: column;
+
     gap: 7px;
 }
 
@@ -109,43 +135,68 @@ body {
 
 label {
     font-size: 12px;
+
     color: var(--muted);
+
     font-weight: bold;
+
     text-transform: uppercase;
 }
 
 input,
 textarea {
     width: 100%;
+
     background: var(--input);
+
     color: white;
+
     border: 1px solid #304151;
+
     border-radius: 8px;
+
     padding: 11px 12px;
+
     font-size: 14px;
+
     outline: none;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 input:focus,
 textarea:focus {
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(197,138,42,.1);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(197,138,42,.1);
 }
 
 textarea {
     min-height: 400px;
+
     resize: vertical;
+
     line-height: 1.7;
 }
 
 button {
     border: 0;
+
     border-radius: 8px;
+
     padding: 11px 15px;
+
     color: white;
+
     font-weight: bold;
+
     cursor: pointer;
+
     transition: .2s;
 }
 
@@ -158,7 +209,13 @@ button:hover {
 }
 
 .btn-gold {
-    background: linear-gradient(135deg, #b8791f, #dfa84e);
+    background:
+        linear-gradient(
+            135deg,
+            #b8791f,
+            #dfa84e
+        );
+
     color: #151515;
 }
 
@@ -172,32 +229,93 @@ button:hover {
 
 .voice-bar {
     display: flex;
+
     gap: 10px;
+
     margin-bottom: 12px;
+
     align-items: center;
+
     flex-wrap: wrap;
 }
 
 .voice-status {
     color: var(--muted);
+
     font-size: 12px;
 }
 
 .recording {
     background: var(--red) !important;
+
     color: white !important;
+
     animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
+
     50% {
         opacity: .65;
     }
+
 }
 
 .preview-wrap {
     overflow: auto;
+
     padding-bottom: 10px;
+}
+
+
+/* =========================================================
+   OPTIONAL SIGNATURE TOGGLE
+========================================================= */
+
+.option-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+    padding: 12px 14px;
+
+    background: #0c131c;
+
+    border: 1px solid #304151;
+
+    border-radius: 8px;
+}
+
+.option-box input[type="checkbox"] {
+    width: 18px;
+
+    height: 18px;
+
+    margin: 0;
+
+    accent-color: var(--gold);
+
+    cursor: pointer;
+}
+
+.option-box label {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    text-transform: none;
+}
+
+#signatureFields {
+    transition: .2s;
 }
 
 
@@ -206,21 +324,38 @@ button:hover {
 ========================================================= */
 
 #letterPreview {
+
     width: 210mm;
+
     min-height: 297mm;
+
     background: #FFFFFF !important;
-    background-color: rgb(255, 255, 255) !important;
+
+    background-color:
+        rgb(255, 255, 255) !important;
+
     background-image: none !important;
+
     color: #1e2933;
+
     padding: 16mm 15mm;
+
     position: relative;
+
     overflow: hidden;
+
     box-sizing: border-box;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-    -webkit-font-smoothing: antialiased;
-    text-rendering: geometricPrecision;
+    -webkit-font-smoothing:
+        antialiased;
+
+    text-rendering:
+        geometricPrecision;
 }
 
 
@@ -229,138 +364,282 @@ button:hover {
 ========================================================= */
 
 .letter-top {
+
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
     gap: 20px;
-    border-bottom: 2px solid #c58a2a;
+
+    border-bottom:
+        2px solid #c58a2a;
+
     padding-bottom: 15px;
 }
 
 .company-area {
+
     display: flex;
+
     gap: 14px;
+
     align-items: center;
 }
 
 .logo {
+
     width: 65px;
+
     max-height: 75px;
+
     object-fit: contain;
+
     display: block;
 }
 
 .company-name {
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 20px;
+
     line-height: 1.2;
+
     font-weight: 900;
+
     color: #a96e1d;
+
     margin-bottom: 7px;
+
     letter-spacing: 1px;
+
     white-space: nowrap;
 }
 
 .company-services {
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 10px;
+
     line-height: 1.5;
+
     font-weight: 700;
+
     color: #26323c;
+
     letter-spacing: .3px;
+
     word-spacing: 1px;
+
     white-space: nowrap;
 }
 
 .company-acn {
+
     margin-top: 6px;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 10px;
+
     line-height: 1.5;
+
     color: #52606c;
+
     letter-spacing: .2px;
 }
 
 .letter-title-area {
+
     text-align: right;
+
     flex-shrink: 0;
 }
 
 .letter-title {
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     color: #bd8b48;
+
     font-size: 38px;
+
     line-height: 1;
+
     font-weight: 900;
+
     letter-spacing: 3px;
 }
 
 .date {
+
     margin-top: 13px;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 13px;
+
     line-height: 1.5;
+
     font-weight: 700;
+
     color: #27323c;
 }
 
 
 /* =========================================================
-   LETTER CONTENT
+   RECIPIENT
 ========================================================= */
 
 .recipient {
+
     margin-top: 30px;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 14px;
+
     line-height: 1.8;
-    letter-spacing: 0;
-    word-spacing: 0;
+
     color: #27323c;
 }
 
 .recipient strong {
+
     font-size: 14px;
+
     font-weight: 700;
 }
 
-.subject {
-    margin-top: 30px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 800;
-    font-size: 15px;
-    line-height: 1.6;
-    letter-spacing: .3px;
-    word-spacing: 0;
-    color: #27323c;
-    text-transform: uppercase;
-}
 
-.letter-body {
-    margin-top: 28px;
-    font-family: Arial, Helvetica, sans-serif;
+/* =========================================================
+   ADDITIONAL TEXT
+========================================================= */
+
+.additional-text {
+
+    margin-top: 20px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 14px;
-    line-height: 1.85;
-    letter-spacing: 0;
-    word-spacing: 0;
+
+    line-height: 1.8;
+
     color: #27323c;
+
     white-space: pre-wrap;
+
     overflow-wrap: break-word;
+
     word-break: normal;
 }
 
-.signature {
-    margin-top: 38px;
-    font-family: Arial, Helvetica, sans-serif;
+
+/* =========================================================
+   SUBJECT
+========================================================= */
+
+.subject {
+
+    margin-top: 30px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-weight: 800;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    letter-spacing: .3px;
+
+    color: #27323c;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LETTER BODY
+========================================================= */
+
+.letter-body {
+
+    margin-top: 28px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 14px;
+
     line-height: 1.85;
-    letter-spacing: 0;
-    word-spacing: 0;
+
+    color: #27323c;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: break-word;
+
+    word-break: normal;
+}
+
+
+/* =========================================================
+   SIGNATURE
+========================================================= */
+
+.signature {
+
+    margin-top: 38px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.85;
+
     color: #27323c;
 }
 
 .signature strong {
+
     font-size: 14px;
+
     font-weight: 700;
 }
 
@@ -370,25 +649,41 @@ button:hover {
 ========================================================= */
 
 .footer {
+
     position: absolute;
+
     left: 15mm;
+
     right: 15mm;
+
     bottom: 14mm;
-    border-top: 1px solid #dedede;
+
+    border-top:
+        1px solid #dedede;
+
     padding-top: 9px;
 
     display: flex;
-    justify-content: space-between;
+
+    justify-content:
+        space-between;
+
     gap: 15px;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size: 9px;
+
     line-height: 1.5;
-    letter-spacing: 0;
+
     color: #5a6570;
 }
 
 .footer-right {
+
     text-align: right;
 }
 
@@ -398,24 +693,36 @@ button:hover {
 ========================================================= */
 
 .actions {
+
     position: fixed;
+
     bottom: 0;
+
     left: 0;
+
     right: 0;
+
     z-index: 1000;
 
     padding: 12px 20px;
 
     display: flex;
+
     justify-content: center;
+
     gap: 10px;
 
-    background: rgba(10,15,22,.97);
-    border-top: 1px solid var(--border);
+    background:
+        rgba(10,15,22,.97);
+
+    border-top:
+        1px solid var(--border);
+
     backdrop-filter: blur(12px);
 }
 
 .actions button {
+
     min-width: 150px;
 }
 
@@ -427,6 +734,7 @@ button:hover {
 @media (max-width: 1250px) {
 
     .grid {
+
         grid-template-columns: 1fr;
     }
 
@@ -435,33 +743,43 @@ button:hover {
 @media (max-width: 700px) {
 
     .header {
+
         padding: 16px;
     }
 
     .container {
+
         padding: 10px;
     }
 
     .form-grid {
+
         grid-template-columns: 1fr;
     }
 
     .form-group.full {
+
         grid-column: span 1;
     }
 
     .panel {
+
         padding: 14px;
     }
 
     .actions {
+
         padding: 10px;
     }
 
     .actions button {
+
         min-width: auto;
+
         flex: 1;
+
         font-size: 11px;
+
         padding: 12px 5px;
     }
 
@@ -479,7 +797,9 @@ button:hover {
 
 <div class="header">
 
-    <h1>TM ELEVEN — Letter Generator</h1>
+    <h1>
+        TM ELEVEN — Letter Generator
+    </h1>
 
     <p>
         Create professional letters with live preview and voice typing.
@@ -504,13 +824,18 @@ button:hover {
 
             <div class="panel">
 
-                <h2>Letter Details</h2>
+                <h2>
+                    Letter Details
+                </h2>
 
                 <div class="form-grid">
 
+
                     <div class="form-group">
 
-                        <label>Recipient Name</label>
+                        <label>
+                            Recipient Name
+                        </label>
 
                         <input
                             type="text"
@@ -523,7 +848,9 @@ button:hover {
 
                     <div class="form-group">
 
-                        <label>Date</label>
+                        <label>
+                            Date
+                        </label>
 
                         <input
                             type="date"
@@ -535,7 +862,9 @@ button:hover {
 
                     <div class="form-group full">
 
-                        <label>Recipient Address</label>
+                        <label>
+                            Recipient Address
+                        </label>
 
                         <input
                             type="text"
@@ -546,9 +875,28 @@ button:hover {
                     </div>
 
 
+                    <!-- NEW OPTIONAL TEXT -->
+
                     <div class="form-group full">
 
-                        <label>Subject</label>
+                        <label>
+                            Additional Text — Optional
+                        </label>
+
+                        <input
+                            type="text"
+                            id="additionalText"
+                            placeholder="Optional text after recipient address"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Subject
+                        </label>
 
                         <input
                             type="text"
@@ -568,7 +916,9 @@ button:hover {
 
             <div class="panel">
 
-                <h2>Letter Body</h2>
+                <h2>
+                    Letter Body
+                </h2>
 
 
                 <div class="voice-bar">
@@ -580,7 +930,6 @@ button:hover {
                     >
                         🎤 Start Voice Typing
                     </button>
-
 
                     <span
                         class="voice-status"
@@ -605,13 +954,40 @@ button:hover {
 
             <div class="panel">
 
-                <h2>Signature</h2>
+                <h2>
+                    Signature
+                </h2>
 
-                <div class="form-grid">
+
+                <!-- SIGNATURE ENABLE CHECKBOX -->
+
+                <div class="option-box">
+
+                    <input
+                        type="checkbox"
+                        id="enableSignature"
+                        checked
+                    >
+
+                    <label for="enableSignature">
+                        Include signature in letter
+                    </label>
+
+                </div>
+
+
+                <!-- SIGNATURE FIELDS -->
+
+                <div
+                    id="signatureFields"
+                    class="form-grid"
+                >
 
                     <div class="form-group">
 
-                        <label>Sender Name</label>
+                        <label>
+                            Sender Name
+                        </label>
 
                         <input
                             type="text"
@@ -624,7 +1000,9 @@ button:hover {
 
                     <div class="form-group">
 
-                        <label>Position</label>
+                        <label>
+                            Position
+                        </label>
 
                         <input
                             type="text"
@@ -651,7 +1029,9 @@ button:hover {
 
             <div class="panel">
 
-                <h2>Live Preview</h2>
+                <h2>
+                    Live Preview
+                </h2>
 
 
                 <!-- =========================================
@@ -739,6 +1119,16 @@ button:hover {
 
 
 
+                    <!-- NEW OPTIONAL TEXT -->
+
+                    <div
+                        class="additional-text"
+                        id="previewAdditionalText"
+                        style="display:none;"
+                    ></div>
+
+
+
                     <!-- SUBJECT -->
 
                     <div
@@ -763,7 +1153,10 @@ Your letter content will appear here.
 
                     <!-- SIGNATURE -->
 
-                    <div class="signature">
+                    <div
+                        class="signature"
+                        id="previewSignature"
+                    >
 
                         Kind regards,
 
@@ -788,7 +1181,9 @@ Your letter content will appear here.
                     <div class="footer">
 
                         <div>
-                            <strong>TM ELEVEN PTY LTD</strong>
+                            <strong>
+                                TM ELEVEN PTY LTD
+                            </strong>
                         </div>
 
 
@@ -865,7 +1260,8 @@ Your letter content will appear here.
    HELPERS
 ========================================================= */
 
-const $ = (id) => document.getElementById(id);
+const $ = (id) =>
+    document.getElementById(id);
 
 
 /* =========================================================
@@ -884,7 +1280,8 @@ $("letterDate").value =
 
 function formatDate(value) {
 
-    if (!value) return "";
+    if (!value)
+        return "";
 
     const date =
         new Date(value + "T00:00:00");
@@ -897,6 +1294,71 @@ function formatDate(value) {
             year: "numeric"
         }
     );
+
+}
+
+
+/* =========================================================
+   UPDATE SIGNATURE VISIBILITY
+========================================================= */
+
+function updateSignatureVisibility() {
+
+    const enabled =
+        $("enableSignature").checked;
+
+    const fields =
+        $("signatureFields");
+
+    const preview =
+        $("previewSignature");
+
+
+    if (enabled) {
+
+        fields.style.display = "grid";
+
+        preview.style.display = "block";
+
+    } else {
+
+        fields.style.display = "none";
+
+        preview.style.display = "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE ADDITIONAL TEXT
+========================================================= */
+
+function updateAdditionalText() {
+
+    const text =
+        $("additionalText")
+            .value
+            .trim();
+
+    const preview =
+        $("previewAdditionalText");
+
+
+    if (text) {
+
+        preview.textContent = text;
+
+        preview.style.display = "block";
+
+    } else {
+
+        preview.textContent = "";
+
+        preview.style.display = "none";
+
+    }
 
 }
 
@@ -942,6 +1404,11 @@ function updatePreview() {
         $("senderPosition").value ||
         "Director";
 
+
+    updateAdditionalText();
+
+    updateSignatureVisibility();
+
 }
 
 
@@ -950,7 +1417,9 @@ function updatePreview() {
 ========================================================= */
 
 document
-    .querySelectorAll("input, textarea")
+    .querySelectorAll(
+        "input, textarea"
+    )
     .forEach(element => {
 
         element.addEventListener(
@@ -964,6 +1433,17 @@ document
         );
 
     });
+
+
+/* =========================================================
+   SIGNATURE CHECKBOX EVENT
+========================================================= */
+
+$("enableSignature")
+    .addEventListener(
+        "change",
+        updatePreview
+    );
 
 
 /* =========================================================
@@ -1000,9 +1480,7 @@ if (SpeechRecognition) {
 
     recognition.continuous = true;
 
-
     recognition.interimResults = false;
-
 
     recognition.lang = "en-AU";
 
@@ -1027,83 +1505,90 @@ if (SpeechRecognition) {
     };
 
 
-    recognition.onresult = function (event) {
+    recognition.onresult =
+        function (event) {
 
-        let finalTranscript = "";
+            let finalTranscript = "";
 
 
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-
-            if (
-                event.results[i].isFinal
+            for (
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
             ) {
 
-                finalTranscript +=
-                    event.results[i][0]
-                        .transcript;
+                if (
+                    event.results[i]
+                        .isFinal
+                ) {
+
+                    finalTranscript +=
+                        event.results[i][0]
+                            .transcript;
+
+                }
 
             }
 
-        }
+
+            if (finalTranscript) {
+
+                const currentText =
+                    letterBody.value.trim();
 
 
-        if (finalTranscript) {
+                letterBody.value =
+                    currentText
+                        ? currentText +
+                          " " +
+                          finalTranscript
 
-            const currentText =
-                letterBody.value.trim();
-
-
-            letterBody.value =
-                currentText
-                    ? currentText + " " + finalTranscript
-                    : finalTranscript;
+                        : finalTranscript;
 
 
-            updatePreview();
+                updatePreview();
 
-        }
+            }
 
-    };
-
-
-    recognition.onerror = function (event) {
-
-        voiceStatus.textContent =
-            "Voice typing error: " +
-            event.error;
-
-    };
+        };
 
 
-    recognition.onend = function () {
-
-        isRecording = false;
-
-
-        voiceBtn.classList.remove(
-            "recording"
-        );
-
-
-        voiceBtn.textContent =
-            "🎤 Start Voice Typing";
-
-
-        if (
-            voiceStatus.textContent ===
-            "Listening... Speak now."
-        ) {
+    recognition.onerror =
+        function (event) {
 
             voiceStatus.textContent =
-                "Voice typing stopped.";
+                "Voice typing error: " +
+                event.error;
 
-        }
+        };
 
-    };
+
+    recognition.onend =
+        function () {
+
+            isRecording = false;
+
+
+            voiceBtn.classList.remove(
+                "recording"
+            );
+
+
+            voiceBtn.textContent =
+                "🎤 Start Voice Typing";
+
+
+            if (
+                voiceStatus.textContent ===
+                "Listening... Speak now."
+            ) {
+
+                voiceStatus.textContent =
+                    "Voice typing stopped.";
+
+            }
+
+        };
 
 
     voiceBtn.addEventListener(
@@ -1161,6 +1646,9 @@ function saveDraft() {
         recipientAddress:
             $("recipientAddress").value,
 
+        additionalText:
+            $("additionalText").value,
+
         letterDate:
             $("letterDate").value,
 
@@ -1169,6 +1657,9 @@ function saveDraft() {
 
         letterBody:
             $("letterBody").value,
+
+        enableSignature:
+            $("enableSignature").checked,
 
         senderName:
             $("senderName").value,
@@ -1226,7 +1717,19 @@ function loadDraft() {
                     $(key);
 
 
-                if (element) {
+                if (!element)
+                    return;
+
+
+                if (
+                    element.type ===
+                    "checkbox"
+                ) {
+
+                    element.checked =
+                        data[key];
+
+                } else {
 
                     element.value =
                         data[key];
@@ -1264,7 +1767,8 @@ function clearDraft() {
         );
 
 
-    if (!confirmed) return;
+    if (!confirmed)
+        return;
 
 
     localStorage.removeItem(
@@ -1273,15 +1777,26 @@ function clearDraft() {
 
 
     $("recipientName").value = "";
+
     $("recipientAddress").value = "";
+
+    $("additionalText").value = "";
+
     $("letterSubject").value = "";
+
     $("letterBody").value = "";
+
 
     $("senderName").value =
         "TM Eleven";
 
+
     $("senderPosition").value =
         "Director";
+
+
+    $("enableSignature").checked =
+        true;
 
 
     $("letterDate").value =
@@ -1307,10 +1822,6 @@ async function downloadPDF() {
     const letter =
         $("letterPreview");
 
-
-    /*
-       Save current inline styles
-    */
 
     const originalBackground =
         letter.style.background;
@@ -1349,54 +1860,62 @@ async function downloadPDF() {
 
                     allowTaint: false,
 
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor:
+                        "#FFFFFF",
 
                     logging: false,
 
-                    onclone: function (
-                        documentClone
-                    ) {
-
-                        /*
-                           Force clone background
-                           to 100% PURE WHITE
-                        */
-
-                        documentClone
-                            .documentElement
-                            .style
-                            .background =
-                            "#FFFFFF";
-
-
-                        documentClone
-                            .body
-                            .style
-                            .background =
-                            "#FFFFFF";
-
-
-                        const clonedLetter =
+                    onclone:
+                        function (
                             documentClone
-                                .getElementById(
-                                    "letterPreview"
-                                );
+                        ) {
 
 
-                        if (clonedLetter) {
-
-                            clonedLetter.style.background =
+                            documentClone
+                                .documentElement
+                                .style
+                                .background =
                                 "#FFFFFF";
 
-                            clonedLetter.style.backgroundColor =
+
+                            documentClone
+                                .body
+                                .style
+                                .background =
                                 "#FFFFFF";
 
-                            clonedLetter.style.backgroundImage =
-                                "none";
+
+                            const clonedLetter =
+                                documentClone
+                                    .getElementById(
+                                        "letterPreview"
+                                    );
+
+
+                            if (
+                                clonedLetter
+                            ) {
+
+                                clonedLetter
+                                    .style
+                                    .background =
+                                    "#FFFFFF";
+
+
+                                clonedLetter
+                                    .style
+                                    .backgroundColor =
+                                    "#FFFFFF";
+
+
+                                clonedLetter
+                                    .style
+                                    .backgroundImage =
+                                    "none";
+
+                            }
 
                         }
-
-                    }
 
                 }
             );
@@ -1414,10 +1933,19 @@ async function downloadPDF() {
         const pdf =
             new jsPDF(
                 {
-                    orientation: "portrait",
-                    unit: "mm",
-                    format: "a4",
-                    compress: true
+
+                    orientation:
+                        "portrait",
+
+                    unit:
+                        "mm",
+
+                    format:
+                        "a4",
+
+                    compress:
+                        true
+
                 }
             );
 
@@ -1443,13 +1971,16 @@ async function downloadPDF() {
 
 
         /*
-           Canvas image dimensions
+           Canvas dimensions
         */
 
-        const pageWidth = 210;
+        const pageWidth =
+            210;
+
 
         const imgWidth =
             pageWidth;
+
 
         const imgHeight =
             (
@@ -1461,7 +1992,7 @@ async function downloadPDF() {
 
 
         /*
-           Add high quality PNG
+           High quality PNG
         */
 
         const imgData =
@@ -1503,6 +2034,7 @@ async function downloadPDF() {
             }.pdf`
         );
 
+
     } catch (error) {
 
         console.error(
@@ -1514,6 +2046,7 @@ async function downloadPDF() {
         alert(
             "Error generating PDF. Please try again."
         );
+
 
     } finally {
 
@@ -1547,3 +2080,4 @@ updatePreview();
 
 </body>
 </html>
+```
