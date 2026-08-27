@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Professional Statement Generator</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:"Inter",sans-serif;
+background:#f4f5f7;
+color:#16181d;
+}
+
+.header{
+height:72px;
+background:#111318;
+color:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 28px;
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:40px;
+height:40px;
+object-fit:contain;
+border-radius:8px;
+}
+
+.brand-text{
+font-family:"Manrope";
+font-size:20px;
+font-weight:800;
+}
+
+.brand-text span{
+color:#aaa;
+font-weight:500;
+}
+
+.header-actions{
+display:flex;
+gap:10px;
+}
+
+.btn{
+border:0;
+border-radius:9px;
+padding:11px 17px;
+font-family:inherit;
+font-weight:600;
+cursor:pointer;
+}
+
+.btn-dark{
+background:#242832;
+color:white;
+}
+
+.btn-white{
+background:white;
+color:#111;
+}
+
+.btn-primary{
+background:#111318;
+color:white;
+}
+
+.main{
+display:grid;
+grid-template-columns:390px 1fr;
+min-height:calc(100vh - 72px);
+}
+
+.sidebar{
+background:white;
+border-right:1px solid #dddfe3;
+padding:24px;
+overflow:auto;
+height:calc(100vh - 72px);
+position:sticky;
+top:72px;
+}
+
+.section{
+margin-bottom:26px;
+}
+
+.section-title{
+font-size:12px;
+font-weight:800;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:#777b83;
+margin-bottom:13px;
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:600;
+margin-bottom:7px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+border:1px solid #d9dce1;
+background:#fafbfc;
+border-radius:8px;
+padding:11px 12px;
+font-family:inherit;
+font-size:14px;
+outline:none;
+}
+
+textarea{
+resize:vertical;
+min-height:85px;
+}
+
+.field{
+margin-bottom:13px;
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.logo-upload{
+border:1.5px dashed #c9ccd2;
+padding:16px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+background:#fafafa;
+}
+
+.logo-preview{
+width:80px;
+height:55px;
+object-fit:contain;
+display:block;
+margin:auto;
+}
+
+.logo-toggle{
+display:flex;
+align-items:center;
+gap:9px;
+margin-top:10px;
+padding:10px 12px;
+background:#f7f7f8;
+border:1px solid #e1e2e5;
+border-radius:8px;
+}
+
+.logo-toggle input{
+width:17px;
+height:17px;
+}
+
+.items-box{
+border:1px solid #dddfe3;
+border-radius:9px;
+overflow:hidden;
+}
+
+.item{
+padding:12px;
+border-bottom:1px solid #e5e6e9;
+}
+
+.item:last-child{
+border-bottom:0;
+}
+
+.item-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+}
+
+.item-number{
+font-size:11px;
+font-weight:800;
+color:#777;
+text-transform:uppercase;
+}
+
+.remove-item{
+border:0;
+background:#eee;
+width:25px;
+height:25px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.add-item{
+width:100%;
+margin-top:10px;
+padding:11px;
+border:1px dashed #bbbfc6;
+background:white;
+border-radius:8px;
+cursor:pointer;
+font-weight:700;
+}
+
+.preview-area{
+padding:35px;
+overflow:auto;
+}
+
+.preview-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.preview-title{
+font-family:"Manrope";
+font-weight:800;
+font-size:19px;
+}
+
+.a4{
+width:210mm;
+min-height:297mm;
+background:white;
+margin:auto;
+padding:20mm;
+box-shadow:0 8px 35px rgba(0,0,0,.12);
+position:relative;
+}
+
+.statement-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding-bottom:22px;
+border-bottom:3px solid #111;
+}
+
+.company{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.company-logo{
+width:72px;
+height:58px;
+object-fit:contain;
+}
+
+.company-name{
+font-family:"Manrope";
+font-size:23px;
+font-weight:800;
+}
+
+.company-details{
+font-size:10px;
+color:#666;
+line-height:1.7;
+max-width:340px;
+}
+
+.statement-title{
+text-align:right;
+}
+
+.statement-title h1{
+font-family:"Manrope";
+font-size:30px;
+font-weight:800;
+}
+
+.meta{
+font-size:10px;
+color:#666;
+margin-top:5px;
+}
+
+.customer{
+margin-top:28px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.info-label{
+font-size:9px;
+text-transform:uppercase;
+letter-spacing:.1em;
+font-weight:800;
+color:#888;
+margin-bottom:5px;
+}
+
+.info-value{
+font-size:11px;
+line-height:1.7;
+}
+
+.table{
+margin-top:28px;
+border:1px solid #dddfe3;
+border-radius:9px;
+overflow:hidden;
+}
+
+.table-row{
+display:grid;
+grid-template-columns:90px 1fr 110px 120px;
+gap:10px;
+padding:12px 14px;
+font-size:10px;
+border-bottom:1px solid #e5e6e8;
+}
+
+.table-row.header{
+background:#111318;
+color:white;
+font-size:9px;
+font-weight:800;
+text-transform:uppercase;
+}
+
+.table-row:last-child{
+border-bottom:0;
+}
+
+.table-row span:nth-child(3),
+.table-row span:nth-child(4){
+text-align:right;
+}
+
+.balance{
+display:flex;
+justify-content:flex-end;
+margin-top:20px;
+}
+
+.balance-box{
+width:280px;
+}
+
+.balance-line{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+font-size:11px;
+}
+
+.balance-line.total{
+border-top:2px solid #111;
+padding-top:13px;
+font-size:17px;
+font-weight:800;
+}
+
+.footer{
+position:absolute;
+left:20mm;
+right:20mm;
+bottom:20mm;
+border-top:1px solid #ddd;
+padding-top:12px;
+font-size:9px;
+color:#777;
+text-align:center;
+}
+
+@media(max-width:1000px){
+
+.main{
+grid-template-columns:1fr;
+}
+
+.sidebar{
+position:relative;
+top:0;
+height:auto;
+border-right:0;
+border-bottom:1px solid #ddd;
+}
+
+.preview-area{
+padding:20px 10px;
+}
+
+}
+
+@media print{
+
+.header,
+.sidebar,
+.preview-top{
+display:none!important;
+}
+
+.main{
+display:block;
+}
+
+.preview-area{
+padding:0;
+}
+
+.a4{
+box-shadow:none;
+margin:0;
+}
+
+@page{
+size:A4;
+margin:0;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="brand">
+
+<img src="logo.png" id="headerLogo" onerror="this.style.display='none'">
+
+<div class="brand-text">
+TM Eleven <span>Statement Studio</span>
+</div>
+
+</div>
+
+<div class="header-actions">
+
+<button class="btn btn-dark" onclick="saveDraft()">
+Save Draft
+</button>
+
+<button class="btn btn-white" onclick="window.print()">
+Print / PDF
+</button>
+
+</div>
+
+</header>
+
+
+<div class="main">
+
+
+<aside class="sidebar">
+
+
+<div class="section">
+
+<div class="section-title">
+Company Details
+</div>
+
+<div class="field">
+
+<label>Company Logo</label>
+
+<label class="logo-upload">
+
+<input type="file" id="logoInput" accept="image/*" hidden>
+
+<img src="logo.png"
+id="logoPreview"
+class="logo-preview"
+onerror="this.style.display='none'">
+
+</label>
+
+<label class="logo-toggle">
+
+<input type="checkbox"
+id="showLogo"
+checked
+onchange="toggleLogo()">
+
+<span>Show logo on statement</span>
+
+</label>
+
+</div>
+
+
+<div class="field">
+<label>Company Name</label>
+<input id="companyName"
+value="TM Eleven"
+oninput="updatePreview()">
+</div>
+
+
+<div class="field">
+<label>Company Address</label>
+<input id="companyAddress"
+placeholder="Melbourne, Victoria, Australia"
+oninput="updatePreview()">
+</div>
+
+
+<div class="row">
+
+<div class="field">
+<label>Email</label>
+<input id="companyEmail"
+placeholder="info@example.com"
+oninput="updatePreview()">
+</div>
+
+<div class="field">
+<label>Phone</label>
+<input id="companyPhone"
+placeholder="+61 xxx xxx xxx"
+oninput="updatePreview()">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Statement Details
+</div>
+
+<div class="row">
+
+<div class="field">
+<label>Statement No.</label>
+<input id="statementNumber"
+value="ST-001"
+oninput="updatePreview()">
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="date"
+id="statementDate"
+onchange="updatePreview()">
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+<label>From</label>
+<input type="date"
+id="periodFrom"
+onchange="updatePreview()">
+</div>
+
+<div class="field">
+<label>To</label>
+<input type="date"
+id="periodTo"
+onchange="updatePreview()">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Customer
+</div>
+
+<div class="field">
+<label>Customer Name</label>
+<input id="customerName"
+placeholder="John Smith"
+oninput="updatePreview()">
+</div>
+
+<div class="field">
+<label>Company</label>
+<input id="customerCompany"
+placeholder="Customer Company"
+oninput="updatePreview()">
+</div>
+
+<div class="field">
+<label>Address</label>
+<textarea id="customerAddress"
+placeholder="Customer address"
+oninput="updatePreview()"></textarea>
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Balance
+</div>
+
+<div class="row">
+
+<div class="field">
+<label>Opening Balance</label>
+<input type="number"
+id="openingBalance"
+value="0"
+oninput="updatePreview()">
+</div>
+
+<div class="field">
+<label>Closing Balance</label>
+<input type="number"
+id="closingBalance"
+value="0"
+oninput="updatePreview()">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Transactions
+</div>
+
+<div class="items-box" id="items"></div>
+
+<button class="add-item" onclick="addItem()">
++ Add Transaction
+</button>
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+Notes
+</div>
+
+<textarea id="notes"
+placeholder="Payment is due according to agreed terms."
+oninput="updatePreview()"></textarea>
+
+</div>
+
+</aside>
+
+
+<main class="preview-area">
+
+<div class="preview-top">
+
+<div class="preview-title">
+Live Statement Preview
+</div>
+
+<button class="btn btn-primary"
+onclick="window.print()">
+Generate PDF
+</button>
+
+</div>
+
+
+<div class="a4">
+
+
+<div class="statement-header">
+
+<div class="company">
+
+<img src="logo.png"
+id="previewLogo"
+class="company-logo"
+onerror="this.style.display='none'">
+
+<div>
+
+<div class="company-name"
+id="previewCompany">
+TM Eleven
+</div>
+
+<div class="company-details"
+id="previewCompanyDetails">
+Melbourne, Victoria, Australia
+</div>
+
+</div>
+
+</div>
+
+
+<div class="statement-title">
+
+<h1>STATEMENT</h1>
+
+<div class="meta"
+id="previewStatementNumber">
+Statement No. ST-001
+</div>
+
+<div class="meta"
+id="previewDate">
+27 August 2026
+</div>
+
+</div>
+
+</div>
+
+
+<div class="customer">
+
+<div>
+
+<div class="info-label">
+Statement For
+</div>
+
+<div class="info-value">
+
+<strong id="previewCustomer">
+Customer Name
+</strong>
+
+<br>
+
+<span id="previewCustomerCompany">
+Customer Company
+</span>
+
+<br>
+
+<span id="previewCustomerAddress">
+Customer Address
+</span>
+
+</div>
+
+</div>
+
+
+<div>
+
+<div class="info-label">
+Statement Period
+</div>
+
+<div class="info-value"
+id="previewPeriod">
+Not specified
+</div>
+
+</div>
+
+</div>
+
+
+<div class="table">
+
+<div class="table-row header">
+
+<span>Date</span>
+<span>Description</span>
+<span>Debit</span>
+<span>Credit</span>
+
+</div>
+
+<div id="previewItems"></div>
+
+</div>
+
+
+<div class="balance">
+
+<div class="balance-box">
+
+<div class="balance-line">
+
+<span>Opening Balance</span>
+
+<span id="previewOpening">
+$0.00
+</span>
+
+</div>
+
+
+<div class="balance-line">
+
+<span>Closing Balance</span>
+
+<span id="previewClosing">
+$0.00
+</span>
+
+</div>
+
+
+<div class="balance-line total">
+
+<span>Amount Due</span>
+
+<span id="previewDue">
+$0.00
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div style="margin-top:25px;font-size:10px;color:#666;line-height:1.6">
+
+<strong>Notes</strong>
+
+<br>
+
+<span id="previewNotes">
+Payment is due according to agreed terms.
+</span>
+
+</div>
+
+
+<div class="footer">
+TM Eleven • Customer Statement
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+const today=new Date();
+
+document.getElementById("statementDate").value=
+today.toISOString().split("T")[0];
+
+
+let items=[
+{
+date:"",
+description:"",
+debit:0,
+credit:0
+}
+];
+
+
+function addItem(){
+
+items.push({
+date:"",
+description:"",
+debit:0,
+credit:0
+});
+
+renderItems();
+
+}
+
+
+function removeItem(index){
+
+if(items.length===1){
+
+items[0]={
+date:"",
+description:"",
+debit:0,
+credit:0
+};
+
+}else{
+
+items.splice(index,1);
+
+}
+
+renderItems();
+
+}
+
+
+function renderItems(){
+
+const container=
+document.getElementById("items");
+
+container.innerHTML="";
+
+
+items.forEach((item,index)=>{
+
+const div=document.createElement("div");
+
+div.style.padding="12px";
+div.style.borderBottom="1px solid #e5e6e9";
+
+div.innerHTML=`
+
+<div style="display:flex;justify-content:space-between;margin-bottom:8px">
+
+<strong style="font-size:11px">
+Transaction ${index+1}
+</strong>
+
+<button
+style="border:0;background:#eee;border-radius:6px;width:25px;height:25px;cursor:pointer"
+onclick="removeItem(${index})">
+×
+</button>
+
+</div>
+
+<div class="field">
+
+<label>Date</label>
+
+<input
+type="date"
+value="${item.date}"
+oninput="updateItem(${index},'date',this.value)">
+
+</div>
+
+<div class="field">
+
+<label>Description</label>
+
+<input
+value="${escapeHtml(item.description)}"
+placeholder="Invoice / Payment"
+oninput="updateItem(${index},'description',this.value)">
+
+</div>
+
+<div class="row">
+
+<div class="field">
+
+<label>Debit</label>
+
+<input
+type="number"
+step="0.01"
+value="${item.debit}"
+oninput="updateItem(${index},'debit',this.value)">
+
+</div>
+
+<div class="field">
+
+<label>Credit</label>
+
+<input
+type="number"
+step="0.01"
+value="${item.credit}"
+oninput="updateItem(${index},'credit',this.value)">
+
+</div>
+
+</div>
+
+`;
+
+container.appendChild(div);
+
+});
+
+updatePreview();
+
+}
+
+
+function updateItem(index,key,value){
+
+if(key==="debit"||key==="credit"){
+value=parseFloat(value)||0;
+}
+
+items[index][key]=value;
+
+updatePreview();
+
+}
+
+
+document.getElementById("logoInput")
+.addEventListener("change",function(){
+
+const file=this.files[0];
+
+if(!file)return;
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+localStorage.setItem(
+"statementLogo",
+e.target.result
+);
+
+document.getElementById("logoPreview").src=
+e.target.result;
+
+document.getElementById("previewLogo").src=
+e.target.result;
+
+toggleLogo();
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+
+function toggleLogo(){
+
+const show=
+document.getElementById("showLogo").checked;
+
+document.getElementById("previewLogo").style.display=
+show?"block":"none";
+
+}
+
+
+function formatDate(value){
+
+if(!value)return"Not specified";
+
+const d=new Date(value+"T00:00:00");
+
+return d.toLocaleDateString("en-AU",{
+day:"numeric",
+month:"long",
+year:"numeric"
+});
+
+}
+
+
+function updatePreview(){
+
+const company=
+document.getElementById("companyName").value;
+
+const address=
+document.getElementById("companyAddress").value;
+
+const email=
+document.getElementById("companyEmail").value;
+
+const phone=
+document.getElementById("companyPhone").value;
+
+
+document.getElementById("previewCompany").textContent=
+company||"Company Name";
+
+
+let details="";
+
+if(address)details+=address;
+
+if(email)details+=(details?" • ":"")+email;
+
+if(phone)details+=(details?" • ":"")+phone;
+
+document.getElementById("previewCompanyDetails").textContent=
+details;
+
+
+document.getElementById("previewStatementNumber").textContent=
+"Statement No. "+
+(document.getElementById("statementNumber").value||"ST-001");
+
+
+document.getElementById("previewDate").textContent=
+formatDate(
+document.getElementById("statementDate").value
+);
+
+
+document.getElementById("previewCustomer").textContent=
+document.getElementById("customerName").value||
+"Customer Name";
+
+
+document.getElementById("previewCustomerCompany").textContent=
+document.getElementById("customerCompany").value;
+
+
+document.getElementById("previewCustomerAddress").innerHTML=
+(document.getElementById("customerAddress").value||"")
+.replace(/\n/g,"<br>");
+
+
+const from=
+document.getElementById("periodFrom").value;
+
+const to=
+document.getElementById("periodTo").value;
+
+
+document.getElementById("previewPeriod").textContent=
+from||to
+?formatDate(from)+" – "+formatDate(to)
+:"Not specified";
+
+
+const previewItems=
+document.getElementById("previewItems");
+
+previewItems.innerHTML="";
+
+
+let totalDebit=0;
+let totalCredit=0;
+
+
+items.forEach(item=>{
+
+const debit=parseFloat(item.debit)||0;
+const credit=parseFloat(item.credit)||0;
+
+totalDebit+=debit;
+totalCredit+=credit;
+
+
+const row=document.createElement("div");
+
+row.className="table-row";
+
+row.innerHTML=`
+
+<span>${formatShortDate(item.date)}</span>
+
+<span>${escapeHtml(item.description||"Transaction")}</span>
+
+<span>$${debit.toFixed(2)}</span>
+
+<span>$${credit.toFixed(2)}</span>
+
+`;
+
+previewItems.appendChild(row);
+
+});
+
+
+const opening=
+parseFloat(
+document.getElementById("openingBalance").value
+)||0;
+
+const closing=
+parseFloat(
+document.getElementById("closingBalance").value
+)||0;
+
+
+document.getElementById("previewOpening").textContent=
+"$"+opening.toFixed(2);
+
+document.getElementById("previewClosing").textContent=
+"$"+closing.toFixed(2);
+
+document.getElementById("previewDue").textContent=
+"$"+closing.toFixed(2);
+
+
+document.getElementById("previewNotes").textContent=
+document.getElementById("notes").value||
+"Payment is due according to agreed terms.";
+
+
+toggleLogo();
+
+}
+
+
+function formatShortDate(value){
+
+if(!value)return"—";
+
+const d=new Date(value+"T00:00:00");
+
+return d.toLocaleDateString("en-AU",{
+day:"2-digit",
+month:"short",
+year:"numeric"
+});
+
+}
+
+
+function escapeHtml(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+function saveDraft(){
+
+const data={};
+
+document.querySelectorAll("input,textarea,select")
+.forEach(el=>{
+
+if(el.id){
+
+data[el.id]=
+el.type==="checkbox"
+?el.checked
+:el.value;
+
+}
+
+});
+
+data.items=items;
+
+localStorage.setItem(
+"tmElevenStatementDraft",
+JSON.stringify(data)
+);
+
+alert("Statement draft saved successfully.");
+
+}
+
+
+function loadDraft(){
+
+const saved=
+localStorage.getItem(
+"tmElevenStatementDraft"
+);
+
+if(!saved)return;
+
+const data=JSON.parse(saved);
+
+Object.keys(data).forEach(key=>{
+
+if(key==="items"){
+
+items=data.items||items;
+
+return;
+
+}
+
+const el=document.getElementById(key);
+
+if(!el)return;
+
+if(el.type==="checkbox"){
+
+el.checked=data[key];
+
+}else{
+
+el.value=data[key];
+
+}
+
+});
+
+}
+
+
+window.addEventListener("load",function(){
+
+const savedLogo=
+localStorage.getItem("statementLogo");
+
+if(savedLogo){
+
+document.getElementById("logoPreview").src=
+savedLogo;
+
+document.getElementById("previewLogo").src=
+savedLogo;
+
+}
+
+loadDraft();
+
+renderItems();
+
+updatePreview();
+
+});
+
+</script>
+
+</body>
+</html>
