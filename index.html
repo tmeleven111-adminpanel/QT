@@ -4,356 +4,602 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TM Eleven | Document Studio</title>
+<title>TM Eleven | Dashboard</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#07090d;
+    --card:#0d1118;
+    --card2:#111720;
+    --border:rgba(255,255,255,.08);
+    --text:#f5f7fa;
+    --muted:#8b95a5;
+    --accent:#ffffff;
 }
 
 body{
+    min-height:100vh;
     font-family:"Inter",sans-serif;
-    background:#f4f5f7;
-    color:#15171c;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(255,255,255,.055), transparent 28%),
+        radial-gradient(circle at 85% 85%, rgba(255,255,255,.035), transparent 30%),
+        var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
 }
 
-.app{
-    min-height:100vh;
+/* Background glow */
+body::before{
+    content:"";
+    position:fixed;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    background:rgba(255,255,255,.025);
+    filter:blur(100px);
+    top:-250px;
+    right:-180px;
+    pointer-events:none;
+}
+
+/* MAIN */
+.container{
+    width:min(1150px,92%);
+    margin:auto;
+    padding:55px 0 40px;
 }
 
 /* HEADER */
-
 .header{
-    height:72px;
-    background:#111318;
-    color:white;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 30px;
+    margin-bottom:65px;
+    animation:fadeDown .7s ease forwards;
 }
 
 .brand{
     display:flex;
     align-items:center;
-    gap:13px;
+    gap:15px;
 }
 
-.logo{
+.logo-box{
+    width:54px;
+    height:54px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:rgba(255,255,255,.035);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.05);
+}
+
+.logo-box img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:7px;
+}
+
+.brand-text h2{
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:-.3px;
+}
+
+.brand-text span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+
+/* PROFILE */
+.profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-info{
+    text-align:right;
+}
+
+.profile-info strong{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+}
+
+.profile-info span{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:3px;
+}
+
+.avatar{
     width:42px;
     height:42px;
-    object-fit:contain;
-    border-radius:8px;
-}
-
-.brand-name{
-    font-family:"Manrope";
-    font-size:20px;
-    font-weight:800;
-}
-
-.brand-name span{
-    color:#92959d;
-    font-weight:500;
-}
-
-/* MAIN */
-
-.main{
-    max-width:1150px;
-    margin:auto;
-    padding:55px 25px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(145deg,#202731,#0b0e13);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    font-weight:700;
 }
 
 /* HERO */
-
 .hero{
-    margin-bottom:35px;
+    margin-bottom:42px;
+    animation:fadeUp .8s ease forwards;
+}
+
+.greeting{
+    color:#8f99a8;
+    font-size:14px;
+    margin-bottom:13px;
 }
 
 .hero h1{
-    font-family:"Manrope";
-    font-size:36px;
+    font-size:clamp(34px,6vw,58px);
+    line-height:1.05;
+    letter-spacing:-2.8px;
     font-weight:800;
-    letter-spacing:-1px;
-    margin-bottom:9px;
+    max-width:700px;
+}
+
+.hero h1 span{
+    color:#777f8b;
 }
 
 .hero p{
-    color:#71757e;
-    font-size:15px;
+    color:var(--muted);
+    margin-top:18px;
+    font-size:14px;
+    line-height:1.7;
+    max-width:560px;
 }
 
-/* DOCUMENT GRID */
+/* SECTION */
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+}
 
-.documents{
+.section-title h3{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:#aab2bf;
+}
+
+.section-title span{
+    color:#5f6876;
+    font-size:11px;
+}
+
+/* GRID */
+.grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
 }
 
-.document{
-    background:white;
-    border:1px solid #e0e2e6;
-    border-radius:14px;
-    padding:25px;
-    cursor:pointer;
-    text-decoration:none;
-    color:#15171c;
-    transition:.2s;
+/* CARD */
+.card{
     position:relative;
+    min-height:190px;
+    padding:26px;
+    border:1px solid var(--border);
+    border-radius:22px;
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),
+        var(--card);
     overflow:hidden;
+    cursor:pointer;
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        background .3s ease,
+        box-shadow .3s ease;
+    animation:fadeUp .7s ease backwards;
 }
 
-.document:hover{
-    transform:translateY(-3px);
-    border-color:#111318;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+.card:nth-child(1){animation-delay:.1s}
+.card:nth-child(2){animation-delay:.18s}
+.card:nth-child(3){animation-delay:.26s}
+.card:nth-child(4){animation-delay:.34s}
+.card:nth-child(5){animation-delay:.42s}
+
+.card::before{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:rgba(255,255,255,.035);
+    filter:blur(45px);
+    right:-90px;
+    bottom:-90px;
+    transition:.4s ease;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(255,255,255,.18);
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015)),
+        var(--card2);
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.35),
+        0 0 35px rgba(255,255,255,.025);
+}
+
+.card:hover::before{
+    transform:scale(1.5);
+    background:rgba(255,255,255,.06);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
 }
 
 .icon{
     width:48px;
     height:48px;
-    border-radius:11px;
-    background:#f0f1f3;
+    border-radius:14px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.07);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:22px;
-    margin-bottom:19px;
+    font-size:21px;
+    transition:.3s ease;
 }
 
-.document h2{
-    font-family:"Manrope";
-    font-size:17px;
-    font-weight:800;
-    margin-bottom:7px;
-}
-
-.document p{
-    color:#777b83;
-    font-size:13px;
-    line-height:1.55;
+.card:hover .icon{
+    background:rgba(255,255,255,.1);
+    transform:scale(1.06);
 }
 
 .arrow{
-    position:absolute;
-    right:22px;
-    bottom:21px;
-    font-size:18px;
-    color:#999da5;
-    transition:.2s;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#8e98a7;
+    font-size:15px;
+    transition:.3s ease;
 }
 
-.document:hover .arrow{
-    color:#111318;
-    transform:translateX(3px);
+.card:hover .arrow{
+    color:white;
+    border-color:rgba(255,255,255,.2);
+    transform:translate(3px,-3px);
+}
+
+.card h2{
+    margin-top:28px;
+    font-size:19px;
+    letter-spacing:-.5px;
+}
+
+.card p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:8px;
+    line-height:1.5;
+}
+
+/* FULL WIDTH LAST CARD */
+.card:last-child{
+    grid-column:1 / -1;
+    min-height:155px;
+}
+
+.card:last-child .card-content{
+    max-width:600px;
 }
 
 /* FOOTER */
-
 .footer{
     text-align:center;
-    color:#92959d;
-    font-size:12px;
-    padding:25px;
+    margin-top:45px;
+    color:#4f5866;
+    font-size:10px;
+    letter-spacing:.8px;
+}
+
+/* CLICK EFFECT */
+.card.clicked{
+    transform:scale(.98);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes fadeDown{
+    from{
+        opacity:0;
+        transform:translateY(-15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 /* MOBILE */
+@media(max-width:650px){
 
-@media(max-width:800px){
+    .container{
+        width:90%;
+        padding:28px 0 30px;
+    }
 
     .header{
-        padding:0 18px;
+        margin-bottom:48px;
     }
 
-    .brand-name{
-        font-size:17px;
+    .brand-text{
+        display:none;
     }
 
-    .main{
-        padding:35px 18px;
+    .profile-info{
+        display:none;
     }
 
     .hero h1{
-        font-size:29px;
+        font-size:38px;
+        letter-spacing:-2px;
     }
 
-    .documents{
+    .hero{
+        margin-bottom:34px;
+    }
+
+    .grid{
         grid-template-columns:1fr;
-        gap:13px;
     }
 
-    .document{
-        padding:21px;
+    .card{
+        min-height:175px;
     }
 
+    .card:last-child{
+        grid-column:auto;
+        min-height:175px;
+    }
 }
 
+@media(max-width:380px){
+    .hero h1{
+        font-size:33px;
+    }
+
+    .card{
+        padding:22px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-<header class="header">
+    <!-- HEADER -->
+    <header class="header">
 
-    <div class="brand">
+        <div class="brand">
+            <div class="logo-box">
+                <img src="logo.png" alt="Company Logo">
+            </div>
 
-        <img
-            src="logo.png"
-            class="logo"
-            alt="TM Eleven Logo"
-            onerror="this.style.display='none'"
-        >
-
-        <div class="brand-name">
-            TM Eleven <span>Document Studio</span>
+            <div class="brand-text">
+                <h2>TM ELEVEN</h2>
+                <span>Business Documents</span>
+            </div>
         </div>
 
-    </div>
+        <div class="profile">
+            <div class="profile-info">
+                <strong>Mr. Mark</strong>
+                <span>Administrator</span>
+            </div>
 
-</header>
+            <div class="avatar">
+                M
+            </div>
+        </div>
+
+    </header>
 
 
-<main class="main">
-
+    <!-- HERO -->
     <section class="hero">
 
-        <h1>Document Studio</h1>
+        <div class="greeting">
+            Hi, Mr. Mark 👋
+        </div>
+
+        <h1>
+            What are you<br>
+            <span>going to do today?</span>
+        </h1>
 
         <p>
-            Create professional business documents quickly and easily.
+            Create professional business documents quickly and effortlessly.
+            Choose what you need to prepare.
         </p>
 
     </section>
 
 
-    <section class="documents">
+    <!-- DOCUMENTS -->
+    <div class="section-title">
+        <h3>Quick Actions</h3>
+        <span>5 Documents</span>
+    </div>
 
 
-        <!-- LETTER -->
-
-        <a class="document" href="letter.html">
-
-            <div class="icon">✉</div>
-
-            <h2>Letter</h2>
-
-            <p>
-                Create professional business letters with your company branding.
-            </p>
-
-            <div class="arrow">→</div>
-
-        </a>
-
+    <div class="grid">
 
         <!-- QUOTE -->
+        <div class="card" onclick="openPage(this,'quote.html')">
 
-        <a class="document" href="quote.html">
+            <div class="card-top">
 
-            <div class="icon">▤</div>
+                <div class="icon">📄</div>
 
-            <h2>Quotation</h2>
+                <div class="arrow">↗</div>
 
-            <p>
-                Prepare professional quotes with items, quantities and pricing.
-            </p>
+            </div>
 
-            <div class="arrow">→</div>
+            <div class="card-content">
+                <h2>Create Quote</h2>
+                <p>Prepare a professional quotation for your customer.</p>
+            </div>
 
-        </a>
+        </div>
 
 
         <!-- RECEIPT -->
+        <div class="card" onclick="openPage(this,'reciept.html')">
 
-        <a class="document" href="receipt.html">
+            <div class="card-top">
 
-            <div class="icon">▣</div>
+                <div class="icon">🧾</div>
 
-            <h2>Receipt</h2>
+                <div class="arrow">↗</div>
 
-            <p>
-                Create clean customer receipts and payment confirmations.
-            </p>
+            </div>
 
-            <div class="arrow">→</div>
+            <div class="card-content">
+                <h2>Create Receipt</h2>
+                <p>Generate a clean receipt for completed payments.</p>
+            </div>
 
-        </a>
+        </div>
 
 
-        <!-- STATEMENT -->
+        <!-- LETTER -->
+        <div class="card" onclick="openPage(this,'letter.html')">
 
-        <a class="document" href="statement.html">
+            <div class="card-top">
 
-            <div class="icon">☷</div>
+                <div class="icon">✉️</div>
 
-            <h2>Statement</h2>
+                <div class="arrow">↗</div>
 
-            <p>
-                Generate customer account statements and transaction summaries.
-            </p>
+            </div>
 
-            <div class="arrow">→</div>
+            <div class="card-content">
+                <h2>Create Letter</h2>
+                <p>Create a professional business letter in seconds.</p>
+            </div>
 
-        </a>
+        </div>
 
 
         <!-- WORK ORDER -->
+        <div class="card" onclick="openPage(this,'workorder.html')">
 
-        <a class="document" href="workorder.html">
+            <div class="card-top">
 
-            <div class="icon">⚒</div>
+                <div class="icon">🛠️</div>
 
-            <h2>Work Order</h2>
+                <div class="arrow">↗</div>
 
-            <p>
-                Create detailed work orders for projects, jobs and services.
-            </p>
+            </div>
 
-            <div class="arrow">→</div>
+            <div class="card-content">
+                <h2>Create Work Order</h2>
+                <p>Prepare job instructions and work order documents.</p>
+            </div>
 
-        </a>
-
-
-        <!-- CONTRACT -->
-
-        <a class="document" href="contract.html">
-
-            <div class="icon">§</div>
-
-            <h2>Contract</h2>
-
-            <p>
-                Create professional agreements and project contracts.
-            </p>
-
-            <div class="arrow">→</div>
-
-        </a>
+        </div>
 
 
-    </section>
+        <!-- STATEMENT -->
+        <div class="card" onclick="openPage(this,'statement.html')">
 
-</main>
+            <div class="card-top">
+
+                <div class="icon">📊</div>
+
+                <div class="arrow">↗</div>
+
+            </div>
+
+            <div class="card-content">
+                <h2>Create Statement</h2>
+                <p>Generate a clear customer account statement.</p>
+            </div>
+
+        </div>
+
+    </div>
 
 
-<footer class="footer">
-
-    TM Eleven · Document Studio
-
-</footer>
+    <div class="footer">
+        TM ELEVEN PTY LTD · BUSINESS DOCUMENTS
+    </div>
 
 </div>
+
+
+<script>
+
+function openPage(card, page){
+
+    card.classList.add("clicked");
+
+    setTimeout(function(){
+
+        window.location.href = page;
+
+    },180);
+
+}
+
+</script>
 
 </body>
 </html>
