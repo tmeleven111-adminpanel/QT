@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Letter Generator</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:#f4f5f7;
+    color:#16181d;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+    height:72px;
+    background:#111318;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand img{
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    border-radius:8px;
+}
+
+.brand-text{
+    font-family:"Manrope";
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-text span{
+    color:#aaa;
+    font-weight:500;
+}
+
+.header-actions{
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    border:0;
+    border-radius:9px;
+    padding:11px 17px;
+    font-family:inherit;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-dark{
+    background:#242832;
+    color:white;
+}
+
+.btn-white{
+    background:white;
+    color:#111;
+}
+
+.btn-primary{
+    background:#111318;
+    color:white;
+}
+
+/* MAIN */
+
+.main{
+    display:grid;
+    grid-template-columns:390px 1fr;
+    min-height:calc(100vh - 72px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    background:white;
+    border-right:1px solid #dddfe3;
+    padding:24px;
+    overflow:auto;
+    height:calc(100vh - 72px);
+    position:sticky;
+    top:72px;
+}
+
+.section{
+    margin-bottom:26px;
+}
+
+.section-title{
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#777b83;
+    margin-bottom:13px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid #d9dce1;
+    background:#fafbfc;
+    border-radius:8px;
+    padding:11px 12px;
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#111;
+    background:white;
+}
+
+textarea{
+    resize:vertical;
+    min-height:110px;
+}
+
+.field{
+    margin-bottom:13px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.logo-upload{
+    border:1.5px dashed #c9ccd2;
+    padding:16px;
+    text-align:center;
+    border-radius:10px;
+    cursor:pointer;
+    background:#fafafa;
+}
+
+.logo-upload:hover{
+    background:#f2f3f5;
+}
+
+.logo-preview{
+    width:80px;
+    height:55px;
+    object-fit:contain;
+    margin:auto;
+    display:none;
+}
+
+/* TEMPLATES */
+
+.templates{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+}
+
+.template{
+    border:1px solid #dddfe3;
+    border-radius:9px;
+    padding:12px 8px;
+    text-align:center;
+    cursor:pointer;
+    background:#fafafa;
+    font-size:12px;
+    font-weight:600;
+}
+
+.template:hover{
+    border-color:#111;
+}
+
+.template.active{
+    border:2px solid #111;
+    background:#f1f2f4;
+}
+
+/* EDITOR */
+
+.toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    border:1px solid #ddd;
+    padding:7px;
+    border-radius:9px 9px 0 0;
+    background:#f7f7f8;
+}
+
+.tool{
+    border:0;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:6px;
+    min-width:32px;
+    height:30px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.tool:hover{
+    background:#eee;
+}
+
+.editor{
+    min-height:170px;
+    border:1px solid #ddd;
+    border-top:0;
+    padding:13px;
+    border-radius:0 0 9px 9px;
+    outline:none;
+    font-size:14px;
+    line-height:1.7;
+    background:white;
+}
+
+/* PREVIEW */
+
+.preview-area{
+    padding:35px;
+    overflow:auto;
+}
+
+.preview-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.preview-title{
+    font-family:"Manrope";
+    font-weight:800;
+    font-size:19px;
+}
+
+.a4{
+    width:210mm;
+    min-height:297mm;
+    background:white;
+    margin:auto;
+    padding:20mm;
+    box-shadow:0 8px 35px rgba(0,0,0,.12);
+    position:relative;
+    overflow:hidden;
+}
+
+/* LETTER */
+
+.letter-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding-bottom:22px;
+    border-bottom:2px solid #111;
+}
+
+.company{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.company-logo{
+    width:70px;
+    height:55px;
+    object-fit:contain;
+    display:none;
+}
+
+.company-name{
+    font-family:"Manrope";
+    font-weight:800;
+    font-size:21px;
+}
+
+.company-details{
+    font-size:10px;
+    color:#666;
+    line-height:1.6;
+}
+
+.letter-date{
+    font-size:11px;
+    color:#555;
+}
+
+.recipient{
+    margin-top:28px;
+    font-size:12px;
+    line-height:1.7;
+}
+
+.subject{
+    margin-top:23px;
+    font-size:13px;
+    font-weight:800;
+}
+
+.greeting{
+    margin-top:22px;
+    font-size:12px;
+}
+
+.letter-body{
+    margin-top:16px;
+    font-size:12px;
+    line-height:1.8;
+    min-height:150px;
+}
+
+.closing{
+    margin-top:28px;
+    font-size:12px;
+}
+
+.signature{
+    margin-top:30px;
+    font-size:12px;
+}
+
+.signature strong{
+    font-size:13px;
+}
+
+/* MODERN */
+
+.a4.modern .letter-header{
+    border-bottom:3px solid #111;
+}
+
+.a4.modern .company-name{
+    letter-spacing:-.03em;
+}
+
+/* CLASSIC */
+
+.a4.classic{
+    font-family:Georgia,serif;
+}
+
+.a4.classic .letter-header{
+    border-bottom:1px solid #777;
+}
+
+.a4.classic .company-name{
+    font-family:Georgia,serif;
+}
+
+/* ELEGANT */
+
+.a4.elegant{
+    font-family:"Manrope";
+}
+
+.a4.elegant .letter-header{
+    border:0;
+    padding-bottom:15px;
+}
+
+.a4.elegant .company-name{
+    font-family:"Playfair Display";
+    font-size:27px;
+}
+
+/* MINIMAL */
+
+.a4.minimal .letter-header{
+    border:0;
+    padding-bottom:30px;
+}
+
+.a4.minimal .company-details{
+    color:#888;
+}
+
+/* CORPORATE */
+
+.a4.corporate .letter-header{
+    background:#111318;
+    color:white;
+    margin:-20mm -20mm 0;
+    padding:15mm 20mm;
+}
+
+.a4.corporate .company-details,
+.a4.corporate .letter-date{
+    color:#ddd;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:relative;
+        top:0;
+        height:auto;
+        border-right:0;
+        border-bottom:1px solid #ddd;
+    }
+
+    .preview-area{
+        padding:20px 10px;
+        overflow:auto;
+    }
+
+    .a4{
+        transform-origin:top left;
+    }
+}
+
+/* PRINT */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .header,
+    .sidebar,
+    .preview-top{
+        display:none!important;
+    }
+
+    .main{
+        display:block;
+    }
+
+    .preview-area{
+        padding:0;
+    }
+
+    .a4{
+        box-shadow:none;
+        margin:0;
+    }
+
+    @page{
+        size:A4;
+        margin:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="brand">
+        <img src="logo.png" id="headerLogo" onerror="this.style.display='none'">
+        <div class="brand-text">
+            TM Eleven <span>Letter Studio</span>
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <button class="btn btn-dark" onclick="saveDraft()">Save Draft</button>
+        <button class="btn btn-white" onclick="window.print()">Print / PDF</button>
+    </div>
+
+</header>
+
+
+<div class="main">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="section">
+
+        <div class="section-title">Letter Template</div>
+
+        <div class="templates">
+
+            <div class="template active" onclick="setTemplate('modern',this)">
+                Modern
+            </div>
+
+            <div class="template" onclick="setTemplate('corporate',this)">
+                Corporate
+            </div>
+
+            <div class="template" onclick="setTemplate('minimal',this)">
+                Minimal
+            </div>
+
+            <div class="template" onclick="setTemplate('classic',this)">
+                Classic
+            </div>
+
+            <div class="template" onclick="setTemplate('elegant',this)">
+                Elegant
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Company Details</div>
+
+        <div class="field">
+
+            <label>Company Logo</label>
+
+            <label class="logo-upload">
+
+                <input type="file"
+                       id="logoInput"
+                       accept="image/*"
+                       hidden>
+
+                <img id="logoPreview" class="logo-preview">
+
+                <span id="logoText">
+                    Click to upload logo
+                </span>
+
+            </label>
+
+        </div>
+
+        <div class="field">
+            <label>Company Name</label>
+            <input id="companyName"
+                   value="TM Eleven"
+                   oninput="updatePreview()">
+        </div>
+
+        <div class="field">
+            <label>Company Address</label>
+            <input id="companyAddress"
+                   placeholder="Melbourne, Victoria, Australia"
+                   oninput="updatePreview()">
+        </div>
+
+        <div class="row">
+
+            <div class="field">
+                <label>Email</label>
+                <input id="companyEmail"
+                       placeholder="info@example.com"
+                       oninput="updatePreview()">
+            </div>
+
+            <div class="field">
+                <label>Phone</label>
+                <input id="companyPhone"
+                       placeholder="+61 xxx xxx xxx"
+                       oninput="updatePreview()">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Letter Details</div>
+
+        <div class="row">
+
+            <div class="field">
+                <label>Date</label>
+                <input type="date"
+                       id="letterDate"
+                       onchange="updatePreview()">
+            </div>
+
+            <div class="field">
+                <label>Reference No.</label>
+                <input id="reference"
+                       placeholder="REF-001"
+                       oninput="updatePreview()">
+            </div>
+
+        </div>
+
+        <div class="field">
+            <label>Subject</label>
+            <input id="subject"
+                   placeholder="Letter subject"
+                   oninput="updatePreview()">
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Recipient</div>
+
+        <div class="field">
+            <label>Name</label>
+            <input id="recipientName"
+                   placeholder="John Smith"
+                   oninput="updatePreview()">
+        </div>
+
+        <div class="field">
+            <label>Company</label>
+            <input id="recipientCompany"
+                   placeholder="Company Name"
+                   oninput="updatePreview()">
+        </div>
+
+        <div class="field">
+            <label>Address</label>
+            <textarea id="recipientAddress"
+                      placeholder="Street, Suburb, State, Postcode"
+                      oninput="updatePreview()"></textarea>
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Greeting</div>
+
+        <select id="greeting"
+                onchange="updatePreview()">
+
+            <option>Dear Sir/Madam,</option>
+            <option>Dear Sir,</option>
+            <option>Dear Madam,</option>
+            <option>Dear Customer,</option>
+            <option>To Whom It May Concern,</option>
+            <option>Dear Client,</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Letter Content</div>
+
+        <div class="toolbar">
+
+            <button class="tool" onclick="format('bold')">
+                B
+            </button>
+
+            <button class="tool" onclick="format('italic')">
+                I
+            </button>
+
+            <button class="tool" onclick="format('underline')">
+                U
+            </button>
+
+            <button class="tool" onclick="format('insertUnorderedList')">
+                •
+            </button>
+
+            <button class="tool" onclick="format('justifyLeft')">
+                ≡
+            </button>
+
+            <button class="tool" onclick="format('justifyCenter')">
+                ≡
+            </button>
+
+            <button class="tool" onclick="format('justifyRight')">
+                ≡
+            </button>
+
+        </div>
+
+        <div id="editor"
+             class="editor"
+             contenteditable="true"
+             oninput="updatePreview()">
+
+            We are pleased to provide this letter regarding your request.
+            <br><br>
+            Please feel free to contact us if you require any additional information.
+            
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Closing</div>
+
+        <select id="closing"
+                onchange="updatePreview()">
+
+            <option>Kind regards,</option>
+            <option>Best regards,</option>
+            <option>Yours sincerely,</option>
+            <option>Yours faithfully,</option>
+            <option>Thank you,</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">Signature</div>
+
+        <div class="field">
+            <label>Name</label>
+            <input id="signName"
+                   value="TM Eleven"
+                   oninput="updatePreview()">
+        </div>
+
+        <div class="field">
+            <label>Position</label>
+            <input id="signPosition"
+                   value="Director"
+                   oninput="updatePreview()">
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- PREVIEW -->
+
+<main class="preview-area">
+
+    <div class="preview-top">
+
+        <div class="preview-title">
+            Live Letter Preview
+        </div>
+
+        <button class="btn btn-primary"
+                onclick="window.print()">
+            Generate PDF
+        </button>
+
+    </div>
+
+
+    <div class="a4 modern" id="paper">
+
+        <div class="letter-header">
+
+            <div class="company">
+
+                <img id="previewLogo"
+                     class="company-logo">
+
+                <div>
+
+                    <div class="company-name"
+                         id="previewCompany">
+                        TM Eleven
+                    </div>
+
+                    <div class="company-details"
+                         id="previewCompanyDetails">
+                        Melbourne, Victoria, Australia
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="letter-date"
+                 id="previewDate">
+                27 August 2026
+            </div>
+
+        </div>
+
+
+        <div class="recipient">
+
+            <strong id="previewRecipient">
+                John Smith
+            </strong>
+
+            <div id="previewRecipientCompany">
+                Company Name
+            </div>
+
+            <div id="previewRecipientAddress">
+                Street, Suburb, State, Postcode
+            </div>
+
+        </div>
+
+
+        <div class="subject">
+            RE: <span id="previewSubject">
+                Letter Subject
+            </span>
+        </div>
+
+
+        <div class="greeting"
+             id="previewGreeting">
+            Dear Sir/Madam,
+        </div>
+
+
+        <div class="letter-body"
+             id="previewBody">
+        </div>
+
+
+        <div class="closing"
+             id="previewClosing">
+            Kind regards,
+        </div>
+
+
+        <div class="signature">
+
+            <strong id="previewSignName">
+                TM Eleven
+            </strong>
+
+            <br>
+
+            <span id="previewSignPosition">
+                Director
+            </span>
+
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+</div>
+
+
+<script>
+
+const today = new Date();
+
+document.getElementById("letterDate").value =
+    today.toISOString().split("T")[0];
+
+
+// FORMAT TOOLBAR
+
+function format(command){
+
+    document.execCommand(command,false,null);
+
+    document.getElementById("editor").focus();
+
+    updatePreview();
+}
+
+
+// TEMPLATE
+
+function setTemplate(template, element){
+
+    document.querySelectorAll(".template")
+        .forEach(t => t.classList.remove("active"));
+
+    element.classList.add("active");
+
+    const paper = document.getElementById("paper");
+
+    paper.className = "a4 " + template;
+}
+
+
+// LOGO
+
+document.getElementById("logoInput")
+.addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        const src = e.target.result;
+
+        document.getElementById("logoPreview").src = src;
+        document.getElementById("logoPreview").style.display = "block";
+
+        document.getElementById("logoText").style.display = "none";
+
+        const preview = document.getElementById("previewLogo");
+
+        preview.src = src;
+        preview.style.display = "block";
+
+        localStorage.setItem("letterLogo",src);
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+// UPDATE PREVIEW
+
+function updatePreview(){
+
+    const company =
+        document.getElementById("companyName").value;
+
+    const address =
+        document.getElementById("companyAddress").value;
+
+    const email =
+        document.getElementById("companyEmail").value;
+
+    const phone =
+        document.getElementById("companyPhone").value;
+
+    const date =
+        document.getElementById("letterDate").value;
+
+    const recipient =
+        document.getElementById("recipientName").value;
+
+    const recipientCompany =
+        document.getElementById("recipientCompany").value;
+
+    const recipientAddress =
+        document.getElementById("recipientAddress").value;
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const greeting =
+        document.getElementById("greeting").value;
+
+    const closing =
+        document.getElementById("closing").value;
+
+    const signName =
+        document.getElementById("signName").value;
+
+    const signPosition =
+        document.getElementById("signPosition").value;
+
+
+    document.getElementById("previewCompany")
+        .textContent = company || "Company Name";
+
+
+    let details = "";
+
+    if(address) details += address;
+
+    if(email)
+        details += (details ? " • " : "") + email;
+
+    if(phone)
+        details += (details ? " • " : "") + phone;
+
+
+    document.getElementById("previewCompanyDetails")
+        .textContent = details;
+
+
+    if(date){
+
+        const d = new Date(date + "T00:00:00");
+
+        document.getElementById("previewDate")
+            .textContent =
+            d.toLocaleDateString("en-AU",{
+                day:"numeric",
+                month:"long",
+                year:"numeric"
+            });
+
+    }
+
+
+    document.getElementById("previewRecipient")
+        .textContent =
+        recipient || "Recipient Name";
+
+
+    document.getElementById("previewRecipientCompany")
+        .textContent =
+        recipientCompany;
+
+
+    document.getElementById("previewRecipientAddress")
+        .innerHTML =
+        (recipientAddress || "").replace(/\n/g,"<br>");
+
+
+    document.getElementById("previewSubject")
+        .textContent =
+        subject || "Letter Subject";
+
+
+    document.getElementById("previewGreeting")
+        .textContent =
+        greeting;
+
+
+    document.getElementById("previewBody")
+        .innerHTML =
+        document.getElementById("editor").innerHTML;
+
+
+    document.getElementById("previewClosing")
+        .textContent =
+        closing;
+
+
+    document.getElementById("previewSignName")
+        .textContent =
+        signName;
+
+
+    document.getElementById("previewSignPosition")
+        .textContent =
+        signPosition;
+
+}
+
+
+// SAVE DRAFT
+
+function saveDraft(){
+
+    const data = {
+
+        companyName:
+            document.getElementById("companyName").value,
+
+        companyAddress:
+            document.getElementById("companyAddress").value,
+
+        companyEmail:
+            document.getElementById("companyEmail").value,
+
+        companyPhone:
+            document.getElementById("companyPhone").value,
+
+        letterDate:
+            document.getElementById("letterDate").value,
+
+        reference:
+            document.getElementById("reference").value,
+
+        subject:
+            document.getElementById("subject").value,
+
+        recipientName:
+            document.getElementById("recipientName").value,
+
+        recipientCompany:
+            document.getElementById("recipientCompany").value,
+
+        recipientAddress:
+            document.getElementById("recipientAddress").value,
+
+        greeting:
+            document.getElementById("greeting").value,
+
+        editor:
+            document.getElementById("editor").innerHTML,
+
+        closing:
+            document.getElementById("closing").value,
+
+        signName:
+            document.getElementById("signName").value,
+
+        signPosition:
+            document.getElementById("signPosition").value
+
+    };
+
+
+    localStorage.setItem(
+        "tmElevenLetterDraft",
+        JSON.stringify(data)
+    );
+
+
+    alert("Letter draft saved successfully.");
+}
+
+
+// LOAD DRAFT
+
+function loadDraft(){
+
+    const saved =
+        localStorage.getItem("tmElevenLetterDraft");
+
+    if(!saved) return;
+
+    const data = JSON.parse(saved);
+
+    Object.keys(data).forEach(key => {
+
+        const el = document.getElementById(key);
+
+        if(!el) return;
+
+        if(key === "editor"){
+            el.innerHTML = data[key];
+        }else{
+            el.value = data[key];
+        }
+
+    });
+
+    updatePreview();
+
+}
+
+
+// START
+
+window.addEventListener("load",function(){
+
+    const savedLogo =
+        localStorage.getItem("letterLogo");
+
+    if(savedLogo){
+
+        document.getElementById("previewLogo").src =
+            savedLogo;
+
+        document.getElementById("previewLogo").style.display =
+            "block";
+
+    }
+
+    loadDraft();
+
+    updatePreview();
+
+});
+
+</script>
+
+</body>
+</html>
