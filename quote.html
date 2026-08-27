@@ -3,933 +3,1207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TM Eleven — Quote Generator</title>
+<title>TM ELEVEN — Quote Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root{
-    --ink:#0f1720;
-    --panel:#141b26;
-    --panel-2:#1b2434;
-    --panel-3:#212c3f;
-    --line:#2a3547;
-    --text:#e7ecf4;
-    --sub:#8b95a7;
-    --accent:#e39c4c;
-    --accent-2:#cf8a3c;
-    --navy:#1c2b45;
-    --paper:#fdfbf7;
-    --row-alt:#fbeedd;
-    --good:#5ec49a;
+    --bg:#0b0d10;
+    --bg-soft:#0f1216;
+    --surface:#151920;
+    --surface-2:#1b2029;
+    --surface-3:#20262f;
+    --border:#272d38;
+    --border-soft:#1e232b;
+    --text:#eef1f5;
+    --text-dim:#96a0af;
+    --text-faint:#5c6472;
+    --accent:#d9a054;
+    --accent-2:#b9803a;
+    --accent-soft:rgba(217,160,84,0.12);
+    --accent-soft-2:rgba(217,160,84,0.22);
+    --danger:#e2685a;
+    --danger-soft:rgba(226,104,90,0.12);
+    --success:#57b686;
+    --radius:14px;
+    --radius-sm:9px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
   }
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:radial-gradient(1200px 800px at 15% -10%, #1c2537 0%, var(--ink) 55%);
+    background:var(--bg);
     color:var(--text);
-    font-family:'Manrope',sans-serif;
+    font-family:var(--font-body);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
     min-height:100vh;
-    padding:28px 20px 80px;
   }
+
+  ::selection{background:var(--accent-soft-2);color:var(--text);}
+
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:10px;border:2px solid var(--bg);}
+  ::-webkit-scrollbar-thumb:hover{background:var(--border);}
+
+  a{color:inherit;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:var(--bg-soft);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .topbar-inner{
+    max-width:1600px;margin:0 auto;
+    display:flex;align-items:center;gap:16px;
+    padding:14px 24px;
+  }
+  .topbar-brand{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+  .topbar-brand img{height:34px;width:auto;display:block;}
+  .topbar-brand .tb-text{display:flex;flex-direction:column;line-height:1.15;min-width:0;}
+  .topbar-brand .tb-text b{
+    font-family:var(--font-display);font-size:15px;font-weight:700;
+    letter-spacing:0.02em;white-space:nowrap;
+  }
+  .topbar-brand .tb-text span{
+    font-size:11.5px;color:var(--text-faint);letter-spacing:0.03em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .hazard-strip{
+    height:4px;width:100%;
+    background:repeating-linear-gradient(135deg, var(--accent) 0 14px, #0b0d10 14px 28px);
+    opacity:0.55;
+  }
+  .topbar-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    appearance:none;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text);
+    font-family:var(--font-body);font-size:13px;font-weight:600;
+    padding:9px 16px;border-radius:var(--radius-sm);
+    cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    transition:background .15s ease, border-color .15s ease, transform .05s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--surface-3);border-color:#333a46;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .btn-primary{
+    background:linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+    border-color:var(--accent-2);color:#1a1204;
+  }
+  .btn-primary:hover{filter:brightness(1.06);}
+  .btn-danger{background:transparent;border-color:var(--border);color:var(--danger);}
+  .btn-danger:hover{background:var(--danger-soft);border-color:var(--danger);}
+  .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim);padding:8px 10px;}
+  .btn-ghost:hover{background:var(--surface-2);color:var(--text);}
+  .btn-sm{padding:6px 12px;font-size:12.5px;border-radius:8px;}
+  .btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:8px;}
+  .btn svg{width:15px;height:15px;flex-shrink:0;}
+
+  /* ---------- Layout ---------- */
   .app{
-    max-width:1400px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:420px 1fr;
-    gap:26px;
+    max-width:1600px;margin:0 auto;
+    display:grid;grid-template-columns:minmax(340px,460px) 1fr;
+    gap:22px;padding:22px 24px 60px;
     align-items:start;
   }
-  @media (max-width:1050px){
+  @media (max-width:980px){
     .app{grid-template-columns:1fr;}
   }
 
-  /* ---------- Header ---------- */
-  .app-header{
-    max-width:1400px;
-    margin:0 auto 22px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-  }
-  .brand-mark{display:flex;align-items:center;gap:12px;}
-  .brand-mark .sw{
-    width:38px;height:38px;border-radius:10px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-weight:700;color:var(--ink);font-size:18px;
-  }
-  .brand-mark h1{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:20px;
-    margin:0;
-    letter-spacing:.2px;
-  }
-  .brand-mark span{display:block;font-size:12px;color:var(--sub);margin-top:2px;font-weight:500;}
-  .dl-btn{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#1a1204;
-    border:none;
-    padding:13px 22px;
-    border-radius:12px;
-    font-weight:700;
-    font-size:14.5px;
-    cursor:pointer;
-    display:flex;align-items:center;gap:9px;
-    box-shadow:0 10px 24px -8px rgba(227,156,76,.55);
-    transition:transform .15s ease, box-shadow .15s ease;
-    font-family:'Manrope',sans-serif;
-  }
-  .dl-btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px -8px rgba(227,156,76,.7);}
-  .dl-btn:active{transform:translateY(0px) scale(.98);}
-  .dl-btn svg{width:17px;height:17px;}
-
-  /* ---------- Editor (dark) ---------- */
-  .editor{
-    background:linear-gradient(180deg,var(--panel),var(--panel-2));
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:6px;
-    position:sticky;
-    top:20px;
-  }
-  .editor-scroll{
-    max-height:calc(100vh - 60px);
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    position:sticky;top:76px;
+    max-height:calc(100vh - 96px);
     overflow-y:auto;
-    padding:18px 18px 10px;
   }
-  .editor-scroll::-webkit-scrollbar{width:8px;}
-  .editor-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+  @media (max-width:980px){
+    .panel{position:static;max-height:none;}
+  }
+  .panel-scroll{padding:20px 20px 26px;}
 
-  .section{
-    border-bottom:1px solid var(--line);
-    padding-bottom:20px;
-    margin-bottom:20px;
+  .card{
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:16px 16px 18px;
+    margin-bottom:16px;
   }
-  .section:last-child{border-bottom:none;margin-bottom:0;}
-
-  .section-title{
-    display:flex;align-items:center;gap:10px;
-    font-size:12px;text-transform:uppercase;letter-spacing:1.4px;
-    color:var(--accent);font-weight:800;margin-bottom:14px;
+  .card:last-child{margin-bottom:0;}
+  .card-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;
   }
-  .section-title .num{
-    width:22px;height:22px;border-radius:7px;
-    background:var(--panel-3);
-    display:flex;align-items:center;justify-content:center;
-    font-size:11px;color:var(--text);font-weight:700;
+  .card-title{
+    font-family:var(--font-display);font-size:13px;font-weight:600;
+    letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);
+    display:flex;align-items:center;gap:8px;
   }
-
-  label{
-    display:block;font-size:11.5px;color:var(--sub);
-    margin:0 0 5px 2px;font-weight:600;letter-spacing:.2px;
+  .card-title .num{
+    font-family:var(--font-mono);color:var(--text-faint);font-size:11px;
   }
-  input[type="text"], input[type="number"], input[type="date"], textarea{
-    width:100%;
-    background:var(--panel-3);
-    border:1px solid var(--line);
-    color:var(--text);
-    padding:10px 12px;
-    border-radius:10px;
-    font-size:13.5px;
-    font-family:'Manrope',sans-serif;
-    outline:none;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  input::placeholder, textarea::placeholder{color:#5a6478;}
-  input:focus, textarea:focus{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(227,156,76,.15);
-  }
-  textarea{resize:vertical;min-height:44px;}
 
   .field{margin-bottom:12px;}
-  .field-row{display:flex;gap:10px;}
-  .field-row > div{flex:1;}
-
-  .to-field{
-    display:flex;gap:8px;align-items:flex-end;margin-bottom:10px;
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:block;font-size:12px;font-weight:600;color:var(--text-dim);
+    margin-bottom:6px;letter-spacing:0.01em;
   }
-  .to-field .grow{flex:1;}
-  .to-field .label-input{width:110px;flex:none;}
-  .icon-btn{
-    width:36px;height:36px;flex:none;
-    background:var(--panel-3);
-    border:1px solid var(--line);
-    border-radius:9px;
-    color:var(--sub);
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;
-    transition:all .15s ease;
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="number"],
+  .field input[type="date"],
+  .field textarea{
+    width:100%;background:var(--bg-soft);
+    border:1px solid var(--border);color:var(--text);
+    font-family:var(--font-body);font-size:13.5px;
+    padding:9px 11px;border-radius:8px;
+    transition:border-color .15s ease, background .15s ease;
   }
-  .icon-btn:hover{color:#ff8080;border-color:#5a3030;background:#2a1a1a;}
-  .icon-btn svg{width:15px;height:15px;}
-
-  .add-btn{
-    width:100%;
-    background:transparent;
-    border:1.5px dashed var(--line);
-    color:var(--accent);
-    padding:10px;
-    border-radius:10px;
-    font-weight:700;
-    font-size:12.5px;
-    cursor:pointer;
-    display:flex;align-items:center;justify-content:center;gap:7px;
-    transition:all .15s ease;
-    font-family:'Manrope',sans-serif;
-    margin-top:4px;
+  .field textarea{resize:vertical;min-height:56px;}
+  .field input:focus,.field textarea:focus{
+    outline:none;border-color:var(--accent);background:#12151a;
   }
-  .add-btn:hover{border-color:var(--accent);background:rgba(227,156,76,.08);}
-  .add-btn svg{width:14px;height:14px;}
+  .field input::placeholder,.field textarea::placeholder{color:var(--text-faint);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-  /* item card */
+  .custom-field-row{
+    display:grid;grid-template-columns:1fr 1fr auto;gap:8px;
+    margin-bottom:8px;align-items:center;
+  }
+  .custom-field-row input{width:100%;}
+
+  .checkline{
+    display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+  }
+  .checkline input[type="checkbox"]{
+    -webkit-appearance:none;appearance:none;
+    width:18px;height:18px;flex-shrink:0;
+    border:1.5px solid var(--border);border-radius:5px;
+    background:var(--bg-soft);cursor:pointer;position:relative;
+    transition:border-color .15s, background .15s;
+  }
+  .checkline input[type="checkbox"]:checked{
+    background:var(--accent);border-color:var(--accent);
+  }
+  .checkline input[type="checkbox"]:checked::after{
+    content:"";position:absolute;left:5px;top:1px;
+    width:5px;height:9px;border:solid #1a1204;
+    border-width:0 2px 2px 0;transform:rotate(45deg);
+  }
+  .checkline span{font-size:13px;font-weight:600;color:var(--text);}
+  .checkline .hint{font-weight:400;color:var(--text-faint);font-size:11.5px;}
+
+  .subrow{
+    margin-top:10px;padding:10px 12px;
+    background:var(--bg-soft);border:1px dashed var(--border);
+    border-radius:8px;
+  }
+
+  /* ---------- Items table (editor) ---------- */
+  .items-editor{display:flex;flex-direction:column;gap:12px;}
   .item-card{
-    background:var(--panel-3);
-    border:1px solid var(--line);
-    border-radius:13px;
-    padding:14px;
-    margin-bottom:12px;
-    position:relative;
+    background:var(--bg-soft);border:1px solid var(--border);
+    border-radius:10px;padding:12px;position:relative;
   }
-  .item-card .item-top{
-    display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+  .item-card-top{display:flex;gap:8px;margin-bottom:8px;}
+  .item-card-top input{flex:1;}
+  .item-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .item-grid .field{margin-bottom:0;}
+  .item-amount-line{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft);
   }
-  .item-tag{
-    font-size:10.5px;font-weight:800;color:var(--sub);letter-spacing:1px;text-transform:uppercase;
+  .item-amount-line .amt{
+    font-family:var(--font-mono);font-weight:600;font-size:14.5px;color:var(--text);
   }
-  .item-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-  .item-grid .full{grid-column:1/-1;}
+  .item-gst-row{
+    display:flex;align-items:center;justify-content:space-between;margin-top:10px;
+  }
+  .gst-rate-wrap{display:flex;align-items:center;gap:8px;margin-top:8px;}
+  .gst-rate-wrap input{width:80px;text-align:right;}
+  .gst-rate-wrap span{font-size:12px;color:var(--text-faint);}
 
-  .gst-row{
-    display:flex;align-items:center;gap:10px;margin-top:11px;
-    flex-wrap:wrap;
+  .add-item-btn{
+    width:100%;padding:11px;border:1.5px dashed var(--border);
+    background:transparent;color:var(--text-dim);border-radius:10px;
+    font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:border-color .15s, color .15s, background .15s;
   }
-  .switch-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
-  .switch{
-    width:36px;height:20px;border-radius:20px;background:#3a4356;
-    position:relative;transition:background .18s ease;flex:none;
-  }
-  .switch::after{
-    content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;
-    border-radius:50%;background:#c7cede;transition:all .18s ease;
-  }
-  input.chk{display:none;}
-  input.chk:checked + .switch{background:linear-gradient(135deg,var(--accent),var(--accent-2));}
-  input.chk:checked + .switch::after{left:18px;background:#1a1204;}
-  .switch-label{font-size:12.5px;color:var(--text);font-weight:600;}
-  .gst-custom{
-    display:flex;align-items:center;gap:6px;
-  }
-  .gst-custom input{width:64px;padding:7px 8px;font-size:12.5px;text-align:center;}
-  .gst-custom span{font-size:12px;color:var(--sub);}
+  .add-item-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
 
-  /* signature */
-  .sig-canvas-wrap{
-    background:#f7f2ea;
-    border-radius:12px;
-    border:1px solid var(--line);
-    overflow:hidden;
-    margin-top:10px;
+  /* ---------- Signature pad ---------- */
+  .sig-wrap{margin-top:10px;}
+  .sig-canvas-box{
+    background:#fff;border-radius:8px;overflow:hidden;
+    border:1px solid var(--border);touch-action:none;
   }
-  canvas#sigPad{display:block;width:100%;height:140px;touch-action:none;cursor:crosshair;}
-  .sig-tools{display:flex;gap:8px;margin-top:9px;}
-  .sig-tools button{
-    flex:1;background:var(--panel-3);border:1px solid var(--line);color:var(--text);
-    padding:8px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;
-    font-family:'Manrope',sans-serif;
-  }
-  .sig-tools button:hover{border-color:var(--accent);color:var(--accent);}
-  .sig-mode-toggle{display:flex;gap:8px;margin-top:12px;}
-  .sig-mode-btn{
-    flex:1;text-align:center;padding:8px;border-radius:9px;font-size:12px;font-weight:700;
-    background:var(--panel-3);border:1px solid var(--line);color:var(--sub);cursor:pointer;
-  }
-  .sig-mode-btn.active{background:rgba(227,156,76,.14);border-color:var(--accent);color:var(--accent);}
+  .sig-canvas-box canvas{display:block;width:100%;height:150px;cursor:crosshair;}
+  .sig-actions{display:flex;gap:8px;margin-top:8px;}
 
-  .hint{font-size:11px;color:var(--sub);margin-top:6px;line-height:1.5;}
+  .status-toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--surface-3);border:1px solid var(--accent);
+    color:var(--text);padding:11px 20px;border-radius:10px;
+    font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;
+    z-index:200;display:flex;align-items:center;gap:8px;
+  }
+  .status-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .status-toast svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;}
 
-  /* ---------- Preview (light, printable) ---------- */
-  .preview-stage{
+  /* ---------- Preview (document) ---------- */
+  .preview-wrap{min-width:0;}
+  .preview-toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;padding:0 2px;
+  }
+  .preview-toolbar h2{
+    font-family:var(--font-display);font-size:14px;font-weight:600;
+    color:var(--text-dim);letter-spacing:0.04em;text-transform:uppercase;margin:0;
+  }
+  .zoom-note{font-size:11.5px;color:var(--text-faint);}
+
+  .doc-shell{
+    background:#e8e6e1;
+    border-radius:var(--radius);
+    padding:26px;
     display:flex;justify-content:center;
+    border:1px solid var(--border-soft);
   }
-  #pdfRoot{
-    width:794px;
-    max-width:100%;
-    background:var(--paper);
-    color:var(--navy);
-    padding:46px 50px 40px;
-    font-family:'Manrope',sans-serif;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
-    border-radius:4px;
+  @media (max-width:600px){ .doc-shell{padding:14px;} }
+
+  #document{
+    position:relative;
+    background:#ffffff;
+    color:#20242b;
+    width:100%;
+    max-width:794px;
+    min-height:1050px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    font-family:'Inter', Arial, sans-serif;
+    padding:56px 56px 40px;
+    overflow:hidden;
   }
-  .doc-head{display:flex;justify-content:space-between;align-items:flex-start;}
+  @media (max-width:600px){
+    #document{padding:26px 20px 24px;}
+  }
+
+  .doc-topline{height:5px;background:#20242b;margin:-56px -56px 28px;}
+  @media (max-width:600px){ .doc-topline{margin:-26px -20px 22px;} }
+
+  .doc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;}
   .doc-brand{display:flex;gap:14px;align-items:flex-start;}
-  .doc-brand img{width:62px;height:62px;object-fit:contain;}
-  .doc-brand .co-name{
-    font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--navy);
-    letter-spacing:.3px;
+  .doc-brand img{height:56px;width:auto;display:block;}
+  .doc-brand-text b{
+    display:block;font-family:'Space Grotesk',Arial,sans-serif;
+    color:#c07f2f;font-size:19px;font-weight:700;letter-spacing:0.01em;
   }
-  .doc-brand .co-line{font-size:11px;font-weight:700;color:var(--navy);margin-top:5px;letter-spacing:.4px;}
-  .doc-brand .co-sub{font-size:11px;color:#5a6274;margin-top:2px;}
-  .doc-brand .co-acn{font-size:10.5px;color:#5a6274;margin-top:2px;}
+  .doc-brand-text .tagline{font-size:10.5px;font-weight:700;letter-spacing:0.06em;color:#20242b;margin-top:3px;}
+  .doc-brand-text .loc{font-size:11px;color:#5a6270;margin-top:5px;}
+  .doc-brand-text .abn{font-size:10px;color:#8a8f99;margin-top:2px;}
 
-  .doc-quote-mark{text-align:right;}
-  .doc-quote-mark .qtitle{
-    font-family:'Fraunces',serif;font-weight:700;font-size:46px;
-    color:#f0d3a6;letter-spacing:2px;line-height:1;
+  .doc-doctype{text-align:right;}
+  .doc-doctype .label{
+    font-family:'Space Grotesk',Arial,sans-serif;font-size:34px;font-weight:700;
+    color:#e9cfa4;letter-spacing:0.02em;line-height:1;
   }
-  .doc-quote-mark .qdate{
-    margin-top:10px;font-size:12.5px;font-weight:700;color:var(--navy);
+  .doc-doctype .date{font-size:12px;font-weight:700;color:#20242b;margin-top:8px;}
+
+  .doc-to-box{
+    margin-top:28px;border:1.5px solid #c07f2f;border-radius:12px;
+    padding:16px 20px;
+  }
+  .doc-to-box .to-label{
+    color:#c07f2f;font-weight:700;font-size:13px;margin-bottom:8px;
+    font-family:'Space Grotesk',Arial,sans-serif;
+  }
+  .doc-to-row{display:flex;font-size:12.5px;margin-bottom:4px;}
+  .doc-to-row .k{width:88px;flex-shrink:0;color:#20242b;font-weight:600;}
+  .doc-to-row .k::after{content:":";float:right;}
+  .doc-to-row .v{color:#3a4049;white-space:pre-wrap;word-break:break-word;}
+
+  .doc-items{margin-top:26px;}
+  table.doc-table{width:100%;border-collapse:collapse;}
+  table.doc-table thead th{
+    background:#c07f2f;color:#fff;text-align:left;
+    font-size:11.5px;font-weight:700;letter-spacing:0.03em;
+    padding:10px 12px;font-family:'Space Grotesk',Arial,sans-serif;
+  }
+  table.doc-table thead th.num{text-align:right;}
+  table.doc-table tbody td{
+    padding:12px 12px;font-size:12.5px;border-bottom:1px solid #eee2d0;
+    vertical-align:top;
+  }
+  table.doc-table tbody tr:nth-child(odd) td{background:#fbf6ee;}
+  table.doc-table tbody td.num{text-align:right;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+  .doc-item-desc b{display:block;font-size:13px;color:#20242b;}
+  .doc-item-desc .sub{display:block;font-size:10.5px;color:#8a8f99;margin-top:2px;}
+  .gst-tag{font-size:10px;color:#c07f2f;font-weight:700;margin-left:4px;}
+
+  .doc-totals{
+    margin-top:6px;margin-left:auto;width:280px;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .doc-totals .t-row{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;}
+  .doc-totals .t-row.sub{color:#5a6270;}
+  .doc-totals .t-row .num{font-family:'JetBrains Mono',monospace;}
+  .doc-totals .t-row.total{
+    border-top:2px solid #20242b;margin-top:4px;padding-top:9px;
+    font-size:15px;font-weight:700;color:#20242b;
   }
 
-  .to-box{
-    margin-top:26px;
-    border:1.5px solid var(--accent);
-    border-radius:16px;
-    padding:18px 22px;
-  }
-  .to-box .to-title{
-    color:var(--accent-2);font-weight:800;font-size:13px;margin-bottom:10px;letter-spacing:.3px;
-  }
-  .to-line{display:flex;font-size:12.5px;margin-bottom:5px;line-height:1.5;}
-  .to-line .k{width:90px;flex:none;font-weight:700;color:var(--navy);}
-  .to-line .sep{width:14px;flex:none;color:var(--navy);}
-  .to-line .v{color:#333d4f;white-space:pre-line;word-break:break-word;}
+  .doc-custom{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;}
+  .doc-custom .cf{font-size:12px;color:#3a4049;}
+  .doc-custom .cf b{color:#20242b;}
 
-  table.quote-table{
-    width:100%;border-collapse:collapse;margin-top:26px;
-  }
-  table.quote-table thead th{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#fff;font-size:12px;text-transform:none;font-weight:800;
-    padding:11px 12px;text-align:left;
-  }
-  table.quote-table thead th.num{text-align:center;}
-  table.quote-table tbody td{
-    padding:12px;font-size:12.5px;vertical-align:top;border-bottom:1px solid #f1e6d6;
-  }
-  table.quote-table tbody tr:nth-child(odd){background:var(--row-alt);}
-  table.quote-table td.num{text-align:center;font-weight:700;}
-  .item-desc-name{font-weight:800;color:var(--navy);font-size:13px;}
-  .item-desc-note{font-size:10.5px;color:var(--accent-2);font-weight:700;margin-top:2px;}
-  .item-total-cell{font-weight:800;color:var(--navy);text-align:right;}
-  .item-total-cell .gstpill{
-    font-size:10px;font-weight:800;color:#8a5a1e;background:#f6e2c2;
-    border-radius:6px;padding:1px 6px;margin-left:6px;white-space:nowrap;
-  }
-
-  .grand-total-row{
-    display:flex;justify-content:flex-end;margin-top:16px;
-  }
-  .grand-total-box{
-    min-width:260px;
-    border-top:2.5px solid var(--navy);
-    padding-top:10px;
-    display:flex;justify-content:space-between;align-items:baseline;
-  }
-  .grand-total-box .gt-label{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:.3px;}
-  .grand-total-box .gt-value{font-size:19px;font-weight:800;color:var(--accent-2);}
-  .grand-total-box .gt-value small{font-size:11px;color:#8a5a1e;font-weight:700;margin-left:4px;}
-
-  .sig-block{margin-top:44px;display:flex;justify-content:flex-start;}
-  .sig-inner{text-align:left;}
-  .sig-line-img{max-width:220px;max-height:80px;display:block;margin-bottom:4px;}
-  .sig-typed{font-family:'Dancing Script',cursive;font-size:32px;color:var(--navy);margin-bottom:0;}
-  .sig-rule{width:220px;border-top:1.5px solid var(--navy);margin-top:6px;padding-top:6px;}
-  .sig-caption{font-size:11px;color:#5a6274;font-weight:700;letter-spacing:.3px;}
+  .doc-sig{margin-top:34px;display:flex;justify-content:flex-end;}
+  .doc-sig-box{text-align:center;}
+  .doc-sig-box img{height:70px;display:block;margin:0 auto 6px;}
+  .doc-sig-box .line{border-top:1px solid #20242b;padding-top:5px;font-size:10.5px;color:#5a6270;min-width:180px;}
 
   .doc-footer{
-    margin-top:46px;padding-top:18px;border-top:1px solid #eee2cf;
+    position:absolute;left:56px;right:56px;bottom:28px;
+    border-top:1px solid #ece5d8;padding-top:14px;
   }
-  .doc-footer .fname{font-family:'Fraunces',serif;font-weight:700;color:var(--accent-2);font-size:15px;}
-  .doc-footer .fline{font-size:10.5px;font-weight:700;color:var(--navy);margin-top:3px;}
-  .doc-footer .fcontact{font-size:11px;color:#333d4f;margin-top:8px;line-height:1.6;font-weight:600;}
+  .doc-footer b{
+    display:block;font-family:'Space Grotesk',Arial,sans-serif;color:#c07f2f;font-size:13px;
+  }
+  .doc-footer .tag{font-size:9.5px;font-weight:700;color:#20242b;letter-spacing:0.04em;margin-top:2px;}
+  .doc-footer .contact{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:#5a6270;}
 
-  @media (max-width:850px){
-    #pdfRoot{padding:28px 22px;}
-    .doc-quote-mark .qtitle{font-size:32px;}
+  .doc-watermark{
+    position:absolute;top:0;left:0;right:0;bottom:0;
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;overflow:hidden;z-index:0;
+  }
+  .doc-watermark span{
+    font-family:'Space Grotesk',Arial,sans-serif;
+    font-size:96px;font-weight:700;color:#c07f2f;
+    opacity:0.08;transform:rotate(-28deg);white-space:nowrap;
+    letter-spacing:0.02em;
+  }
+  .doc-header,.doc-to-box,.doc-items,.doc-custom,.doc-sig,.doc-footer{position:relative;z-index:1;}
+
+  .empty-note{font-size:12px;color:#b7bcc4;font-style:italic;text-align:center;padding:18px 0;}
+
+  /* footer credit */
+  .app-footer{
+    text-align:center;color:var(--text-faint);font-size:11.5px;
+    padding:20px 0 30px;
+  }
+
+  @media print{
+    body *{visibility:hidden;}
   }
 </style>
 </head>
 <body>
 
-<div class="app-header">
-  <div class="brand-mark">
-    <div class="sw">TM</div>
-    <div>
-      <h1>Quote Builder</h1>
-      <span>TM Eleven Pty Ltd — internal tool</span>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <img src="logo.png" alt="TM Eleven logo">
+      <div class="tb-text">
+        <b>TM ELEVEN</b>
+        <span>Quote &amp; Invoice Generator</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn" id="btnSaveDraft" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+        Save Draft
+      </button>
+      <button class="btn btn-danger" id="btnClearAll" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Clear All
+      </button>
+      <button class="btn btn-primary" id="btnDownloadPdf" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Download PDF
+      </button>
     </div>
   </div>
-  <button class="dl-btn" id="downloadBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Download PDF
-  </button>
+  <div class="hazard-strip"></div>
 </div>
 
 <div class="app">
 
-  <!-- ============= EDITOR (DARK) ============= -->
-  <div class="editor">
-    <div class="editor-scroll">
+  <!-- ============ LEFT: INPUT PANEL ============ -->
+  <div class="panel">
+    <div class="panel-scroll">
 
-      <!-- 1. TO -->
-      <div class="section">
-        <div class="section-title"><span class="num">1</span> To</div>
-        <div id="toFields"></div>
-        <button class="add-btn" id="addToField">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add new field
-        </button>
-      </div>
-
-      <!-- 2. DATE -->
-      <div class="section">
-        <div class="section-title"><span class="num">2</span> Date</div>
+      <!-- Customer / Project -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">01</span> Customer &amp; Project</div>
+        </div>
         <div class="field">
-          <label>Quote date</label>
-          <input type="date" id="quoteDate">
+          <label for="inpName">Name</label>
+          <input type="text" id="inpName" placeholder="Client or company name">
+        </div>
+        <div class="field">
+          <label for="inpEmail">Email</label>
+          <input type="email" id="inpEmail" placeholder="client@email.com.au">
+        </div>
+        <div class="field">
+          <label for="inpAddress">Address</label>
+          <textarea id="inpAddress" placeholder="Site / billing address"></textarea>
+        </div>
+        <div class="field">
+          <label for="inpProject">Project</label>
+          <input type="text" id="inpProject" placeholder="Project name or description">
+        </div>
+
+        <div id="customFieldsList"></div>
+
+        <button class="add-item-btn" id="btnAddField" type="button" style="margin-top:4px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
+          Add New Field
+        </button>
+      </div>
+
+      <!-- Date -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">02</span> Date</div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label for="inpDate">Document Date</label>
+          <input type="date" id="inpDate">
         </div>
       </div>
 
-      <!-- 3. TABLE -->
-      <div class="section">
-        <div class="section-title"><span class="num">3</span> Items</div>
-        <div id="itemsList"></div>
-        <button class="add-btn" id="addItem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add new item
+      <!-- Items -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">03</span> Items &amp; Pricing</div>
+        </div>
+        <div class="items-editor" id="itemsEditor"></div>
+        <button class="add-item-btn" id="btnAddItem" type="button" style="margin-top:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
+          Add Item
         </button>
 
-        <div class="gst-row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);">
-          <label class="switch-wrap">
-            <input type="checkbox" class="chk" id="grandGstToggle">
-            <span class="switch"></span>
-            <span class="switch-label">Add GST to grand total</span>
+        <div class="subrow" style="margin-top:16px;">
+          <label class="checkline">
+            <input type="checkbox" id="chkShowTotal">
+            <span>Show Overall Total</span>
           </label>
+
+          <div id="overallTotalOptions" style="display:none;">
+            <div class="item-gst-row" style="margin-top:12px;">
+              <label class="checkline">
+                <input type="checkbox" id="chkOverallGst">
+                <span>+ GST <span class="hint">(overall)</span></span>
+              </label>
+            </div>
+            <div class="gst-rate-wrap" id="overallGstRateWrap" style="display:none;">
+              <label style="margin:0;" for="inpOverallGstRate"></label>
+              <input type="number" id="inpOverallGstRate" min="0" step="0.01" placeholder="e.g. 10">
+              <span>% &nbsp;GST Rate (optional)</span>
+            </div>
+          </div>
         </div>
-        <div class="gst-custom" id="grandGstCustomWrap" style="display:none;margin-top:9px;">
-          <span>Rate</span>
-          <input type="number" id="grandGstRate" value="10" min="0" step="0.5">
-          <span>%</span>
-        </div>
-        <div class="hint">Grand total always adds up every item's subtotal automatically. Tick this to also show GST on the total line.</div>
       </div>
 
-      <!-- 4. SIGNATURE -->
-      <div class="section">
-        <div class="section-title"><span class="num">4</span> Signature</div>
-        <label class="switch-wrap">
-          <input type="checkbox" class="chk" id="sigToggle">
-          <span class="switch"></span>
-          <span class="switch-label">Include signature</span>
+      <!-- Signature -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">04</span> Signature</div>
+        </div>
+        <label class="checkline">
+          <input type="checkbox" id="chkAddSignature">
+          <span>Add Signature</span>
         </label>
-
-        <div id="sigOptions" style="display:none;margin-top:14px;">
-          <div class="sig-mode-toggle">
-            <div class="sig-mode-btn active" data-mode="draw" id="modeDrawBtn">Draw</div>
-            <div class="sig-mode-btn" data-mode="type" id="modeTypeBtn">Type name</div>
+        <div class="sig-wrap" id="sigWrap" style="display:none;">
+          <div class="sig-canvas-box">
+            <canvas id="sigCanvas"></canvas>
           </div>
-
-          <div id="drawWrap">
-            <div class="sig-canvas-wrap">
-              <canvas id="sigPad"></canvas>
-            </div>
-            <div class="sig-tools">
-              <button id="clearSig" type="button">Clear</button>
-            </div>
-          </div>
-
-          <div id="typeWrap" style="display:none;">
-            <div class="field" style="margin-top:12px;">
-              <label>Signed name</label>
-              <input type="text" id="sigName" placeholder="e.g. Tharindu Madushan">
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:12px;">
-            <label>Caption under signature</label>
-            <input type="text" id="sigCaption" placeholder="e.g. Authorised Signatory">
+          <div class="sig-actions">
+            <button class="btn btn-sm" id="btnClearSig" type="button">Clear Signature</button>
           </div>
         </div>
+      </div>
+
+      <!-- Watermark -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">05</span> Watermark</div>
+        </div>
+        <label class="checkline">
+          <input type="checkbox" id="chkWatermark">
+          <span>Add Watermark <span class="hint">— "TM ELEVEN"</span></span>
+        </label>
       </div>
 
     </div>
   </div>
 
-  <!-- ============= PREVIEW (LIGHT / PRINTABLE) ============= -->
-  <div class="preview-stage">
-    <div id="pdfRoot">
-
-      <div class="doc-head">
-        <div class="doc-brand">
-          <img src="logo.png" alt="logo" onerror="this.style.display='none'">
-          <div>
-            <div class="co-name">TM ELEVEN PTY LTD</div>
-            <div class="co-line">CONCRETING | LANDSCAPING | FENCING</div>
-            <div class="co-sub">Melbourne VIC</div>
-            <div class="co-acn">ACN : 692 149 045</div>
-          </div>
-        </div>
-        <div class="doc-quote-mark">
-          <div class="qtitle">QUOTE</div>
-          <div class="qdate">Date : <span id="outDate">26 August 2026</span></div>
-        </div>
-      </div>
-
-      <div class="to-box">
-        <div class="to-title">To</div>
-        <div id="toOutput"></div>
-      </div>
-
-      <table class="quote-table">
-        <thead>
-          <tr>
-            <th style="width:34%;">Description</th>
-            <th class="num">Unit</th>
-            <th class="num">Unit Price</th>
-            <th class="num">Quantity</th>
-            <th style="text-align:right;">Item Total</th>
-          </tr>
-        </thead>
-        <tbody id="tableOutput"></tbody>
-      </table>
-
-      <div class="grand-total-row">
-        <div class="grand-total-box">
-          <span class="gt-label">Grand Total</span>
-          <span class="gt-value" id="grandTotalOut">$0</span>
-        </div>
-      </div>
-
-      <div class="sig-block" id="sigBlock" style="display:none;">
-        <div class="sig-inner">
-          <img id="sigImgOut" class="sig-line-img" style="display:none;">
-          <div id="sigTypedOut" class="sig-typed" style="display:none;"></div>
-          <div class="sig-rule">
-            <div class="sig-caption" id="sigCaptionOut">Authorised Signatory</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="doc-footer">
-        <div class="fname">TM ELEVEN PTY LTD</div>
-        <div class="fline">CONCRETING | LANDSCAPING | FENCING</div>
-        <div class="fcontact">
-          +61 451 160 058<br>
-          tmeleven111@gmail.com<br>
-          tmeleven.com.au
-        </div>
-      </div>
-
+  <!-- ============ RIGHT: LIVE PREVIEW ============ -->
+  <div class="preview-wrap">
+    <div class="preview-toolbar">
+      <h2>Live Preview</h2>
+      <span class="zoom-note">Updates automatically</span>
     </div>
+    <div class="doc-shell">
+      <div id="document">
+        <div class="doc-topline"></div>
+        <div class="doc-watermark" id="docWatermark" style="display:none;"><span>TM ELEVEN</span></div>
+
+        <div class="doc-header">
+          <div class="doc-brand">
+            <img src="logo.png" alt="TM Eleven">
+            <div class="doc-brand-text">
+              <b>TM ELEVEN PTY LTD</b>
+              <div class="tagline">CONCRETING&nbsp;|&nbsp;LANDSCAPING&nbsp;|&nbsp;FENCING</div>
+              <div class="loc">Melbourne VIC</div>
+              <div class="abn">ACN : 692 149 045</div>
+            </div>
+          </div>
+          <div class="doc-doctype">
+            <div class="label">QUOTE</div>
+            <div class="date" id="docDate">Date : —</div>
+          </div>
+        </div>
+
+        <div class="doc-to-box">
+          <div class="to-label">To</div>
+          <div class="doc-to-row"><div class="k">Name</div><div class="v" id="docName">—</div></div>
+          <div class="doc-to-row"><div class="k">Email</div><div class="v" id="docEmail">—</div></div>
+          <div class="doc-to-row"><div class="k">Project</div><div class="v" id="docProject">—</div></div>
+          <div class="doc-to-row"><div class="k">Address</div><div class="v" id="docAddress">—</div></div>
+        </div>
+
+        <div class="doc-custom" id="docCustomFields"></div>
+
+        <div class="doc-items">
+          <table class="doc-table">
+            <thead>
+              <tr>
+                <th style="width:44%;">Description</th>
+                <th class="num" style="width:12%;">Qty</th>
+                <th class="num" style="width:20%;">Unit Price</th>
+                <th class="num" style="width:24%;">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="docItemsBody"></tbody>
+          </table>
+        </div>
+
+        <div class="doc-totals" id="docTotals" style="display:none;"></div>
+
+        <div class="doc-sig" id="docSigWrap" style="display:none;">
+          <div class="doc-sig-box">
+            <img id="docSigImg" src="" alt="Signature">
+            <div class="line">Authorised Signature</div>
+          </div>
+        </div>
+
+        <div class="doc-footer">
+          <b>TM ELEVEN PTY LTD</b>
+          <div class="tag">CONCRETING&nbsp;|&nbsp;LANDSCAPING&nbsp;|&nbsp;FENCING</div>
+          <div class="contact">
+            <span>+61 451 160 058</span>
+            <span>tmeleven111@gmail.com</span>
+            <span>tmeleven.com.au</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="app-footer">This document is generated locally in your browser. No data leaves your device.</div>
   </div>
+
+</div>
+
+<div class="status-toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg">Saved</span>
 </div>
 
 <script>
-/* ===================== STATE ===================== */
-let toFields = [
-  { label:'Name',    value:'Makray Homes' },
-  { label:'Email',   value:'admin@makrayhomes.com.au\nsupervisor_if@makrayhomes.com.au' },
-  { label:'project', value:'141 - 143 Bedford Road, Ringwood East' },
-  { label:'Address', value:'' }
-];
+(function(){
+  "use strict";
 
-let items = [
-  { desc:'Fencing', note:'Extra charges will be applied for extra slipers', unit:'1m', price:120, qty:160, gst:true, gstCustom:false, gstRate:10 },
-  { desc:'Gates',   note:'with standard lock', unit:'One Gate', price:750, qty:8, gst:true, gstCustom:false, gstRate:10 },
-  { desc:'Decking', note:'Including all materials', unit:'One Step', price:3500, qty:5, gst:true, gstCustom:false, gstRate:10 }
-];
+  /* ---------------------------------------------------------------
+     STATE
+  ----------------------------------------------------------------*/
+  var uidCounter = 1;
+  function uid(prefix){ return prefix + (uidCounter++) + '_' + Math.random().toString(36).slice(2,7); }
 
-/* ===================== HELPERS ===================== */
-function money(n){
-  n = Number(n)||0;
-  return '$' + n.toLocaleString('en-AU', {maximumFractionDigits:2});
-}
-function fmtDateLong(iso){
-  if(!iso) return '';
-  const d = new Date(iso + 'T00:00:00');
-  if(isNaN(d)) return '';
-  return d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
-}
+  var state = {
+    name: '',
+    email: '',
+    address: '',
+    project: '',
+    date: todayISO(),
+    customFields: [],           // {id, key, value}
+    items: [],                  // {id, desc, sub, qty, price, gstEnabled, gstRate}
+    showOverallTotal: false,
+    overallGstEnabled: false,
+    overallGstRate: '',
+    addSignature: false,
+    signatureData: null,        // dataURL
+    addWatermark: false
+  };
 
-/* ===================== TO SECTION ===================== */
-const toFieldsEl = document.getElementById('toFields');
-const toOutput = document.getElementById('toOutput');
+  function todayISO(){
+    var d = new Date();
+    var m = String(d.getMonth()+1).padStart(2,'0');
+    var day = String(d.getDate()).padStart(2,'0');
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
 
-function renderToEditor(){
-  toFieldsEl.innerHTML = '';
-  toFields.forEach((f, i) => {
-    const row = document.createElement('div');
-    row.className = 'to-field';
-    row.innerHTML = `
-      <div class="label-input">
-        <label>Label</label>
-        <input type="text" data-i="${i}" data-k="label" value="${escapeAttr(f.label)}">
-      </div>
-      <div class="grow">
-        <label>Value</label>
-        <textarea data-i="${i}" data-k="value" rows="1">${escapeHtml(f.value)}</textarea>
-      </div>
-      <div class="icon-btn" data-remove="${i}" title="Remove">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </div>
-    `;
-    toFieldsEl.appendChild(row);
-  });
+  function formatDateHuman(iso){
+    if(!iso) return '—';
+    var parts = iso.split('-');
+    if(parts.length !== 3) return iso;
+    var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+    if(isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
+  }
 
-  toFieldsEl.querySelectorAll('input, textarea').forEach(el => {
-    el.addEventListener('input', e => {
-      const i = +e.target.dataset.i, k = e.target.dataset.k;
-      toFields[i][k] = e.target.value;
-      renderToOutput();
+  function currency(n){
+    if(isNaN(n)) n = 0;
+    return new Intl.NumberFormat('en-AU', { style:'currency', currency:'AUD', minimumFractionDigits:2, maximumFractionDigits:2 }).format(n);
+  }
+
+  function escapeHtml(str){
+    if(str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function newItem(desc, sub, qty, price){
+    return { id: uid('item'), desc: desc || '', sub: sub || '', qty: (qty!==undefined?qty:1), price: (price!==undefined?price:0), gstEnabled:false, gstRate:'' };
+  }
+
+  /* ---------------------------------------------------------------
+     INIT DEFAULT DATA
+  ----------------------------------------------------------------*/
+  function seedDefaults(){
+    state.items = [ newItem('', '', 1, 0) ];
+  }
+
+  /* ---------------------------------------------------------------
+     DOM REFS
+  ----------------------------------------------------------------*/
+  var $ = function(id){ return document.getElementById(id); };
+
+  var inpName = $('inpName'), inpEmail = $('inpEmail'), inpAddress = $('inpAddress'),
+      inpProject = $('inpProject'), inpDate = $('inpDate');
+  var customFieldsList = $('customFieldsList');
+  var itemsEditor = $('itemsEditor');
+  var chkShowTotal = $('chkShowTotal'), overallTotalOptions = $('overallTotalOptions');
+  var chkOverallGst = $('chkOverallGst'), overallGstRateWrap = $('overallGstRateWrap'), inpOverallGstRate = $('inpOverallGstRate');
+  var chkAddSignature = $('chkAddSignature'), sigWrap = $('sigWrap');
+  var chkWatermark = $('chkWatermark');
+
+  /* ---------------------------------------------------------------
+     RENDER: LEFT PANEL (dynamic bits only — static inputs bind directly)
+  ----------------------------------------------------------------*/
+  function renderCustomFields(){
+    customFieldsList.innerHTML = '';
+    state.customFields.forEach(function(cf){
+      var row = document.createElement('div');
+      row.className = 'custom-field-row';
+      row.innerHTML =
+        '<input type="text" placeholder="Field Name" data-cf="' + cf.id + '" data-part="key" value="' + escapeHtml(cf.key) + '">' +
+        '<input type="text" placeholder="Value" data-cf="' + cf.id + '" data-part="value" value="' + escapeHtml(cf.value) + '">' +
+        '<button class="btn btn-icon btn-danger" type="button" data-remove-field="' + cf.id + '" title="Remove field">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+        '</button>';
+      customFieldsList.appendChild(row);
     });
-  });
-  toFieldsEl.querySelectorAll('[data-remove]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      toFields.splice(+btn.dataset.remove, 1);
-      renderToEditor();
-      renderToOutput();
+  }
+
+  function renderItemsEditor(){
+    itemsEditor.innerHTML = '';
+    state.items.forEach(function(item, idx){
+      var amount = (parseFloat(item.qty)||0) * (parseFloat(item.price)||0);
+      var card = document.createElement('div');
+      card.className = 'item-card';
+      card.dataset.itemId = item.id;
+
+      var gstRateHtml = '';
+      var rateDisplayStyle = item.gstEnabled ? '' : 'display:none;';
+
+      card.innerHTML =
+        '<div class="item-card-top">' +
+          '<input type="text" placeholder="Description / Item ' + (idx+1) + '" data-item="' + item.id + '" data-part="desc" value="' + escapeHtml(item.desc) + '">' +
+          '<button class="btn btn-icon btn-danger" type="button" data-remove-item="' + item.id + '" title="Remove item">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="field" style="margin-bottom:8px;">' +
+          '<input type="text" placeholder="Extra note (optional, shown under description)" data-item="' + item.id + '" data-part="sub" value="' + escapeHtml(item.sub) + '">' +
+        '</div>' +
+        '<div class="item-grid">' +
+          '<div class="field"><label>Quantity</label><input type="number" min="0" step="any" data-item="' + item.id + '" data-part="qty" value="' + escapeHtml(item.qty) + '"></div>' +
+          '<div class="field"><label>Unit Price ($)</label><input type="number" min="0" step="0.01" data-item="' + item.id + '" data-part="price" value="' + escapeHtml(item.price) + '"></div>' +
+        '</div>' +
+        '<div class="item-gst-row">' +
+          '<label class="checkline">' +
+            '<input type="checkbox" data-item="' + item.id + '" data-part="gstEnabled" ' + (item.gstEnabled?'checked':'') + '>' +
+            '<span>+ GST</span>' +
+          '</label>' +
+          '<span class="amt" data-amt-for="' + item.id + '">' + currency(amount) + '</span>' +
+        '</div>' +
+        '<div class="gst-rate-wrap" data-gstwrap="' + item.id + '" style="' + rateDisplayStyle + '">' +
+          '<input type="number" min="0" step="0.01" placeholder="e.g. 10" data-item="' + item.id + '" data-part="gstRate" value="' + escapeHtml(item.gstRate) + '">' +
+          '<span>% &nbsp;GST Rate (optional)</span>' +
+        '</div>';
+      itemsEditor.appendChild(card);
     });
-  });
-}
+  }
 
-function renderToOutput(){
-  toOutput.innerHTML = toFields
-    .filter(f => f.label.trim() !== '' || f.value.trim() !== '')
-    .map(f => `
-      <div class="to-line">
-        <div class="k">${escapeHtml(f.label)}</div>
-        <div class="sep">:</div>
-        <div class="v">${escapeHtml(f.value)}</div>
-      </div>
-    `).join('');
-}
+  function syncStaticInputs(){
+    inpName.value = state.name;
+    inpEmail.value = state.email;
+    inpAddress.value = state.address;
+    inpProject.value = state.project;
+    inpDate.value = state.date;
+    chkShowTotal.checked = state.showOverallTotal;
+    overallTotalOptions.style.display = state.showOverallTotal ? '' : 'none';
+    chkOverallGst.checked = state.overallGstEnabled;
+    overallGstRateWrap.style.display = state.overallGstEnabled ? '' : 'none';
+    inpOverallGstRate.value = state.overallGstRate;
+    chkAddSignature.checked = state.addSignature;
+    sigWrap.style.display = state.addSignature ? '' : 'none';
+    chkWatermark.checked = state.addWatermark;
+  }
 
-document.getElementById('addToField').addEventListener('click', () => {
-  toFields.push({ label:'New field', value:'' });
-  renderToEditor();
-  renderToOutput();
-});
+  /* ---------------------------------------------------------------
+     RENDER: RIGHT PREVIEW / DOCUMENT
+  ----------------------------------------------------------------*/
+  function renderPreview(){
+    $('docDate').textContent = 'Date : ' + formatDateHuman(state.date);
+    $('docName').textContent = state.name || '—';
+    $('docEmail').textContent = state.email || '—';
+    $('docProject').textContent = state.project || '—';
+    $('docAddress').textContent = state.address || '—';
 
-/* ===================== DATE ===================== */
-const dateInput = document.getElementById('quoteDate');
-const outDate = document.getElementById('outDate');
+    // custom fields
+    var cfWrap = $('docCustomFields');
+    cfWrap.innerHTML = '';
+    var validCf = state.customFields.filter(function(cf){ return (cf.key && cf.key.trim()) || (cf.value && cf.value.trim()); });
+    if(validCf.length){
+      validCf.forEach(function(cf){
+        var d = document.createElement('div');
+        d.className = 'cf';
+        d.innerHTML = '<b>' + escapeHtml(cf.key || 'Field') + ':</b> ' + escapeHtml(cf.value || '—');
+        cfWrap.appendChild(d);
+      });
+    }
 
-function initDate(){
-  const d = new Date();
-  const iso = d.toISOString().slice(0,10);
-  dateInput.value = iso;
-  outDate.textContent = fmtDateLong(iso);
-}
-dateInput.addEventListener('input', () => {
-  outDate.textContent = fmtDateLong(dateInput.value) || '—';
-});
+    // items
+    var tbody = $('docItemsBody');
+    tbody.innerHTML = '';
+    var subtotal = 0;
+    var hasAnyItem = false;
 
-/* ===================== ITEMS TABLE ===================== */
-const itemsListEl = document.getElementById('itemsList');
-const tableOutput = document.getElementById('tableOutput');
-const grandTotalOut = document.getElementById('grandTotalOut');
-const grandGstToggle = document.getElementById('grandGstToggle');
-const grandGstCustomWrap = document.getElementById('grandGstCustomWrap');
-const grandGstRate = document.getElementById('grandGstRate');
+    state.items.forEach(function(item){
+      var desc = (item.desc || '').trim();
+      var hasContent = desc || (parseFloat(item.qty)||0) > 0 || (parseFloat(item.price)||0) > 0;
+      if(!hasContent) return;
+      hasAnyItem = true;
 
-function renderItemsEditor(){
-  itemsListEl.innerHTML = '';
-  items.forEach((it, i) => {
-    const card = document.createElement('div');
-    card.className = 'item-card';
-    card.innerHTML = `
-      <div class="item-top">
-        <span class="item-tag">Item ${i+1}</span>
-        <div class="icon-btn" data-remove-item="${i}" title="Remove">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </div>
-      </div>
-      <div class="item-grid">
-        <div class="full">
-          <label>Description</label>
-          <input type="text" data-i="${i}" data-k="desc" value="${escapeAttr(it.desc)}">
-        </div>
-        <div class="full">
-          <label>Note (optional, small text)</label>
-          <input type="text" data-i="${i}" data-k="note" value="${escapeAttr(it.note)}">
-        </div>
-        <div>
-          <label>Unit</label>
-          <input type="text" data-i="${i}" data-k="unit" value="${escapeAttr(it.unit)}">
-        </div>
-        <div>
-          <label>Unit Price</label>
-          <input type="number" data-i="${i}" data-k="price" value="${it.price}">
-        </div>
-        <div class="full">
-          <label>Quantity</label>
-          <input type="number" data-i="${i}" data-k="qty" value="${it.qty}">
-        </div>
-      </div>
-      <div class="gst-row">
-        <label class="switch-wrap">
-          <input type="checkbox" class="chk" data-i="${i}" data-k="gst" ${it.gst ? 'checked' : ''}>
-          <span class="switch"></span>
-          <span class="switch-label">+ GST</span>
-        </label>
-      </div>
-      <div class="gst-row" data-custom-wrap="${i}" style="display:${it.gst ? 'flex' : 'none'};">
-        <label class="switch-wrap">
-          <input type="checkbox" class="chk" data-i="${i}" data-k="gstCustom" ${it.gstCustom ? 'checked' : ''}>
-          <span class="switch"></span>
-          <span class="switch-label">Custom rate</span>
-        </label>
-        <div class="gst-custom" style="display:${it.gstCustom ? 'flex' : 'none'};" data-rate-wrap="${i}">
-          <input type="number" data-i="${i}" data-k="gstRate" value="${it.gstRate}" min="0" step="0.5">
-          <span>%</span>
-        </div>
-      </div>
-    `;
-    itemsListEl.appendChild(card);
-  });
+      var qty = parseFloat(item.qty) || 0;
+      var price = parseFloat(item.price) || 0;
+      var amount = qty * price;
+      subtotal += amount;
 
-  itemsListEl.querySelectorAll('input[type="text"], input[type="number"]').forEach(el => {
-    el.addEventListener('input', e => {
-      const i = +e.target.dataset.i, k = e.target.dataset.k;
-      const val = e.target.type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
-      items[i][k] = val;
-      renderTableOutput();
+      var amountCellHtml = currency(amount);
+      if(item.gstEnabled){
+        var rate = parseFloat(item.gstRate);
+        if(!isNaN(rate) && item.gstRate !== ''){
+          var gstAmt = amount * (rate/100);
+          amountCellHtml = currency(amount) + '<span class="gst-tag">+GST(' + rate + '%)</span><br>' + currency(amount+gstAmt);
+        } else {
+          amountCellHtml = currency(amount) + '<span class="gst-tag">+ GST</span>';
+        }
+      }
+
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="doc-item-desc"><b>' + escapeHtml(desc || 'Item') + '</b>' + (item.sub ? '<span class="sub">' + escapeHtml(item.sub) + '</span>' : '') + '</td>' +
+        '<td class="num">' + (qty % 1 === 0 ? qty : qty) + '</td>' +
+        '<td class="num">' + currency(price) + '</td>' +
+        '<td class="num">' + amountCellHtml + '</td>';
+      tbody.appendChild(tr);
     });
-  });
 
-  itemsListEl.querySelectorAll('input.chk[data-k="gst"]').forEach(el => {
-    el.addEventListener('change', e => {
-      const i = +e.target.dataset.i;
-      items[i].gst = e.target.checked;
-      itemsListEl.querySelector(`[data-custom-wrap="${i}"]`).style.display = items[i].gst ? 'flex' : 'none';
-      renderTableOutput();
-    });
-  });
+    if(!hasAnyItem){
+      var trEmpty = document.createElement('tr');
+      trEmpty.innerHTML = '<td colspan="4" class="empty-note">No items added yet</td>';
+      tbody.appendChild(trEmpty);
+    }
 
-  itemsListEl.querySelectorAll('input.chk[data-k="gstCustom"]').forEach(el => {
-    el.addEventListener('change', e => {
-      const i = +e.target.dataset.i;
-      items[i].gstCustom = e.target.checked;
-      itemsListEl.querySelector(`[data-rate-wrap="${i}"]`).style.display = items[i].gstCustom ? 'flex' : 'none';
-      renderTableOutput();
-    });
-  });
-
-  itemsListEl.querySelectorAll('[data-remove-item]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      items.splice(+btn.dataset.removeItem, 1);
-      renderItemsEditor();
-      renderTableOutput();
-    });
-  });
-}
-
-function itemSubtotal(it){
-  return (Number(it.price)||0) * (Number(it.qty)||0);
-}
-
-function renderTableOutput(){
-  tableOutput.innerHTML = items.map(it => {
-    const sub = itemSubtotal(it);
-    const rate = it.gstCustom ? it.gstRate : 10;
-    const gstLabel = it.gst ? `<span class="gstpill">+ GST${it.gstCustom ? ' ('+rate+'%)' : ''}</span>` : '';
-    return `
-      <tr>
-        <td>
-          <div class="item-desc-name">${escapeHtml(it.desc)}</div>
-          ${it.note ? `<div class="item-desc-note">${escapeHtml(it.note)}</div>` : ''}
-        </td>
-        <td class="num">${escapeHtml(it.unit)}</td>
-        <td class="num">${money(it.price)}</td>
-        <td class="num">${it.qty}</td>
-        <td class="item-total-cell">${money(sub)}${gstLabel}</td>
-      </tr>
-    `;
-  }).join('');
-
-  const grand = items.reduce((s, it) => s + itemSubtotal(it), 0);
-  const gstOn = grandGstToggle.checked;
-  const gstRate = gstOn ? (parseFloat(grandGstRate.value) || 0) : 0;
-  grandTotalOut.innerHTML = money(grand) + (gstOn ? `<small>+ GST ${gstRate}%</small>` : '');
-}
-
-document.getElementById('addItem').addEventListener('click', () => {
-  items.push({ desc:'New item', note:'', unit:'', price:0, qty:1, gst:false, gstCustom:false, gstRate:10 });
-  renderItemsEditor();
-  renderTableOutput();
-});
-
-grandGstToggle.addEventListener('change', () => {
-  grandGstCustomWrap.style.display = grandGstToggle.checked ? 'flex' : 'none';
-  renderTableOutput();
-});
-grandGstRate.addEventListener('input', renderTableOutput);
-
-/* ===================== SIGNATURE ===================== */
-const sigToggle = document.getElementById('sigToggle');
-const sigOptions = document.getElementById('sigOptions');
-const sigBlock = document.getElementById('sigBlock');
-const sigCaption = document.getElementById('sigCaption');
-const sigCaptionOut = document.getElementById('sigCaptionOut');
-const sigName = document.getElementById('sigName');
-const sigTypedOut = document.getElementById('sigTypedOut');
-const sigImgOut = document.getElementById('sigImgOut');
-const modeDrawBtn = document.getElementById('modeDrawBtn');
-const modeTypeBtn = document.getElementById('modeTypeBtn');
-const drawWrap = document.getElementById('drawWrap');
-const typeWrap = document.getElementById('typeWrap');
-let sigMode = 'draw';
-
-sigToggle.addEventListener('change', () => {
-  sigOptions.style.display = sigToggle.checked ? 'block' : 'none';
-  updateSigOutput();
-  if (sigToggle.checked) setTimeout(setupCanvas, 30);
-});
-
-function setMode(m){
-  sigMode = m;
-  modeDrawBtn.classList.toggle('active', m === 'draw');
-  modeTypeBtn.classList.toggle('active', m === 'type');
-  drawWrap.style.display = m === 'draw' ? 'block' : 'none';
-  typeWrap.style.display = m === 'type' ? 'block' : 'none';
-  updateSigOutput();
-}
-modeDrawBtn.addEventListener('click', () => setMode('draw'));
-modeTypeBtn.addEventListener('click', () => setMode('type'));
-
-sigName.addEventListener('input', updateSigOutput);
-sigCaption.addEventListener('input', () => {
-  sigCaptionOut.textContent = sigCaption.value || 'Authorised Signatory';
-});
-
-function updateSigOutput(){
-  sigBlock.style.display = sigToggle.checked ? 'flex' : 'none';
-  sigCaptionOut.textContent = sigCaption.value || 'Authorised Signatory';
-
-  if (!sigToggle.checked){ return; }
-
-  if (sigMode === 'type'){
-    sigImgOut.style.display = 'none';
-    sigTypedOut.style.display = 'block';
-    sigTypedOut.textContent = sigName.value || 'Signature';
-  } else {
-    sigTypedOut.style.display = 'none';
-    // image set live by canvas draw handler
-    if (hasDrawing){
-      sigImgOut.style.display = 'block';
-      sigImgOut.src = sigPad.toDataURL('image/png');
+    // overall totals
+    var totalsWrap = $('docTotals');
+    if(state.showOverallTotal){
+      totalsWrap.style.display = '';
+      var rowsHtml = '<div class="t-row sub"><span>Subtotal</span><span class="num">' + currency(subtotal) + '</span></div>';
+      var grandTotal = subtotal;
+      if(state.overallGstEnabled){
+        var oRate = parseFloat(state.overallGstRate);
+        if(!isNaN(oRate) && state.overallGstRate !== ''){
+          var gstVal = subtotal * (oRate/100);
+          grandTotal = subtotal + gstVal;
+          rowsHtml += '<div class="t-row sub"><span>GST (' + oRate + '%)</span><span class="num">' + currency(gstVal) + '</span></div>';
+          rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(grandTotal) + '</span></div>';
+        } else {
+          rowsHtml += '<div class="t-row sub"><span>GST</span><span class="num">To be advised</span></div>';
+          rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(subtotal) + ' + GST</span></div>';
+        }
+      } else {
+        rowsHtml += '<div class="t-row total"><span>TOTAL</span><span class="num">' + currency(grandTotal) + '</span></div>';
+      }
+      totalsWrap.innerHTML = rowsHtml;
     } else {
-      sigImgOut.style.display = 'none';
+      totalsWrap.style.display = 'none';
+      totalsWrap.innerHTML = '';
+    }
+
+    // signature
+    var docSigWrap = $('docSigWrap');
+    if(state.addSignature && state.signatureData){
+      docSigWrap.style.display = '';
+      $('docSigImg').src = state.signatureData;
+    } else {
+      docSigWrap.style.display = 'none';
+    }
+
+    // watermark
+    $('docWatermark').style.display = state.addWatermark ? '' : 'none';
+  }
+
+  function renderAll(){
+    renderCustomFields();
+    renderItemsEditor();
+    syncStaticInputs();
+    renderPreview();
+  }
+
+  /* ---------------------------------------------------------------
+     EVENT WIRING — static top-level fields
+  ----------------------------------------------------------------*/
+  inpName.addEventListener('input', function(){ state.name = this.value; renderPreview(); });
+  inpEmail.addEventListener('input', function(){ state.email = this.value; renderPreview(); });
+  inpAddress.addEventListener('input', function(){ state.address = this.value; renderPreview(); });
+  inpProject.addEventListener('input', function(){ state.project = this.value; renderPreview(); });
+  inpDate.addEventListener('input', function(){ state.date = this.value; renderPreview(); });
+
+  chkShowTotal.addEventListener('change', function(){
+    state.showOverallTotal = this.checked;
+    overallTotalOptions.style.display = this.checked ? '' : 'none';
+    renderPreview();
+  });
+  chkOverallGst.addEventListener('change', function(){
+    state.overallGstEnabled = this.checked;
+    overallGstRateWrap.style.display = this.checked ? '' : 'none';
+    renderPreview();
+  });
+  inpOverallGstRate.addEventListener('input', function(){ state.overallGstRate = this.value; renderPreview(); });
+
+  chkAddSignature.addEventListener('change', function(){
+    state.addSignature = this.checked;
+    sigWrap.style.display = this.checked ? '' : 'none';
+    if(this.checked){ setTimeout(setupSignatureCanvas, 0); }
+    renderPreview();
+  });
+
+  chkWatermark.addEventListener('change', function(){
+    state.addWatermark = this.checked;
+    renderPreview();
+  });
+
+  /* ---------------------------------------------------------------
+     EVENT WIRING — custom fields (delegated)
+  ----------------------------------------------------------------*/
+  $('btnAddField').addEventListener('click', function(){
+    state.customFields.push({ id: uid('cf'), key:'', value:'' });
+    renderCustomFields();
+    renderPreview();
+    var lastInput = customFieldsList.querySelector('.custom-field-row:last-child input');
+    if(lastInput) lastInput.focus();
+  });
+
+  customFieldsList.addEventListener('input', function(e){
+    var t = e.target;
+    if(t.dataset.cf){
+      var cf = state.customFields.find(function(c){ return c.id === t.dataset.cf; });
+      if(cf){ cf[t.dataset.part] = t.value; renderPreview(); }
+    }
+  });
+  customFieldsList.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-remove-field]');
+    if(btn){
+      var id = btn.getAttribute('data-remove-field');
+      state.customFields = state.customFields.filter(function(c){ return c.id !== id; });
+      renderCustomFields();
+      renderPreview();
+    }
+  });
+
+  /* ---------------------------------------------------------------
+     EVENT WIRING — items (delegated)
+  ----------------------------------------------------------------*/
+  $('btnAddItem').addEventListener('click', function(){
+    state.items.push(newItem());
+    renderItemsEditor();
+    renderPreview();
+    var lastInput = itemsEditor.querySelector('.item-card:last-child input[data-part="desc"]');
+    if(lastInput) lastInput.focus();
+  });
+
+  itemsEditor.addEventListener('input', function(e){
+    var t = e.target;
+    if(t.dataset.item && t.dataset.part){
+      var item = state.items.find(function(i){ return i.id === t.dataset.item; });
+      if(!item) return;
+      var part = t.dataset.part;
+      if(part === 'gstEnabled') return; // handled by change
+      item[part] = t.value;
+
+      if(part === 'qty' || part === 'price'){
+        var amt = (parseFloat(item.qty)||0) * (parseFloat(item.price)||0);
+        var amtEl = itemsEditor.querySelector('[data-amt-for="' + item.id + '"]');
+        if(amtEl) amtEl.textContent = currency(amt);
+      }
+      renderPreview();
+    }
+  });
+
+  itemsEditor.addEventListener('change', function(e){
+    var t = e.target;
+    if(t.dataset.item && t.dataset.part === 'gstEnabled'){
+      var item = state.items.find(function(i){ return i.id === t.dataset.item; });
+      if(!item) return;
+      item.gstEnabled = t.checked;
+      var wrap = itemsEditor.querySelector('[data-gstwrap="' + item.id + '"]');
+      if(wrap) wrap.style.display = t.checked ? '' : 'none';
+      renderPreview();
+    }
+  });
+
+  itemsEditor.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-remove-item]');
+    if(btn){
+      var id = btn.getAttribute('data-remove-item');
+      state.items = state.items.filter(function(i){ return i.id !== id; });
+      renderItemsEditor();
+      renderPreview();
+    }
+  });
+
+  /* ---------------------------------------------------------------
+     SIGNATURE PAD
+  ----------------------------------------------------------------*/
+  var sigCanvas, sigCtx, sigDrawing = false, sigHasStroke = false;
+
+  function setupSignatureCanvas(){
+    sigCanvas = $('sigCanvas');
+    if(!sigCanvas) return;
+    var box = sigCanvas.parentElement;
+    var ratio = window.devicePixelRatio || 1;
+    var w = box.clientWidth, h = 150;
+    sigCanvas.width = w * ratio;
+    sigCanvas.height = h * ratio;
+    sigCanvas.style.width = w + 'px';
+    sigCanvas.style.height = h + 'px';
+    sigCtx = sigCanvas.getContext('2d');
+    sigCtx.scale(ratio, ratio);
+    sigCtx.lineJoin = 'round';
+    sigCtx.lineCap = 'round';
+    sigCtx.lineWidth = 2.2;
+    sigCtx.strokeStyle = '#20242b';
+    sigCtx.fillStyle = '#ffffff';
+    sigCtx.fillRect(0,0,w,h);
+    sigHasStroke = false;
+
+    // if we have saved signature data, redraw it
+    if(state.signatureData){
+      var img = new Image();
+      img.onload = function(){ sigCtx.drawImage(img, 0, 0, w, h); };
+      img.src = state.signatureData;
+      sigHasStroke = true;
+    }
+
+    function getPos(evt){
+      var rect = sigCanvas.getBoundingClientRect();
+      var clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      var clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+    function start(evt){
+      evt.preventDefault();
+      sigDrawing = true;
+      var p = getPos(evt);
+      sigCtx.beginPath();
+      sigCtx.moveTo(p.x, p.y);
+    }
+    function move(evt){
+      if(!sigDrawing) return;
+      evt.preventDefault();
+      var p = getPos(evt);
+      sigCtx.lineTo(p.x, p.y);
+      sigCtx.stroke();
+      sigHasStroke = true;
+    }
+    function end(evt){
+      if(!sigDrawing) return;
+      sigDrawing = false;
+      state.signatureData = sigHasStroke ? sigCanvas.toDataURL('image/png') : null;
+      renderPreview();
+    }
+
+    sigCanvas.onmousedown = start;
+    sigCanvas.onmousemove = move;
+    window.addEventListener('mouseup', end);
+    sigCanvas.addEventListener('touchstart', start, { passive:false });
+    sigCanvas.addEventListener('touchmove', move, { passive:false });
+    sigCanvas.addEventListener('touchend', end);
+  }
+
+  $('btnClearSig').addEventListener('click', function(){
+    if(!sigCtx) return;
+    var w = sigCanvas.clientWidth, h = sigCanvas.clientHeight;
+    sigCtx.fillStyle = '#ffffff';
+    sigCtx.fillRect(0,0,w,h);
+    sigHasStroke = false;
+    state.signatureData = null;
+    renderPreview();
+  });
+
+  window.addEventListener('resize', function(){
+    if(state.addSignature) setupSignatureCanvas();
+  });
+
+  /* ---------------------------------------------------------------
+     TOAST
+  ----------------------------------------------------------------*/
+  var toastTimer;
+  function showToast(msg){
+    var toast = $('toast');
+    $('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+
+  /* ---------------------------------------------------------------
+     SAVE / LOAD / CLEAR (localStorage)
+  ----------------------------------------------------------------*/
+  var STORAGE_KEY = 'tmeleven_quote_draft_v1';
+
+  function saveDraft(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      showToast('Draft Saved');
+    }catch(err){
+      showToast('Could not save draft');
     }
   }
-}
 
-/* signature drawing pad */
-const sigPad = document.getElementById('sigPad');
-const ctx = sigPad.getContext('2d');
-let drawing = false, hasDrawing = false;
-let lastX = 0, lastY = 0;
-
-function setupCanvas(){
-  const ratio = window.devicePixelRatio || 1;
-  const rect = sigPad.getBoundingClientRect();
-  sigPad.width = rect.width * ratio;
-  sigPad.height = rect.height * ratio;
-  ctx.scale(ratio, ratio);
-  ctx.lineWidth = 2.2;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#1c2b45';
-}
-
-function getPos(e){
-  const rect = sigPad.getBoundingClientRect();
-  if (e.touches && e.touches[0]){
-    return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+  function loadDraft(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return false;
+      var saved = JSON.parse(raw);
+      if(saved && typeof saved === 'object'){
+        Object.keys(state).forEach(function(k){
+          if(saved.hasOwnProperty(k)) state[k] = saved[k];
+        });
+        if(!Array.isArray(state.items) || state.items.length === 0){
+          state.items = [ newItem() ];
+        }
+        if(!Array.isArray(state.customFields)) state.customFields = [];
+        return true;
+      }
+    }catch(err){ /* ignore corrupt draft */ }
+    return false;
   }
-  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-}
 
-function startDraw(e){
-  drawing = true;
-  const p = getPos(e);
-  lastX = p.x; lastY = p.y;
-  e.preventDefault();
-}
-function moveDraw(e){
-  if (!drawing) return;
-  const p = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-  lastX = p.x; lastY = p.y;
-  hasDrawing = true;
-  e.preventDefault();
-}
-function endDraw(){
-  if (drawing) updateSigOutput();
-  drawing = false;
-}
+  $('btnSaveDraft').addEventListener('click', saveDraft);
 
-sigPad.addEventListener('mousedown', startDraw);
-sigPad.addEventListener('mousemove', moveDraw);
-window.addEventListener('mouseup', endDraw);
-sigPad.addEventListener('touchstart', startDraw, { passive:false });
-sigPad.addEventListener('touchmove', moveDraw, { passive:false });
-sigPad.addEventListener('touchend', endDraw);
-
-document.getElementById('clearSig').addEventListener('click', () => {
-  ctx.clearRect(0, 0, sigPad.width, sigPad.height);
-  hasDrawing = false;
-  updateSigOutput();
-});
-
-/* ===================== ESCAPE HELPERS ===================== */
-function escapeHtml(s){
-  return String(s ?? '').replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m])).replace(/\n/g,'<br>');
-}
-function escapeAttr(s){
-  return String(s ?? '').replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m]));
-}
-
-/* ===================== PDF DOWNLOAD ===================== */
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  const el = document.getElementById('pdfRoot');
-  const opt = {
-    margin: 0,
-    filename: 'TM-Eleven-Quote.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.5, useCORS: true, backgroundColor: '#fdfbf7' },
-    jsPDF: { unit: 'px', format: [el.offsetWidth, el.scrollHeight], orientation: 'portrait' }
-  };
-  const btn = document.getElementById('downloadBtn');
-  const original = btn.innerHTML;
-  btn.innerHTML = 'Preparing…';
-  btn.disabled = true;
-  html2pdf().set(opt).from(el).save().then(() => {
-    btn.innerHTML = original;
-    btn.disabled = false;
-  }).catch(() => {
-    btn.innerHTML = original;
-    btn.disabled = false;
+  $('btnClearAll').addEventListener('click', function(){
+    var ok = window.confirm('This will clear all entered data and cannot be undone. Continue?');
+    if(!ok) return;
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(err){}
+    state.name = ''; state.email = ''; state.address = ''; state.project = '';
+    state.date = todayISO();
+    state.customFields = [];
+    state.items = [ newItem() ];
+    state.showOverallTotal = false;
+    state.overallGstEnabled = false;
+    state.overallGstRate = '';
+    state.addSignature = false;
+    state.signatureData = null;
+    state.addWatermark = false;
+    renderAll();
+    showToast('All Data Cleared');
   });
-});
 
-/* ===================== INIT ===================== */
-initDate();
-renderToEditor();
-renderToOutput();
-renderItemsEditor();
-renderTableOutput();
+  /* ---------------------------------------------------------------
+     PDF GENERATION
+  ----------------------------------------------------------------*/
+  $('btnDownloadPdf').addEventListener('click', function(){
+    var el = $('document');
+    var filename = 'TM-Eleven-Quote-' + (state.project ? state.project.replace(/[^a-z0-9]+/gi,'-').replace(/(^-|-$)/g,'') + '-' : '') + state.date + '.pdf';
+
+    var opt = {
+      margin: 0,
+      filename: filename,
+      image: { type:'jpeg', quality:0.98 },
+      html2canvas: { scale:2, useCORS:true, backgroundColor:'#ffffff' },
+      jsPDF: { unit:'pt', format:'a4', orientation:'portrait' }
+    };
+
+    var btn = $('btnDownloadPdf');
+    var originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Generating…';
+
+    html2pdf().set(opt).from(el).save().then(function(){
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      showToast('PDF Downloaded');
+    }).catch(function(){
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      showToast('PDF generation failed');
+    });
+  });
+
+  /* ---------------------------------------------------------------
+     BOOT
+  ----------------------------------------------------------------*/
+  function boot(){
+    var restored = loadDraft();
+    if(!restored){
+      seedDefaults();
+    }
+    renderAll();
+    if(state.addSignature){ setTimeout(setupSignatureCanvas, 0); }
+  }
+
+  boot();
+
+})();
 </script>
 </body>
 </html>
