@@ -1,43 +1,27 @@
-<html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>TM ELEVEN — Quote Generator</title>
 
 <style>
-
-/* =========================================================
-   DARK UI
-========================================================= */
-
 :root{
   --gold:#d8872f;
   --gold-dark:#b9681c;
-  --gold-light:#5a3a20;
+  --gold-light:#f3e5d5;
 
-  --bg:#0d0f12;
-  --panel:#15181c;
-  --panel2:#1b1f24;
-  --input:#20252b;
+  --ui-bg:#0d0f12;
+  --ui-panel:#15181c;
+  --ui-panel2:#1d2126;
+  --ui-input:#24292f;
+  --ui-border:#343a40;
 
-  --ink:#f4f4f4;
-  --muted:#9da3aa;
-
-  --border:#30353b;
-  --danger:#351b1b;
+  --paper:#fff;
+  --ink:#111;
 }
 
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html{
   scroll-behavior:smooth;
@@ -46,24 +30,21 @@ html{
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
+  background:var(--ui-bg);
+  color:#fff;
 }
 
-button,
-input,
-textarea{
+button,input,textarea{
   font:inherit;
 }
 
 button{
-  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
 }
 
-
-/* =========================================================
+/* =========================
    APP
-========================================================= */
+========================= */
 
 .app{
   max-width:1450px;
@@ -71,26 +52,23 @@ button{
   padding:24px;
 }
 
-
-/* =========================================================
-   STICKY TOOLBAR
-========================================================= */
+/* =========================
+   TOOLBAR
+========================= */
 
 .toolbar{
   position:sticky;
-  top:0;
+  top:10px;
   z-index:1000;
 
-  background:rgba(21,24,28,.96);
-  backdrop-filter:blur(12px);
-
-  border:1px solid var(--border);
+  background:rgba(21,24,28,.97);
+  border:1px solid var(--ui-border);
   border-radius:14px;
 
-  padding:13px 15px;
+  padding:14px;
 
   display:flex;
-  gap:9px;
+  gap:10px;
   align-items:center;
   flex-wrap:wrap;
 
@@ -100,77 +78,58 @@ button{
 }
 
 .toolbar h1{
-  font-size:17px;
+  font-size:18px;
   margin:0 auto 0 0;
   letter-spacing:.4px;
 }
 
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
 .btn{
   border:0;
   border-radius:8px;
-
-  padding:10px 14px;
-
-  cursor:pointer;
+  padding:10px 15px;
   font-weight:700;
-
-  transition:.15s ease;
-}
-
-.btn:hover{
-  transform:translateY(-1px);
 }
 
 .btn-light{
   background:#292e34;
   color:#fff;
+  border:1px solid #3b4148;
 }
 
 .btn-dark{
-  background:#090a0b;
+  background:#08090a;
   color:#fff;
-  border:1px solid #34383d;
+  border:1px solid #3b4148;
 }
 
 .btn-danger{
-  background:var(--danger);
-  color:#ffb5b5;
+  background:#391c1c;
+  color:#ffb3b3;
 }
 
-
-/* =========================================================
-   PDF ICON BUTTON
-========================================================= */
+/* =========================
+   PDF ICON
+========================= */
 
 .pdf-btn{
   width:42px;
   height:42px;
 
-  padding:0;
+  border:0;
+  border-radius:8px;
+
+  background:var(--gold);
+  color:#fff;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  background:var(--gold);
-  color:#fff;
-
-  border:0;
-  border-radius:9px;
-
-  cursor:pointer;
-
-  box-shadow:0 4px 14px rgba(216,135,47,.25);
+  box-shadow:0 4px 15px rgba(216,135,47,.25);
 }
 
 .pdf-btn:hover{
   background:#e4933c;
-  transform:translateY(-1px);
 }
 
 .pdf-btn svg{
@@ -178,10 +137,9 @@ button{
   height:21px;
 }
 
-
-/* =========================================================
+/* =========================
    LAYOUT
-========================================================= */
+========================= */
 
 .layout{
   display:grid;
@@ -190,25 +148,23 @@ button{
   align-items:start;
 }
 
-
-/* =========================================================
-   EDITOR PANEL
-========================================================= */
+/* =========================
+   PANEL
+========================= */
 
 .panel{
-  background:var(--panel);
-
-  border:1px solid var(--border);
+  background:var(--ui-panel);
+  border:1px solid var(--ui-border);
   border-radius:14px;
 
   padding:20px;
 
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  box-shadow:0 8px 25px rgba(0,0,0,.3);
 
   position:sticky;
-  top:78px;
+  top:82px;
 
-  max-height:calc(100vh - 95px);
+  max-height:calc(100vh - 100px);
   overflow:auto;
 }
 
@@ -217,70 +173,48 @@ button{
   font-size:17px;
 }
 
-
-/* =========================================================
-   SECTION TITLES
-========================================================= */
-
 .section-title{
   margin:20px 0 10px;
-
   padding-bottom:7px;
 
-  border-bottom:2px solid var(--gold-light);
+  border-bottom:2px solid #51351f;
 
   font-size:13px;
-
   text-transform:uppercase;
-
   letter-spacing:.8px;
 
   color:#e39a51;
 }
 
-
-/* =========================================================
-   FORM
-========================================================= */
-
 label{
   display:block;
-
   font-size:12px;
   font-weight:700;
-
   margin:9px 0 5px;
 }
 
-input,
-textarea{
+input,textarea{
   width:100%;
 
-  border:1px solid var(--border);
-
+  border:1px solid var(--ui-border);
   border-radius:7px;
 
   padding:9px 10px;
 
   outline:none;
 
-  background:var(--input);
-
+  background:var(--ui-input);
   color:#fff;
 }
 
 input::placeholder,
 textarea::placeholder{
-  color:#777d84;
+  color:#777;
 }
 
 input:focus,
 textarea:focus{
   border-color:var(--gold);
-
-  box-shadow:
-    0 0 0 2px
-    rgba(216,135,47,.10);
 }
 
 textarea{
@@ -288,10 +222,101 @@ textarea{
   resize:vertical;
 }
 
+/* =========================
+   OTHER DETAILS
+========================= */
 
-/* =========================================================
+.other-detail-head{
+  margin-top:14px;
+
+  padding:11px 12px;
+
+  border:1px solid #50351f;
+  background:#211a14;
+
+  border-radius:10px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.other-detail-title{
+  font-size:12px;
+  font-weight:900;
+  color:#e49a50;
+}
+
+.other-detail-title span{
+  color:#888;
+  font-size:9px;
+  margin-left:5px;
+  text-transform:uppercase;
+}
+
+.other-detail-sub{
+  font-size:9px;
+  color:#888;
+  margin-top:3px;
+}
+
+.mini-add{
+  border:1px solid var(--gold);
+  background:#211a14;
+  color:#e6a05a;
+
+  border-radius:7px;
+
+  padding:7px 10px;
+
+  font-size:11px;
+  font-weight:800;
+}
+
+.other-detail-row{
+  display:grid;
+
+  grid-template-columns:28px 105px 1fr 35px;
+
+  gap:7px;
+
+  align-items:end;
+
+  margin-top:8px;
+}
+
+.detail-check{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height:35px;
+  margin:0;
+}
+
+.detail-check input{
+  width:16px;
+  height:16px;
+  accent-color:var(--gold);
+}
+
+.remove-detail{
+  height:35px;
+
+  border:0;
+  border-radius:7px;
+
+  background:#391c1c;
+  color:#ffaaaa;
+
+  font-size:18px;
+  font-weight:700;
+}
+
+/* =========================
    ITEMS
-========================================================= */
+========================= */
 
 .items-editor{
   display:flex;
@@ -300,25 +325,23 @@ textarea{
 }
 
 .item-editor{
-  border:1px solid var(--border);
-
+  border:1px solid var(--ui-border);
   border-radius:9px;
 
   padding:10px;
 
-  background:var(--panel2);
+  background:var(--ui-panel2);
 }
 
 .item-top{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:8px;
+  display:flex;
+  justify-content:space-between;
   align-items:center;
 }
 
 .item-fields{
   display:grid;
-  grid-template-columns:1.4fr .7fr .8fr;
+  grid-template-columns:1.3fr .8fr .8fr;
   gap:7px;
   margin-top:7px;
 }
@@ -336,169 +359,37 @@ textarea{
   display:flex;
   align-items:center;
   gap:8px;
-
   margin-top:8px;
-
   font-size:12px;
 }
 
-.gst-row input[type=checkbox]{
-  width:auto;
+.gst-row input[type="checkbox"]{
+  width:16px;
 }
 
 .gst-rate{
-  width:80px!important;
+  width:70px!important;
 }
 
+/* =========================
+   OPTIONS
+========================= */
 
-/* =========================================================
-   OTHER DETAILS
-========================================================= */
-
-.other-detail-head{
-  margin-top:14px;
-
-  padding:11px 12px;
-
-  border:1px solid #51371f;
-
-  background:#211a14;
-
+.options-box{
+  border:1px solid var(--ui-border);
   border-radius:10px;
-
-  display:flex;
-
-  justify-content:space-between;
-  align-items:center;
-
-  gap:10px;
-}
-
-.other-detail-title{
-  font-size:12px;
-
-  font-weight:900;
-
-  color:#e49a50;
-}
-
-.other-detail-title span{
-  color:#777;
-
-  font-size:9px;
-
-  font-weight:700;
-
-  margin-left:5px;
-
-  text-transform:uppercase;
-}
-
-.other-detail-sub{
-  font-size:9px;
-
-  color:#888;
-
-  margin-top:3px;
-}
-
-.mini-add{
-  border:1px solid var(--gold);
-
-  background:#211a14;
-
-  color:#e6a05a;
-
-  border-radius:7px;
-
-  padding:7px 10px;
-
-  cursor:pointer;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  white-space:nowrap;
-}
-
-.other-detail-row{
-  display:grid;
-
-  grid-template-columns:24px 105px 1fr auto;
-
-  gap:7px;
-
-  align-items:end;
-
-  margin-top:8px;
-}
-
-.check-detail{
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  height:35px;
-
-  margin:0;
-}
-
-.check-detail input{
-  width:16px;
-  height:16px;
-
-  accent-color:var(--gold);
-
-  cursor:pointer;
-}
-
-.remove-detail{
-  height:35px;
-
-  border:0;
-
-  border-radius:7px;
-
-  background:#351b1b;
-
-  color:#ffaaaa;
-
-  padding:0 9px;
-
-  cursor:pointer;
-
-  font-weight:800;
-}
-
-
-/* =========================================================
-   INVOICE OPTIONS
-========================================================= */
-
-.display-card{
-  border:1px solid var(--border);
-
-  border-radius:10px;
-
-  padding:4px 10px;
-
-  background:var(--panel2);
+  background:var(--ui-panel2);
+  padding:5px 10px;
 }
 
 .check-option{
   display:flex;
-
   align-items:center;
-
   gap:9px;
 
-  margin:0;
+  padding:9px 5px;
 
-  padding:9px 6px;
-
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--ui-border);
 
   cursor:pointer;
 }
@@ -510,17 +401,12 @@ textarea{
 .check-option input{
   width:16px;
   height:16px;
-
   accent-color:var(--gold);
-
-  cursor:pointer;
 }
 
 .check-option span{
   display:flex;
-
   flex-direction:column;
-
   gap:2px;
 }
 
@@ -529,54 +415,30 @@ textarea{
 }
 
 .check-option small{
-  font-size:9px;
-
   color:#888;
+  font-size:9px;
 }
 
-.hint{
-  font-size:11px;
-
-  color:var(--muted);
-
-  line-height:1.4;
-
-  margin-top:8px;
-}
-
-
-/* =========================================================
-   QUOTE PREVIEW
-========================================================= */
+/* =========================
+   PAPER
+========================= */
 
 .quote-wrap{
   display:flex;
-
   justify-content:center;
-
   overflow:auto;
-
-  padding:0 0 40px;
+  padding-bottom:40px;
 }
-
-
-/* =========================================================
-   A4 PAPER
-========================================================= */
 
 .paper{
   width:794px;
-
   min-width:794px;
-
   min-height:1123px;
 
   background:#fff;
-
   color:#111;
 
-  box-shadow:
-    0 8px 35px rgba(0,0,0,.30);
+  box-shadow:0 8px 35px rgba(0,0,0,.4);
 
   padding:45px 38px 50px;
 
@@ -597,16 +459,13 @@ textarea{
   background:#222;
 }
 
-
-/* =========================================================
-   QUOTE HEADER
-========================================================= */
+/* =========================
+   HEADER
+========================= */
 
 .quote-header{
   display:flex;
-
   justify-content:space-between;
-
   align-items:flex-start;
 
   gap:30px;
@@ -614,22 +473,18 @@ textarea{
 
 .brand{
   display:flex;
-
   align-items:flex-start;
-
   gap:12px;
 }
 
 .brand img{
   width:48px;
   height:48px;
-
   object-fit:contain;
 }
 
 .company-name{
   font-size:16px;
-
   font-weight:900;
 
   color:var(--gold);
@@ -639,17 +494,13 @@ textarea{
 
 .company-sub{
   font-size:8px;
-
   font-weight:900;
-
   margin-top:3px;
 }
 
 .company-acn{
   font-size:7px;
-
   font-weight:700;
-
   margin-top:4px;
 }
 
@@ -673,16 +524,13 @@ textarea{
 
 .quote-date{
   font-size:10px;
-
   font-weight:800;
-
   margin-top:13px;
 }
 
-
-/* =========================================================
+/* =========================
    CUSTOMER BOX
-========================================================= */
+========================= */
 
 .to-box{
   border:1.5px solid var(--gold);
@@ -720,18 +568,12 @@ textarea{
 
 .to-grid .value{
   font-weight:600;
-
   white-space:pre-line;
 }
 
-.dynamic-detail{
-  min-width:0;
-}
-
-
-/* =========================================================
-   ITEMS TABLE
-========================================================= */
+/* =========================
+   TABLE
+========================= */
 
 .items-table{
   width:100%;
@@ -745,7 +587,6 @@ textarea{
 
 .items-table th{
   background:#d9822b;
-
   color:#fff;
 
   text-align:left;
@@ -753,7 +594,6 @@ textarea{
   padding:7px 10px;
 
   font-size:10px;
-
   font-weight:900;
 }
 
@@ -767,7 +607,7 @@ textarea{
 
   font-weight:800;
 
-  border-bottom:5px solid #f3e5d5;
+  border-bottom:5px solid var(--gold-light);
 
   vertical-align:top;
 }
@@ -790,18 +630,14 @@ textarea{
 
 .empty-msg{
   color:#777;
-
-  font-weight:600;
 }
 
-
-/* =========================================================
+/* =========================
    TOTALS
-========================================================= */
+========================= */
 
 .totals{
   margin-top:12px;
-
   margin-left:auto;
 
   width:315px;
@@ -811,7 +647,6 @@ textarea{
 
 .total-row{
   display:flex;
-
   justify-content:space-between;
 
   padding:5px 8px;
@@ -833,56 +668,44 @@ textarea{
   margin-top:4px;
 }
 
-
-/* =========================================================
+/* =========================
    FOOTER
-========================================================= */
+========================= */
 
 .footer{
   position:absolute;
 
   left:38px;
-
-  bottom:55px;
+  bottom:35px;
 
   display:flex;
-
   align-items:center;
 
-  gap:12px;
+  gap:10px;
 
-  font-size:8px;
-
-  line-height:1.45;
+  font-size:7px;
+  line-height:1.35;
 }
 
 .footer-logo{
-  width:48px;
-  height:48px;
+  width:42px;
+  height:42px;
 
   object-fit:contain;
-
-  flex-shrink:0;
 }
 
 .footer-info strong{
   color:var(--gold);
-
-  font-size:13px;
+  font-size:11px;
 }
 
 .footer-info b{
-  font-size:8px;
+  font-size:7px;
 }
 
-.footer-info span{
-  font-size:8px;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:950px){
 
@@ -892,14 +715,12 @@ textarea{
 
   .panel{
     position:static;
-
     max-height:none;
   }
 
   .quote-wrap{
     justify-content:flex-start;
   }
-
 }
 
 @media(max-width:600px){
@@ -909,61 +730,50 @@ textarea{
   }
 
   .toolbar{
-    padding:11px;
+    top:5px;
   }
 
   .toolbar h1{
     width:100%;
-
-    margin-bottom:3px;
-
     font-size:15px;
+    margin-bottom:3px;
   }
 
   .item-fields{
     grid-template-columns:1fr 1fr;
   }
 
-  .item-fields > div:first-child{
+  .item-fields .mini:first-child{
     grid-column:1/-1;
   }
 
   .other-detail-row{
-    grid-template-columns:24px 1fr auto;
+    grid-template-columns:28px 1fr 35px;
   }
 
   .other-detail-row > div:nth-child(2){
-    grid-column:2/-1;
+    grid-column:2/3;
   }
 
   .other-detail-row > div:nth-child(3){
-    grid-column:2/-1;
+    grid-column:2/3;
   }
 
   .paper{
-    transform-origin:top left;
-
     width:794px;
-
     min-width:794px;
   }
-
 }
 
-
-/* =========================================================
-   PRINT / PDF
-========================================================= */
+/* =========================
+   PRINT
+========================= */
 
 @media print{
 
   html,
   body{
     background:#fff!important;
-  }
-
-  body{
-    color:#111!important;
   }
 
   .no-print{
@@ -979,227 +789,149 @@ textarea{
   }
 
   .quote-wrap{
-    padding:0;
-
     display:block;
-
     overflow:visible;
+    padding:0;
   }
 
   .paper{
-    box-shadow:none;
+    width:210mm;
+    min-width:210mm;
+    min-height:297mm;
 
     margin:0;
 
-    width:210mm;
-
-    min-width:210mm;
-
-    min-height:297mm;
-
     padding:12mm 10mm 13mm;
 
-    background:#fff!important;
+    box-shadow:none;
 
+    background:#fff!important;
     color:#111!important;
   }
 
   .footer{
     left:10mm;
-
-    bottom:18mm;
+    bottom:10mm;
   }
 
   @page{
     size:A4 portrait;
-
     margin:0;
   }
-
 }
-
 </style>
 </head>
 
-
 <body>
-
 
 <div class="app">
 
-
-  <!-- =====================================================
-       TOOLBAR
-  ====================================================== -->
+  <!-- TOOLBAR -->
 
   <div class="toolbar no-print">
 
-    <h1>
-      TM ELEVEN — Professional Quote Generator
-    </h1>
+    <h1>TM ELEVEN — Professional Quote Generator</h1>
 
-
-    <button
-      class="btn btn-light"
-      onclick="saveDraft()"
-    >
+    <button class="btn btn-light" id="saveBtn">
       Save Draft
     </button>
 
-
-    <button
-      class="btn btn-light"
-      onclick="loadDraft()"
-    >
+    <button class="btn btn-light" id="loadBtn">
       Load Draft
     </button>
 
-
-    <button
-      class="btn btn-dark"
-      onclick="clearDraft()"
-    >
+    <button class="btn btn-dark" id="clearBtn">
       Clear Draft
     </button>
 
-
-    <!-- PDF ICON ONLY -->
-
-    <button
-      class="pdf-btn"
-      onclick="convertPDF()"
-      title="Convert to PDF / Print"
-      aria-label="Convert to PDF"
-    >
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <button class="pdf-btn" id="pdfBtn" title="Convert to PDF">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round">
 
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-
         <polyline points="14 2 14 8 20 8"/>
-
         <path d="M8 13h2a1.5 1.5 0 0 1 0 3H8z"/>
-
         <path d="M13 16v-3h1.5a1.5 1.5 0 0 1 0 3H13z"/>
-
         <path d="M18 13h-2v3"/>
 
       </svg>
-
     </button>
 
   </div>
 
 
-
   <div class="layout">
 
 
-    <!-- =================================================
+    <!-- =====================
          EDITOR
-    ================================================== -->
+    ====================== -->
 
     <div class="panel no-print">
 
+      <h2>Quote Details</h2>
 
-      <h2>
-        Quote Details
-      </h2>
-
-
-      <!-- DATE -->
 
       <div class="section-title">
         Date
       </div>
 
-
       <label for="quoteDate">
         Quote Date
       </label>
 
+      <input id="quoteDate" type="date">
 
-      <input
-        id="quoteDate"
-        type="date"
-      >
-
-
-
-      <!-- CUSTOMER -->
 
       <div class="section-title">
         Customer
       </div>
 
-
       <label>
         Name
       </label>
 
-
-      <input
-        id="customerName"
-        placeholder="Customer name"
-      >
+      <input id="customerName"
+             placeholder="Customer name">
 
 
       <label>
         Email
       </label>
 
-
-      <input
-        id="customerEmail"
-        type="email"
-        placeholder="customer@email.com"
-      >
+      <input id="customerEmail"
+             type="email"
+             placeholder="customer@email.com">
 
 
       <label>
         Address
       </label>
 
-
-      <textarea
-        id="customerAddress"
-        placeholder="Customer / project address"
-      ></textarea>
+      <textarea id="customerAddress"
+                placeholder="Customer / project address"></textarea>
 
 
       <label>
         Project
       </label>
 
-
-      <input
-        id="project"
-        placeholder="Project description / project name"
-      >
+      <input id="project"
+             placeholder="Project description / project name">
 
 
-
-      <!-- OTHER DETAILS -->
+      <!-- OTHER -->
 
       <div class="other-detail-head">
 
         <div>
 
           <div class="other-detail-title">
-
             Other Detail
-
-            <span>
-              Optional
-            </span>
-
+            <span>Optional</span>
           </div>
 
           <div class="other-detail-sub">
@@ -1208,20 +940,15 @@ textarea{
 
         </div>
 
-
-        <button
-          class="mini-add"
-          type="button"
-          onclick="addOtherDetail()"
-        >
+        <button class="mini-add"
+                id="addOtherBtn"
+                type="button">
           + Add
         </button>
 
       </div>
 
-
       <div id="otherDetailsEditor"></div>
-
 
 
       <!-- ITEMS -->
@@ -1230,21 +957,14 @@ textarea{
         Items
       </div>
 
+      <div id="itemsEditor"
+           class="items-editor"></div>
 
-      <div
-        id="itemsEditor"
-        class="items-editor"
-      ></div>
-
-
-      <button
-        class="btn btn-light"
-        style="margin-top:10px;width:100%;border:1px solid #3a3f45"
-        onclick="addItem()"
-      >
+      <button class="btn btn-light"
+              id="addItemBtn"
+              style="margin-top:10px;width:100%">
         + Add Item
       </button>
-
 
 
       <!-- OPTIONS -->
@@ -1253,247 +973,141 @@ textarea{
         Invoice Options
       </div>
 
-
-      <div class="display-card">
-
+      <div class="options-box">
 
         <label class="check-option">
 
-          <input
-            id="showSubtotal"
-            type="checkbox"
-            checked
-            onchange="updatePreview()"
-          >
+          <input id="showSubtotal"
+                 type="checkbox"
+                 checked>
 
           <span>
-
-            <b>
-              Show Subtotal
-            </b>
-
-            <small>
-              Display subtotal on quote
-            </small>
-
+            <b>Show Subtotal</b>
+            <small>Display subtotal</small>
           </span>
 
         </label>
 
 
-
         <label class="check-option">
 
-          <input
-            id="showGst"
-            type="checkbox"
-            checked
-            onchange="updatePreview()"
-          >
+          <input id="showGst"
+                 type="checkbox"
+                 checked>
 
           <span>
-
-            <b>
-              Show GST
-            </b>
-
-            <small>
-              Display GST amount
-            </small>
-
+            <b>Show GST</b>
+            <small>Display GST amount</small>
           </span>
 
         </label>
 
 
-
         <label class="check-option">
 
-          <input
-            id="showTotal"
-            type="checkbox"
-            checked
-            onchange="updatePreview()"
-          >
+          <input id="showTotal"
+                 type="checkbox"
+                 checked>
 
           <span>
-
-            <b>
-              Show Total
-            </b>
-
-            <small>
-              Display final total
-            </small>
-
+            <b>Show Total</b>
+            <small>Display final total</small>
           </span>
 
         </label>
-
 
       </div>
-
-
-      <div class="hint">
-        Tick the options you want to display on the quote.
-      </div>
-
 
     </div>
 
 
-
-    <!-- =================================================
+    <!-- =====================
          QUOTE
-    ================================================== -->
+    ====================== -->
 
     <div class="quote-wrap">
 
-
-      <div
-        class="paper"
-        id="quotePaper"
-      >
+      <div class="paper" id="quotePaper">
 
 
         <!-- HEADER -->
 
         <div class="quote-header">
 
-
           <div class="brand">
 
-
-            <img
-              src="logo.png"
-              alt="TM Eleven Logo"
-              onerror="this.style.display='none'"
-            >
-
+            <img src="logo.png"
+                 alt="TM Eleven Logo"
+                 id="headerLogo">
 
             <div>
-
 
               <div class="company-name">
                 TM ELEVEN PTY LTD
               </div>
 
-
               <div class="company-sub">
                 CONCRETING | LANDSCAPING | FENCING
               </div>
-
 
               <div class="company-acn">
                 ACN : 692 149 045
               </div>
 
-
             </div>
-
 
           </div>
 
 
-
           <div class="quote-heading">
-
 
             <h2>
               QUOTE
             </h2>
 
-
             <div class="quote-date">
-
               Date :
-
               <span id="previewDate"></span>
-
             </div>
-
 
           </div>
 
-
         </div>
-
 
 
         <!-- CUSTOMER -->
 
         <div class="to-box">
 
-
           <div class="to-title">
             To
           </div>
 
+          <div class="to-grid" id="toGrid">
 
-          <div
-            class="to-grid"
-            id="toGrid"
-          >
+            <div>Name</div>
+            <div class="value" id="pName"></div>
 
+            <div>Email</div>
+            <div class="value" id="pEmail"></div>
 
-            <div>
-              Name
-            </div>
-
-
-            <div
-              class="value"
-              id="pName"
-            ></div>
-
-
-
-            <div>
-              Email
-            </div>
-
-
-            <div
-              class="value"
-              id="pEmail"
-            ></div>
-
-
-
-            <div>
-              Project
-            </div>
-
-
-            <div
-              class="value"
-              id="pProject"
-            ></div>
-
-
+            <div>Project</div>
+            <div class="value" id="pProject"></div>
 
             <div id="addressLabel">
               Address
             </div>
 
-
-            <div
-              class="value"
-              id="pAddress"
-            ></div>
-
+            <div class="value" id="pAddress"></div>
 
           </div>
-
 
         </div>
 
 
-
-        <!-- ITEMS TABLE -->
+        <!-- TABLE -->
 
         <table class="items-table">
-
 
           <thead>
 
@@ -1523,213 +1137,126 @@ textarea{
 
           </thead>
 
-
           <tbody id="previewItems">
 
             <tr>
-
-              <td
-                colspan="5"
-                class="empty-msg"
-              >
+              <td colspan="5"
+                  class="empty-msg">
                 No items added
               </td>
-
             </tr>
 
           </tbody>
 
-
         </table>
-
 
 
         <!-- TOTALS -->
 
-        <div
-          class="totals"
-          id="totalsPreview"
-        ></div>
-
+        <div id="totalsPreview"
+             class="totals"></div>
 
 
         <!-- FOOTER -->
 
         <div class="footer">
 
-
-          <img
-            src="logo.png"
-            alt="TM Eleven Logo"
-            class="footer-logo"
-            onerror="this.style.display='none'"
-          >
-
+          <img src="logo.png"
+               class="footer-logo"
+               alt="TM Eleven Logo">
 
           <div class="footer-info">
-
 
             <strong>
               TM ELEVEN PTY LTD
             </strong>
 
-
             <br>
-
 
             <b>
               CONCRETING | LANDSCAPING | FENCING
             </b>
 
+            <br>
+
+            ACN : 692 149 045
 
             <br>
 
-
-            <span>
-              ACN : 692 149 045
-            </span>
-
+            +61 451 160 058
 
             <br>
 
-
-            <span>
-              +61 451 160 058
-            </span>
-
+            tmeleven111@gmail.com
 
             <br>
 
-
-            <span>
-              tmeleven111@gmail.com
-            </span>
-
-
-            <br>
-
-
-            <span>
-              tmeleven.com.au
-            </span>
-
+            tmeleven.com.au
 
           </div>
 
-
         </div>
-
 
       </div>
 
-
     </div>
 
-
   </div>
-
 
 </div>
 
 
-
 <script>
 
-/* =========================================================
-   DEFAULT ITEMS
-========================================================= */
+/* =====================================================
+   DATA
+===================================================== */
 
-const defaultItems = [
+const blankItem = () => ({
+  desc:"",
+  note:"",
+  unit:"",
+  price:"",
+  qty:"",
+  gst:false,
+  gstRate:10
+});
 
-  {
-    desc:"",
-    note:"",
-    unit:"",
-    price:"",
-    qty:"",
-    gst:false,
-    gstRate:10
-  },
-
-  {
-    desc:"",
-    note:"",
-    unit:"",
-    price:"",
-    qty:"",
-    gst:false,
-    gstRate:10
-  },
-
-  {
-    desc:"",
-    note:"",
-    unit:"",
-    price:"",
-    qty:"",
-    gst:false,
-    gstRate:10
-  }
-
+let items = [
+  blankItem(),
+  blankItem(),
+  blankItem()
 ];
-
-
-let items =
-  structuredClone(defaultItems);
-
 
 let otherDetails = [];
 
 
+/* =====================================================
+   HELPERS
+===================================================== */
 
-/* =========================================================
-   MONEY
-========================================================= */
+function money(value){
 
-function money(n){
-
-  return new Intl.NumberFormat(
-    'en-AU',
-    {
-      style:'currency',
-      currency:'AUD',
-      minimumFractionDigits:2
-    }
-  ).format(
-    Number(n)||0
-  );
+  return new Intl.NumberFormat("en-AU",{
+    style:"currency",
+    currency:"AUD",
+    minimumFractionDigits:2
+  }).format(Number(value) || 0);
 
 }
 
 
+function esc(value){
 
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function esc(s){
-
-  return String(
-    s ?? ''
-  ).replace(
-    /[&<>"']/g,
-
-    m => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    }[m])
-  );
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
-
-
-/* =========================================================
-   TODAY
-========================================================= */
 
 function todayISO(){
 
@@ -1738,637 +1265,598 @@ function todayISO(){
   const local =
     new Date(
       d.getTime() -
-      d.getTimezoneOffset()*60000
+      d.getTimezoneOffset() * 60000
     );
 
-  return local
-    .toISOString()
-    .slice(0,10);
+  return local.toISOString().slice(0,10);
 
 }
 
 
+function formatDate(value){
 
-/* =========================================================
-   DATE FORMAT
-========================================================= */
-
-function formatDate(v){
-
-  if(!v){
-    return '';
-  }
+  if(!value) return "";
 
   const d =
-    new Date(
-      v + 'T00:00:00'
-    );
+    new Date(value + "T00:00:00");
 
   return d.toLocaleDateString(
-    'en-AU',
+    "en-AU",
     {
-      day:'2-digit',
-      month:'long',
-      year:'numeric'
+      day:"2-digit",
+      month:"long",
+      year:"numeric"
     }
   );
 
 }
 
 
-
-/* =========================================================
+/* =====================================================
    ITEMS
-========================================================= */
+===================================================== */
 
 function addItem(){
 
-  items.push({
+  items.push(blankItem());
 
-    desc:"",
-    note:"",
-    unit:"",
-    price:"",
-    qty:"",
-    gst:false,
-    gstRate:10
-
-  });
-
-  renderEditor();
-
+  renderItems();
   updatePreview();
 
 }
 
 
-function removeItem(i){
+function removeItem(index){
 
-  items.splice(i,1);
+  items.splice(index,1);
 
-  if(!items.length){
-
-    items.push({
-
-      desc:"",
-      note:"",
-      unit:"",
-      price:"",
-      qty:"",
-      gst:false,
-      gstRate:10
-
-    });
-
+  if(items.length === 0){
+    items.push(blankItem());
   }
 
-  renderEditor();
+  renderItems();
+  updatePreview();
+
+}
+
+
+function updateItem(index,key,value){
+
+  items[index][key] = value;
 
   updatePreview();
 
 }
 
 
-function updateItem(
-  i,
-  key,
-  value
-){
-
-  items[i][key] =
-    value;
-
-  updatePreview();
-
-}
-
-
-
-/* =========================================================
-   RENDER ITEMS
-========================================================= */
-
-function renderEditor(){
+function renderItems(){
 
   const box =
     document.getElementById(
-      'itemsEditor'
+      "itemsEditor"
     );
 
-  box.innerHTML =
-    items.map(
-      (it,i) => `
+  box.innerHTML = "";
 
-        <div class="item-editor">
+  items.forEach((item,index)=>{
 
-          <div class="item-top">
+    const div =
+      document.createElement("div");
 
-            <b style="font-size:12px">
-              Item ${i+1}
-            </b>
+    div.className =
+      "item-editor";
 
-            <button
-              class="btn btn-danger"
-              style="padding:5px 8px"
-              onclick="removeItem(${i})"
-            >
-              Remove
-            </button>
+    div.innerHTML = `
 
-          </div>
+      <div class="item-top">
 
+        <b style="font-size:12px">
+          Item ${index + 1}
+        </b>
+
+        <button
+          class="btn btn-danger remove-item"
+          type="button">
+          Remove
+        </button>
+
+      </div>
+
+
+      <label>
+        Description
+      </label>
+
+      <input
+        class="item-desc"
+        value="${esc(item.desc)}"
+        placeholder="e.g. Fencing">
+
+
+      <label>
+        Small note (optional)
+      </label>
+
+      <input
+        class="item-note-input"
+        value="${esc(item.note)}"
+        placeholder="Optional note">
+
+
+      <div class="item-fields">
+
+        <div class="mini">
 
           <label>
-            Description
+            Unit
           </label>
 
           <input
-            value="${esc(it.desc)}"
-            placeholder="e.g. Fencing"
-            oninput="updateItem(${i},'desc',this.value)"
-          >
-
-
-          <label>
-            Small note (optional)
-          </label>
-
-          <input
-            value="${esc(it.note)}"
-            placeholder="e.g. Extra posts may incur additional charges"
-            oninput="updateItem(${i},'note',this.value)"
-          >
-
-
-          <div class="item-fields">
-
-
-            <div class="mini">
-
-              <label>
-                Unit
-              </label>
-
-              <input
-                value="${esc(it.unit)}"
-                placeholder="1m / One Gate"
-                oninput="updateItem(${i},'unit',this.value)"
-              >
-
-            </div>
-
-
-            <div class="mini">
-
-              <label>
-                Unit Price
-              </label>
-
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value="${esc(it.price)}"
-                placeholder="0"
-                oninput="updateItem(${i},'price',this.value)"
-              >
-
-            </div>
-
-
-            <div class="mini">
-
-              <label>
-                Quantity
-              </label>
-
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value="${esc(it.qty)}"
-                placeholder="0"
-                oninput="updateItem(${i},'qty',this.value)"
-              >
-
-            </div>
-
-
-          </div>
-
-
-          <div class="gst-row">
-
-            <input
-              type="checkbox"
-              ${it.gst?'checked':''}
-              onchange="updateItem(${i},'gst',this.checked)"
-            >
-
-            <span>
-              +GST
-            </span>
-
-
-            <input
-              class="gst-rate"
-              type="number"
-              min="0"
-              step="0.01"
-              value="${it.gstRate ?? 10}"
-              oninput="updateItem(${i},'gstRate',this.value)"
-            >
-
-            <span>
-              %
-            </span>
-
-          </div>
-
+            class="item-unit"
+            value="${esc(item.unit)}"
+            placeholder="1m / One Gate">
 
         </div>
 
-      `
-    ).join('');
+
+        <div class="mini">
+
+          <label>
+            Unit Price
+          </label>
+
+          <input
+            class="item-price"
+            type="number"
+            min="0"
+            step="0.01"
+            value="${esc(item.price)}"
+            placeholder="0">
+
+        </div>
+
+
+        <div class="mini">
+
+          <label>
+            Quantity
+          </label>
+
+          <input
+            class="item-qty"
+            type="number"
+            min="0"
+            step="0.01"
+            value="${esc(item.qty)}"
+            placeholder="0">
+
+        </div>
+
+      </div>
+
+
+      <div class="gst-row">
+
+        <input
+          class="item-gst"
+          type="checkbox"
+          ${item.gst ? "checked" : ""}>
+
+        <span>
+          +GST
+        </span>
+
+        <input
+          class="gst-rate"
+          type="number"
+          min="0"
+          step="0.01"
+          value="${item.gstRate ?? 10}">
+
+        <span>%</span>
+
+      </div>
+    `;
+
+
+    div.querySelector(".remove-item")
+      .addEventListener("click",()=>{
+        removeItem(index);
+      });
+
+
+    div.querySelector(".item-desc")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"desc",e.target.value);
+      });
+
+
+    div.querySelector(".item-note-input")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"note",e.target.value);
+      });
+
+
+    div.querySelector(".item-unit")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"unit",e.target.value);
+      });
+
+
+    div.querySelector(".item-price")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"price",e.target.value);
+      });
+
+
+    div.querySelector(".item-qty")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"qty",e.target.value);
+      });
+
+
+    div.querySelector(".item-gst")
+      .addEventListener("change",(e)=>{
+        updateItem(index,"gst",e.target.checked);
+      });
+
+
+    div.querySelector(".gst-rate")
+      .addEventListener("input",(e)=>{
+        updateItem(index,"gstRate",e.target.value);
+      });
+
+
+    box.appendChild(div);
+
+  });
 
 }
 
 
-
-/* =========================================================
+/* =====================================================
    OTHER DETAILS
-========================================================= */
+===================================================== */
 
 function addOtherDetail(){
 
   otherDetails.push({
-
     label:"",
     value:"",
     enabled:true
-
   });
 
   renderOtherDetails();
-
   updatePreview();
 
 }
 
 
-function removeOtherDetail(i){
+function removeOtherDetail(index){
 
-  otherDetails.splice(i,1);
+  otherDetails.splice(index,1);
 
   renderOtherDetails();
-
   updatePreview();
 
 }
 
-
-function updateOtherDetail(
-  i,
-  key,
-  value
-){
-
-  otherDetails[i][key] =
-    value;
-
-  updatePreview();
-
-}
-
-
-
-/* =========================================================
-   RENDER OTHER DETAILS
-========================================================= */
 
 function renderOtherDetails(){
 
   const box =
     document.getElementById(
-      'otherDetailsEditor'
+      "otherDetailsEditor"
     );
 
+  box.innerHTML = "";
 
-  box.innerHTML =
-    otherDetails.map(
-      (d,i) => `
+  otherDetails.forEach((detail,index)=>{
 
-        <div class="other-detail-row">
+    const row =
+      document.createElement("div");
 
+    row.className =
+      "other-detail-row";
 
-          <label class="check-detail">
+    row.innerHTML = `
 
-            <input
-              type="checkbox"
-              ${d.enabled !== false ? 'checked' : ''}
-              onchange="updateOtherDetail(${i},'enabled',this.checked)"
-            >
+      <label class="detail-check">
 
-          </label>
+        <input
+          type="checkbox"
+          class="detail-enabled"
+          ${detail.enabled !== false ? "checked" : ""}>
 
-
-          <div>
-
-            <label>
-              Label
-            </label>
-
-            <input
-              value="${esc(d.label)}"
-              placeholder="Company"
-              oninput="updateOtherDetail(${i},'label',this.value)"
-            >
-
-          </div>
+      </label>
 
 
-          <div>
+      <div>
 
-            <label>
-              Detail
-            </label>
+        <label>
+          Label
+        </label>
 
-            <input
-              value="${esc(d.value)}"
-              placeholder="Enter detail"
-              oninput="updateOtherDetail(${i},'value',this.value)"
-            >
+        <input
+          class="detail-label"
+          value="${esc(detail.label)}"
+          placeholder="Company">
 
-          </div>
-
-
-          <button
-            class="remove-detail"
-            type="button"
-            onclick="removeOtherDetail(${i})"
-          >
-            ×
-          </button>
+      </div>
 
 
-        </div>
+      <div>
 
-      `
-    ).join('');
+        <label>
+          Detail
+        </label>
+
+        <input
+          class="detail-value"
+          value="${esc(detail.value)}"
+          placeholder="Enter detail">
+
+      </div>
+
+
+      <button
+        class="remove-detail"
+        type="button">
+        ×
+      </button>
+
+    `;
+
+
+    row.querySelector(".detail-enabled")
+      .addEventListener("change",(e)=>{
+
+        otherDetails[index].enabled =
+          e.target.checked;
+
+        updatePreview();
+
+      });
+
+
+    row.querySelector(".detail-label")
+      .addEventListener("input",(e)=>{
+
+        otherDetails[index].label =
+          e.target.value;
+
+        updatePreview();
+
+      });
+
+
+    row.querySelector(".detail-value")
+      .addEventListener("input",(e)=>{
+
+        otherDetails[index].value =
+          e.target.value;
+
+        updatePreview();
+
+      });
+
+
+    row.querySelector(".remove-detail")
+      .addEventListener("click",()=>{
+
+        removeOtherDetail(index);
+
+      });
+
+
+    box.appendChild(row);
+
+  });
 
 }
 
 
-
-/* =========================================================
+/* =====================================================
    PREVIEW
-========================================================= */
+===================================================== */
 
 function updatePreview(){
 
-
-  /* DATE */
-
-  document.getElementById(
-    'previewDate'
-  ).textContent =
+  document.getElementById("previewDate")
+    .textContent =
     formatDate(
-      document.getElementById(
-        'quoteDate'
-      ).value
+      document.getElementById("quoteDate").value
     );
 
 
-
-  /* CUSTOMER */
-
-  document.getElementById(
-    'pName'
-  ).textContent =
-    document.getElementById(
-      'customerName'
-    ).value;
+  document.getElementById("pName")
+    .textContent =
+    document.getElementById("customerName").value;
 
 
-  document.getElementById(
-    'pEmail'
-  ).textContent =
-    document.getElementById(
-      'customerEmail'
-    ).value;
+  document.getElementById("pEmail")
+    .textContent =
+    document.getElementById("customerEmail").value;
 
 
-  document.getElementById(
-    'pProject'
-  ).textContent =
-    document.getElementById(
-      'project'
-    ).value;
+  document.getElementById("pProject")
+    .textContent =
+    document.getElementById("project").value;
 
 
-
-  /* REMOVE OLD DYNAMIC DETAILS */
-
-  document
-    .querySelectorAll(
-      '.dynamic-detail'
-    )
-    .forEach(
-      el => el.remove()
-    );
+  document.getElementById("pAddress")
+    .textContent =
+    document.getElementById("customerAddress").value;
 
 
-  const toGrid =
-    document.getElementById(
-      'toGrid'
-    );
+  /* REMOVE OLD DETAILS */
 
+  document.querySelectorAll(
+    ".dynamic-detail"
+  ).forEach(el=>el.remove());
+
+
+  const grid =
+    document.getElementById("toGrid");
 
   const addressLabel =
-    document.getElementById(
-      'addressLabel'
-    );
+    document.getElementById("addressLabel");
 
 
+  /* ADD OTHER DETAILS ABOVE ADDRESS */
 
-  /* ADD DETAILS ABOVE ADDRESS */
+  otherDetails.forEach(detail=>{
 
-  otherDetails.forEach(
-    d => {
+    if(
+      detail.enabled !== false &&
+      (detail.label.trim() ||
+       detail.value.trim())
+    ){
 
-      if(
-        d.enabled !== false &&
-        (d.label || d.value)
-      ){
+      const label =
+        document.createElement("div");
 
-        const label =
-          document.createElement(
-            'div'
-          );
+      label.className =
+        "dynamic-detail";
 
-        label.className =
-          'dynamic-detail';
-
-        label.textContent =
-          d.label || 'Detail';
+      label.textContent =
+        detail.label || "Detail";
 
 
-        const value =
-          document.createElement(
-            'div'
-          );
+      const value =
+        document.createElement("div");
 
-        value.className =
-          'value dynamic-detail';
+      value.className =
+        "value dynamic-detail";
 
-        value.textContent =
-          d.value || '';
+      value.textContent =
+        detail.value || "";
 
 
-        toGrid.insertBefore(
-          label,
-          addressLabel
-        );
+      grid.insertBefore(
+        label,
+        addressLabel
+      );
 
+      grid.insertBefore(
+        value,
+        addressLabel
+      );
 
-        toGrid.insertBefore(
-          value,
-          addressLabel
-        );
+    }
 
-      }
-
-    );
-
-
-
-  /* ADDRESS */
-
-  document.getElementById(
-    'pAddress'
-  ).textContent =
-    document.getElementById(
-      'customerAddress'
-    ).value;
-
+  });
 
 
   /* ITEMS */
 
   const tbody =
     document.getElementById(
-      'previewItems'
+      "previewItems"
     );
 
 
   let subtotal = 0;
-
   let gstTotal = 0;
 
   const rows = [];
 
 
-  items.forEach(
-    it => {
+  items.forEach(item=>{
 
-      const price =
-        Number(it.price)||0;
+    const price =
+      Number(item.price) || 0;
 
-      const qty =
-        Number(it.qty)||0;
+    const qty =
+      Number(item.qty) || 0;
 
-      const base =
-        price * qty;
-
-
-      if(
-        !it.desc &&
-        !it.unit &&
-        !it.price &&
-        !it.qty
-      ){
-
-        return;
-
-      }
+    const base =
+      price * qty;
 
 
-      subtotal += base;
-
-
-      const gstAmount =
-        it.gst
-        ? base *
-          (Number(it.gstRate)||0) /
-          100
-        : 0;
-
-
-      gstTotal += gstAmount;
-
-
-      rows.push(`
-
-        <tr>
-
-          <td class="desc">
-
-            ${esc(
-              it.desc || '—'
-            )}
-
-            ${
-              it.note
-              ? `
-                <span class="item-note">
-                  ${esc(it.note)}
-                </span>
-              `
-              : ''
-            }
-
-          </td>
-
-
-          <td>
-            ${esc(it.unit || '—')}
-          </td>
-
-
-          <td>
-            ${money(price)}
-          </td>
-
-
-          <td>
-            ${esc(it.qty || '—')}
-          </td>
-
-
-          <td>
-            ${money(base)}
-            ${it.gst ? ' + GST' : ''}
-          </td>
-
-        </tr>
-
-      `);
-
+    if(
+      !item.desc &&
+      !item.note &&
+      !item.unit &&
+      !item.price &&
+      !item.qty
+    ){
+      return;
     }
-  );
 
 
-  tbody.innerHTML =
-    rows.length
-    ? rows.join('')
-    : `
+    subtotal += base;
+
+
+    const gst =
+      item.gst
+      ? base *
+        (Number(item.gstRate) || 0) /
+        100
+      : 0;
+
+
+    gstTotal += gst;
+
+
+    rows.push(`
+
+      <tr>
+
+        <td class="desc">
+
+          ${esc(item.desc || "—")}
+
+          ${
+            item.note
+            ? `
+              <span class="item-note">
+                ${esc(item.note)}
+              </span>
+            `
+            : ""
+          }
+
+        </td>
+
+        <td>
+          ${esc(item.unit || "—")}
+        </td>
+
+        <td>
+          ${money(price)}
+        </td>
+
+        <td>
+          ${esc(item.qty || "—")}
+        </td>
+
+        <td>
+          ${money(base)}
+          ${item.gst ? " + GST" : ""}
+        </td>
+
+      </tr>
+
+    `);
+
+  });
+
+
+  if(rows.length){
+
+    tbody.innerHTML =
+      rows.join("");
+
+  }else{
+
+    tbody.innerHTML = `
 
       <tr>
 
         <td
           colspan="5"
-          class="empty-msg"
-        >
+          class="empty-msg">
           No items added
         </td>
 
@@ -2376,280 +1864,238 @@ function updatePreview(){
 
     `;
 
+  }
 
 
-  /* TOTAL OPTIONS */
+  /* TOTALS */
 
   const showSubtotal =
     document.getElementById(
-      'showSubtotal'
+      "showSubtotal"
     ).checked;
 
 
   const showGst =
     document.getElementById(
-      'showGst'
+      "showGst"
     ).checked;
 
 
   const showTotal =
     document.getElementById(
-      'showTotal'
+      "showTotal"
     ).checked;
 
 
   const totals =
     document.getElementById(
-      'totalsPreview'
+      "totalsPreview"
     );
 
 
-  totals.innerHTML = `
+  let html = "";
 
 
-    ${
-      showSubtotal
-      ? `
+  if(showSubtotal){
 
-        <div class="total-row">
+    html += `
 
-          <span>
-            Subtotal
-          </span>
+      <div class="total-row">
 
-          <span>
-            ${money(subtotal)}
-          </span>
+        <span>Subtotal</span>
 
-        </div>
+        <span>
+          ${money(subtotal)}
+        </span>
 
-      `
-      : ''
-    }
+      </div>
+
+    `;
+
+  }
 
 
-    ${
-      showGst
-      ? `
+  if(showGst){
 
-        <div class="total-row">
+    html += `
 
-          <span>
-            GST
-          </span>
+      <div class="total-row">
 
-          <span>
-            ${money(gstTotal)}
-          </span>
+        <span>GST</span>
 
-        </div>
+        <span>
+          ${money(gstTotal)}
+        </span>
 
-      `
-      : ''
-    }
+      </div>
+
+    `;
+
+  }
 
 
-    ${
-      showTotal
-      ? `
+  if(showTotal){
 
-        <div class="total-row grand">
+    html += `
 
-          <span>
-            TOTAL
-          </span>
+      <div class="total-row grand">
 
-          <span>
-            ${money(
-              subtotal + gstTotal
-            )}
-          </span>
+        <span>TOTAL</span>
 
-        </div>
+        <span>
+          ${money(subtotal + gstTotal)}
+        </span>
 
-      `
-      : ''
-    }
+      </div>
 
-  `;
+    `;
+
+  }
+
+
+  totals.innerHTML = html;
 
 }
 
 
-
-/* =========================================================
-   STATE
-========================================================= */
+/* =====================================================
+   SAVE STATE
+===================================================== */
 
 function getState(){
 
   return {
 
     date:
-      document.getElementById(
-        'quoteDate'
-      ).value,
+      document.getElementById("quoteDate").value,
 
     name:
-      document.getElementById(
-        'customerName'
-      ).value,
+      document.getElementById("customerName").value,
 
     email:
-      document.getElementById(
-        'customerEmail'
-      ).value,
+      document.getElementById("customerEmail").value,
 
     address:
-      document.getElementById(
-        'customerAddress'
-      ).value,
+      document.getElementById("customerAddress").value,
 
     project:
-      document.getElementById(
-        'project'
-      ).value,
+      document.getElementById("project").value,
 
-    items,
+    items:items,
 
-    otherDetails,
+    otherDetails:otherDetails,
 
     showSubtotal:
-      document.getElementById(
-        'showSubtotal'
-      ).checked,
+      document.getElementById("showSubtotal").checked,
 
     showGst:
-      document.getElementById(
-        'showGst'
-      ).checked,
+      document.getElementById("showGst").checked,
 
     showTotal:
-      document.getElementById(
-        'showTotal'
-      ).checked
+      document.getElementById("showTotal").checked
 
   };
 
 }
 
 
+/* =====================================================
+   LOAD STATE
+===================================================== */
 
-/* =========================================================
-   SET STATE
-========================================================= */
+function setState(state){
 
-function setState(s){
+  document.getElementById("quoteDate").value =
+    state.date || todayISO();
 
-  document.getElementById(
-    'quoteDate'
-  ).value =
-    s.date || todayISO();
+  document.getElementById("customerName").value =
+    state.name || "";
 
+  document.getElementById("customerEmail").value =
+    state.email || "";
 
-  document.getElementById(
-    'customerName'
-  ).value =
-    s.name || '';
+  document.getElementById("customerAddress").value =
+    state.address || "";
 
-
-  document.getElementById(
-    'customerEmail'
-  ).value =
-    s.email || '';
-
-
-  document.getElementById(
-    'customerAddress'
-  ).value =
-    s.address || '';
-
-
-  document.getElementById(
-    'project'
-  ).value =
-    s.project || '';
+  document.getElementById("project").value =
+    state.project || "";
 
 
   items =
-    s.items ||
-    structuredClone(
-      defaultItems
-    );
+    Array.isArray(state.items)
+    ? state.items
+    : [
+        blankItem(),
+        blankItem(),
+        blankItem()
+      ];
 
 
   otherDetails =
-    s.otherDetails || [];
+    Array.isArray(state.otherDetails)
+    ? state.otherDetails
+    : [];
 
 
-  document.getElementById(
-    'showSubtotal'
-  ).checked =
-    s.showSubtotal !== false;
+  document.getElementById("showSubtotal").checked =
+    state.showSubtotal !== false;
+
+  document.getElementById("showGst").checked =
+    state.showGst !== false;
+
+  document.getElementById("showTotal").checked =
+    state.showTotal !== false;
 
 
-  document.getElementById(
-    'showGst'
-  ).checked =
-    s.showGst !== false;
-
-
-  document.getElementById(
-    'showTotal'
-  ).checked =
-    s.showTotal !== false;
-
-
-  renderEditor();
-
+  renderItems();
   renderOtherDetails();
-
   updatePreview();
 
 }
 
 
-
-/* =========================================================
-   SAVE DRAFT
-========================================================= */
+/* =====================================================
+   SAVE
+===================================================== */
 
 function saveDraft(){
 
-  localStorage.setItem(
-    'tmElevenQuoteDraft',
+  try{
 
-    JSON.stringify(
-      getState()
-    )
-  );
+    localStorage.setItem(
+      "tmElevenQuoteDraft",
+      JSON.stringify(getState())
+    );
 
+    alert("Draft saved successfully.");
 
-  alert(
-    'Draft saved on this device.'
-  );
+  }catch(error){
+
+    alert(
+      "Could not save draft: " +
+      error.message
+    );
+
+  }
 
 }
 
 
-
-/* =========================================================
-   LOAD DRAFT
-========================================================= */
+/* =====================================================
+   LOAD
+===================================================== */
 
 function loadDraft(){
 
-  const raw =
+  const saved =
     localStorage.getItem(
-      'tmElevenQuoteDraft'
+      "tmElevenQuoteDraft"
     );
 
 
-  if(!raw){
+  if(!saved){
 
-    alert(
-      'No saved draft found.'
-    );
+    alert("No saved draft found.");
 
     return;
 
@@ -2658,19 +2104,17 @@ function loadDraft(){
 
   try{
 
-    setState(
-      JSON.parse(raw)
-    );
+    const state =
+      JSON.parse(saved);
 
+    setState(state);
 
-    alert(
-      'Draft loaded.'
-    );
+    alert("Draft loaded successfully.");
 
-  }catch(e){
+  }catch(error){
 
     alert(
-      'Could not load the draft.'
+      "Could not load draft."
     );
 
   }
@@ -2678,26 +2122,24 @@ function loadDraft(){
 }
 
 
-
-/* =========================================================
-   CLEAR DRAFT
-========================================================= */
+/* =====================================================
+   CLEAR
+===================================================== */
 
 function clearDraft(){
 
   if(
     confirm(
-      'Clear the saved draft?'
+      "Clear the saved draft?"
     )
   ){
 
     localStorage.removeItem(
-      'tmElevenQuoteDraft'
+      "tmElevenQuoteDraft"
     );
 
-
     alert(
-      'Saved draft cleared.'
+      "Saved draft cleared."
     );
 
   }
@@ -2705,10 +2147,9 @@ function clearDraft(){
 }
 
 
-
-/* =========================================================
+/* =====================================================
    PDF
-========================================================= */
+===================================================== */
 
 function convertPDF(){
 
@@ -2719,51 +2160,95 @@ function convertPDF(){
 }
 
 
+/* =====================================================
+   BUTTON EVENTS
+===================================================== */
 
-/* =========================================================
-   LIVE UPDATE
-========================================================= */
-
-document
-  .querySelectorAll(
-    'input,textarea'
-  )
-  .forEach(
-    el => {
-
-      el.addEventListener(
-        'input',
-        updatePreview
-      );
-
-      el.addEventListener(
-        'change',
-        updatePreview
-      );
-
-    }
+document.getElementById("saveBtn")
+  .addEventListener(
+    "click",
+    saveDraft
   );
 
 
+document.getElementById("loadBtn")
+  .addEventListener(
+    "click",
+    loadDraft
+  );
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
 
-document.getElementById(
-  'quoteDate'
-).value =
+document.getElementById("clearBtn")
+  .addEventListener(
+    "click",
+    clearDraft
+  );
+
+
+document.getElementById("pdfBtn")
+  .addEventListener(
+    "click",
+    convertPDF
+  );
+
+
+document.getElementById("addItemBtn")
+  .addEventListener(
+    "click",
+    addItem
+  );
+
+
+document.getElementById("addOtherBtn")
+  .addEventListener(
+    "click",
+    addOtherDetail
+  );
+
+
+/* =====================================================
+   LIVE INPUTS
+===================================================== */
+
+[
+  "quoteDate",
+  "customerName",
+  "customerEmail",
+  "customerAddress",
+  "project",
+  "showSubtotal",
+  "showGst",
+  "showTotal"
+].forEach(id=>{
+
+  const element =
+    document.getElementById(id);
+
+  element.addEventListener(
+    "input",
+    updatePreview
+  );
+
+  element.addEventListener(
+    "change",
+    updatePreview
+  );
+
+});
+
+
+/* =====================================================
+   START
+===================================================== */
+
+document.getElementById("quoteDate").value =
   todayISO();
 
-
-renderEditor();
-
+renderItems();
 renderOtherDetails();
-
 updatePreview();
 
 </script>
 
 </body>
 </html>
-
