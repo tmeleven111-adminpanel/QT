@@ -2,2142 +2,631 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>TM Eleven Quote Generator</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TM ELEVEN — Quote Generator</title>
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&family=Roboto+Condensed:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap');
-
-*{
-  box-sizing:border-box;
-}
-
-:root{
-  --gold:#d0832d;
-  --gold2:#e4b45e;
-  --light:#f5e7d7;
-  --ink:#101010;
-  --paper:#fff;
-  --line:#d0832d;
-  --editor:#171717;
-}
-
-body{
-  margin:0;
-  font-family:"Inter",Arial,sans-serif;
-  background:#ececec;
-  color:var(--ink);
-}
-
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.app{
-  display:grid;
-  grid-template-columns:390px 1fr;
-  min-height:100vh;
-}
-
-/* =========================
-   LEFT EDITOR
-========================= */
-
-.panel{
-  background:#171717;
-  color:#fff;
-  padding:22px;
-  overflow:auto;
-}
-
-.panel h1{
-  font-family:"Montserrat",sans-serif;
-  font-size:22px;
-  font-weight:800;
-  margin:0 0 4px;
-  letter-spacing:-.4px;
-}
-
-.panel .sub{
-  color:#bbb;
-  font-size:13px;
-  margin-bottom:18px;
-}
-
-.card{
-  background:#242424;
-  border:1px solid #3a3a3a;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:14px;
-}
-
-.card h2{
-  font-family:"Montserrat",sans-serif;
-  font-size:12px;
-  font-weight:800;
-  margin:0 0 12px;
-  color:var(--gold2);
-  text-transform:uppercase;
-  letter-spacing:.8px;
-}
-
-.grid2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-label{
-  display:block;
-  font-size:11px;
-  font-weight:600;
-  color:#bbb;
-  margin:0 0 5px;
-}
-
-input,
-textarea,
-select{
-  width:100%;
-  background:#111;
-  color:#fff;
-  border:1px solid #444;
-  border-radius:7px;
-  padding:9px 10px;
-  outline:none;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:var(--gold2);
-}
-
-textarea{
-  resize:vertical;
-  min-height:70px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-.btn{
-  border:0;
-  border-radius:7px;
-  padding:9px 12px;
-  background:var(--gold);
-  color:#fff;
-  font-weight:700;
-}
-
-.btn.secondary{
-  background:#3a3a3a;
-}
-
-.btn.danger{
-  background:#7c2e2e;
-}
-
-.btn.small{
-  font-size:12px;
-  padding:7px 9px;
-}
-
-.rowhead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:10px;
-  gap:8px;
-}
-
-.item-editor{
-  border:1px solid #3d3d3d;
-  border-radius:9px;
-  padding:10px;
-  margin-bottom:9px;
-  background:#1e1e1e;
-}
-
-.item-top{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center;
-  margin-bottom:8px;
-}
-
-.item-num{
-  font-weight:700;
-  color:#eee;
-  font-size:13px;
-}
-
-.gstline{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  margin-top:8px;
-  font-size:12px;
-  color:#ddd;
-}
-
-.gstline input{
-  width:auto;
-}
-
-.toggle{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  color:#ddd;
-  font-size:12px;
-  margin-top:8px;
-}
-
-.toggle input{
-  width:auto;
-}
-
-/* More detail editor */
-
-.detail-row{
-  display:grid;
-  grid-template-columns:105px 1fr auto;
-  gap:7px;
-  margin-bottom:8px;
-}
-
-.detail-row input{
-  min-width:0;
-}
-
-/* =========================
-   PREVIEW
-========================= */
-
-.preview-wrap{
-  padding:28px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  overflow:auto;
-}
-
-.preview-actions{
-  position:fixed;
-  right:22px;
-  top:18px;
-  z-index:10;
-  display:flex;
-  gap:8px;
-}
-
-.preview-actions button{
-  box-shadow:0 2px 8px #0002;
-}
-
-/* =========================
-   PAPER
-========================= */
-
-.paper{
-  width:794px;
-  min-height:1123px;
-  background:#fff;
-  box-shadow:0 8px 30px #0002;
-  padding:34px 34px 42px;
-  position:relative;
-}
-
-/* Header */
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  min-height:125px;
-}
-
-.logo{
-  width:355px;
-  height:auto;
-  max-height:110px;
-  object-fit:contain;
-  object-position:left top;
-}
-
-.quote-title{
-  text-align:right;
-}
-
-.quote-title .big{
-  font-family:"Montserrat",sans-serif;
-  font-size:58px;
-  line-height:.9;
-  font-weight:900;
-  color:var(--gold2);
-  letter-spacing:-2px;
-}
-
-.quote-title .date{
-  font-family:"Inter",sans-serif;
-  font-weight:700;
-  font-size:14px;
-  margin-top:15px;
-}
-
-/* =========================
-   CUSTOMER BOX
-========================= */
-
-.to-box{
-  border:1.5px solid var(--line);
-  border-radius:16px;
-  padding:27px 31px 23px;
-  margin:2px 0 28px;
-  min-height:150px;
-}
-
-.to-title{
-  font-family:"Montserrat",sans-serif;
-  color:var(--gold);
-  font-weight:800;
-  font-size:16px;
-  margin-bottom:10px;
-}
-
-.customer-line{
-  font-family:"Inter",sans-serif;
-  display:grid;
-  grid-template-columns:95px 12px 1fr;
-  gap:0;
-  font-size:14px;
-  font-weight:700;
-  line-height:21px;
-}
-
-.customer-line .label{
-  color:#111;
-  font-weight:800;
-}
-
-.customer-line .colon{
-  text-align:center;
-}
-
-.customer-line .value{
-  font-weight:700;
-  word-break:break-word;
-}
-
-/* =========================
-   QUOTE TABLE
-========================= */
-
-.quote-table{
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
-}
-
-.quote-table th{
-  font-family:"Roboto Condensed",sans-serif;
-  background:var(--gold);
-  color:#fff;
-  font-size:17px;
-  padding:10px 7px;
-  text-align:center;
-}
-
-.quote-table th:first-child{
-  text-align:left;
-  padding-left:31px;
-}
-
-.quote-table td{
-  font-family:"Roboto Condensed",sans-serif;
-  padding:9px 8px;
-  font-size:15px;
-  font-weight:700;
-  text-align:center;
-  vertical-align:middle;
-}
-
-.quote-table td:first-child{
-  text-align:left;
-  padding-left:19px;
-}
-
-.quote-table tbody tr{
-  border-bottom:7px solid var(--light);
-}
-
-.desc-main{
-  font-family:"Roboto Condensed",sans-serif;
-  font-size:18px;
-  font-weight:800;
-  line-height:19px;
-}
-
-.desc-note{
-  font-family:"Inter",sans-serif;
-  font-size:9px;
-  font-weight:500;
-  line-height:11px;
-  margin-top:2px;
-}
-
-.total-cell{
-  white-space:nowrap;
-}
-
-.empty{
-  padding:18px;
-  text-align:center;
-  color:#999;
-}
-
-/* =========================
-   SUMMARY
-========================= */
-
-.summary{
-  margin-top:10px;
-  margin-left:auto;
-  width:310px;
-  border-top:2px solid var(--gold);
-  padding-top:7px;
-  display:none;
-}
-
-.summary.show{
-  display:block;
-}
-
-.sumrow{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  font-weight:700;
-  padding:4px 0;
-}
-
-.sumrow.total{
-  font-size:17px;
-  border-top:1px solid #ddd;
-  margin-top:4px;
-  padding-top:8px;
-}
-
-/* =========================
-   FOOTER
-   IMPORTANT:
-   Normal flow instead of absolute
-   so table can grow safely.
-========================= */
-
-.footer{
-  margin-top:34px;
-  padding-top:15px;
-  border-top:1px solid #eee;
-}
-
-.footer .name{
-  font-family:"Montserrat",sans-serif;
-  color:var(--gold);
-  font-weight:900;
-  font-size:20px;
-  letter-spacing:-.3px;
-}
-
-.footer .services{
-  font-family:"Montserrat",sans-serif;
-  font-size:11px;
-  font-weight:800;
-  margin-top:3px;
-}
-
-.footer .contact{
-  font-family:"Inter",sans-serif;
-  font-size:13px;
-  line-height:18px;
-  margin-top:5px;
-  font-weight:500;
-}
-
-.print-note{
-  font-size:11px;
-  color:#888;
-  margin-top:14px;
-}
-
-/* =========================
-   SETTINGS
-========================= */
-
-.option-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.color-preview{
-  height:9px;
-  border-radius:20px;
-  margin-top:6px;
-  background:var(--gold);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:1050px){
-
+  :root{
+    --gold:#d8872f;
+    --gold-dark:#b9681c;
+    --gold-light:#f3e5d5;
+    --ink:#111;
+    --muted:#666;
+    --line:#d8872f;
+    --paper:#fff;
+    --bg:#f3f4f6;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  button,input,textarea{font:inherit}
   .app{
-    grid-template-columns:340px 1fr;
+    max-width:1450px;
+    margin:auto;
+    padding:24px;
   }
-
-  .preview-wrap{
-    padding:20px;
+  .toolbar{
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:14px;
+    padding:16px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
   }
-
-  .paper{
-    transform-origin:top left;
+  .toolbar h1{
+    font-size:18px;
+    margin:0 auto 0 0;
+    letter-spacing:.4px;
   }
-
-}
-
-@media(max-width:760px){
-
-  .app{
-    display:block;
+  .btn{
+    border:0;
+    border-radius:8px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:700;
   }
-
+  .btn-primary{background:var(--gold);color:#fff}
+  .btn-dark{background:#171717;color:#fff}
+  .btn-light{background:#eee;color:#222}
+  .btn-danger{background:#fff0f0;color:#b42318}
+  .layout{
+    display:grid;
+    grid-template-columns:minmax(310px,420px) 1fr;
+    gap:24px;
+    align-items:start;
+  }
   .panel{
-    position:relative;
-  }
-
-  .preview-wrap{
-    padding:10px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    position:sticky;
+    top:15px;
+    max-height:calc(100vh - 30px);
     overflow:auto;
   }
-
-  .paper{
-    width:794px;
-    transform:scale(.75);
-    transform-origin:top left;
-    margin-bottom:-280px;
+  .panel h2{
+    margin:0 0 16px;
+    font-size:17px;
   }
-
-  .preview-actions{
-    position:sticky;
-    top:0;
-    justify-content:flex-end;
-    background:#ececec;
-    padding:8px;
+  .section-title{
+    margin:20px 0 10px;
+    padding-bottom:7px;
+    border-bottom:2px solid var(--gold-light);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    color:var(--gold-dark);
   }
-
-}
-
-/* =========================
-   PRINT
-========================= */
-
-@media print{
-
-  body{
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin:9px 0 5px;
+  }
+  input,textarea{
+    width:100%;
+    border:1px solid #cfcfcf;
+    border-radius:7px;
+    padding:9px 10px;
+    outline:none;
     background:#fff;
   }
-
-  .panel,
-  .preview-actions,
-  .print-note{
-    display:none!important;
+  input:focus,textarea:focus{border-color:var(--gold)}
+  textarea{min-height:70px;resize:vertical}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .items-editor{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
-
-  .app{
-    display:block;
+  .item-editor{
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:10px;
+    background:#fafafa;
   }
-
-  .preview-wrap{
-    padding:0;
-    display:block;
-    overflow:visible;
+  .item-top{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    align-items:center;
   }
-
+  .item-fields{
+    display:grid;
+    grid-template-columns:1.4fr .7fr .8fr .8fr;
+    gap:7px;
+    margin-top:7px;
+  }
+  .mini label{font-size:10px}
+  .mini input{padding:7px;font-size:12px}
+  .gst-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+    font-size:12px;
+  }
+  .gst-row input[type=checkbox]{width:auto}
+  .gst-rate{width:80px!important}
+  .quote-wrap{
+    display:flex;
+    justify-content:center;
+    overflow:auto;
+    padding:0 0 30px;
+  }
   .paper{
-    box-shadow:none;
-    margin:0;
-    width:210mm;
-    min-height:297mm;
-    padding:9mm 9mm 12mm;
+    width:794px;
+    min-width:794px;
+    min-height:1123px;
+    background:#fff;
+    box-shadow:0 8px 35px rgba(0,0,0,.14);
+    padding:45px 38px 50px;
+    position:relative;
   }
-
+  .paper:before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background:#222;
+  }
+  .quote-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+  }
+  .brand{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .brand img{
+    width:48px;
+    height:48px;
+    object-fit:contain;
+  }
+  .company-name{
+    font-size:16px;
+    font-weight:900;
+    color:var(--gold);
+    line-height:1.1;
+  }
+  .company-sub{
+    font-size:8px;
+    font-weight:900;
+    margin-top:3px;
+  }
+  .company-acn{
+    font-size:7px;
+    font-weight:700;
+    margin-top:4px;
+  }
+  .quote-heading{
+    text-align:right;
+  }
+  .quote-heading h2{
+    margin:0;
+    color:#eed19f;
+    font-size:52px;
+    line-height:.85;
+    font-weight:900;
+    letter-spacing:1px;
+  }
+  .quote-date{
+    font-size:10px;
+    font-weight:800;
+    margin-top:13px;
+  }
+  .to-box{
+    border:1.5px solid var(--gold);
+    border-radius:13px;
+    margin-top:38px;
+    padding:15px 18px;
+    min-height:118px;
+  }
+  .to-title{
+    color:var(--gold-dark);
+    font-size:10px;
+    font-weight:900;
+    margin-bottom:8px;
+  }
+  .to-grid{
+    display:grid;
+    grid-template-columns:95px 1fr;
+    gap:5px 0;
+    font-size:10px;
+    font-weight:700;
+  }
+  .to-grid .value{font-weight:600}
+  .items-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:31px;
+    font-size:10px;
+  }
+  .items-table th{
+    background:#d9822b;
+    color:#fff;
+    text-align:left;
+    padding:7px 10px;
+    font-size:10px;
+    font-weight:900;
+  }
+  .items-table th:not(:first-child),
+  .items-table td:not(:first-child){text-align:center}
+  .items-table td{
+    padding:7px 8px 5px;
+    font-weight:800;
+    border-bottom:5px solid var(--gold-light);
+    vertical-align:top;
+  }
+  .items-table .desc{text-align:left!important}
+  .item-note{
+    display:block;
+    font-size:6px;
+    font-weight:600;
+    margin-top:2px;
+    color:#333;
+  }
+  .totals{
+    margin-top:12px;
+    margin-left:auto;
+    width:315px;
+    font-size:10px;
+  }
+  .total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:5px 8px;
+    border-bottom:1px solid #ddd;
+    font-weight:700;
+  }
+  .total-row.grand{
+    background:#f2dfca;
+    border-bottom:0;
+    font-size:12px;
+    font-weight:900;
+    margin-top:4px;
+  }
   .footer{
-    break-inside:avoid;
+    position:absolute;
+    left:38px;
+    bottom:205px;
+    font-size:9px;
+    line-height:1.45;
   }
-
-  .quote-table{
-    break-inside:auto;
+  .footer strong{
+    color:var(--gold);
+    font-size:13px;
   }
-
-  .quote-table tr{
-    break-inside:avoid;
-    page-break-inside:avoid;
+  .empty-msg{color:#777;font-weight:600}
+  .optional-preview{font-style:italic}
+  .hint{
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.4;
+    margin-top:8px;
   }
-
-  @page{
-    size:A4 portrait;
-    margin:0;
+  @media(max-width:950px){
+    .layout{grid-template-columns:1fr}
+    .panel{position:static;max-height:none}
+    .quote-wrap{justify-content:flex-start}
   }
-
-}
-
+  @media(max-width:600px){
+    .app{padding:10px}
+    .toolbar{padding:12px}
+    .toolbar h1{width:100%;margin-bottom:3px}
+    .grid2,.item-fields{grid-template-columns:1fr 1fr}
+    .item-fields .wide{grid-column:1/-1}
+    .paper{
+      transform-origin:top left;
+      width:794px;
+      min-width:794px;
+    }
+  }
+  @media print{
+    body{background:#fff}
+    .no-print{display:none!important}
+    .app{padding:0}
+    .layout{display:block}
+    .quote-wrap{padding:0;display:block;overflow:visible}
+    .paper{
+      box-shadow:none;
+      margin:0;
+      width:210mm;
+      min-width:210mm;
+      min-height:297mm;
+      padding:12mm 10mm 13mm;
+    }
+    .footer{left:10mm;bottom:54mm}
+    @page{size:A4 portrait;margin:0}
+  }
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
-<!-- =====================================================
-     LEFT EDITOR
-===================================================== -->
-
-<aside class="panel">
-
-  <h1>TM Eleven Quote Generator</h1>
-
-  <div class="sub">
-    Enter the details → the quote updates live on the right.
+  <div class="toolbar no-print">
+    <h1>TM ELEVEN — Professional Quote Generator</h1>
+    <button class="btn btn-light" onclick="saveDraft()">Save Draft</button>
+    <button class="btn btn-light" onclick="loadDraft()">Load Draft</button>
+    <button class="btn btn-dark" onclick="clearDraft()">Clear Draft</button>
+    <button class="btn btn-primary" onclick="convertPDF()">Convert to PDF</button>
   </div>
 
+  <div class="layout">
+    <div class="panel no-print">
+      <h2>Quote Details</h2>
 
-  <!-- ================= QUOTE DETAILS ================= -->
+      <div class="section-title">Date</div>
+      <label for="quoteDate">Quote Date</label>
+      <input id="quoteDate" type="date">
 
-  <div class="card">
+      <div class="section-title">Customer</div>
+      <label>Name</label>
+      <input id="customerName" placeholder="Customer name">
 
-    <h2>Quote Details</h2>
+      <label>Email</label>
+      <input id="customerEmail" type="email" placeholder="customer@email.com">
 
-    <div class="grid2">
+      <label>Address</label>
+      <textarea id="customerAddress" placeholder="Customer / project address"></textarea>
 
-      <div>
-        <label>Date</label>
-        <input id="quoteDate" type="date">
+      <label>Project</label>
+      <input id="project" placeholder="Project description / project name">
+
+      <div class="section-title">Items</div>
+      <div id="itemsEditor" class="items-editor"></div>
+      <button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="addItem()">+ Add Item</button>
+
+      <div class="section-title">Optional Extra</div>
+      <label>Additional Charge Description</label>
+      <input id="extraDesc" placeholder="e.g. Waste removal / Delivery / Other">
+
+      <div class="grid2">
+        <div>
+          <label>Amount</label>
+          <input id="extraAmount" type="number" min="0" step="0.01" value="0">
+        </div>
+        <div>
+          <label>GST Rate %</label>
+          <input id="extraGstRate" type="number" min="0" step="0.01" value="10">
+        </div>
+      </div>
+      <div class="gst-row">
+        <input id="extraGst" type="checkbox">
+        <label for="extraGst" style="margin:0">Apply +GST</label>
       </div>
 
-      <div>
-        <label>Project</label>
-        <input id="project" placeholder="Project / job name">
+      <div class="hint">
+        Tick <b>+GST</b> for any item or the optional extra. GST rate can be changed individually.
+        The quote automatically calculates subtotal, GST and grand total.
       </div>
-
     </div>
 
-  </div>
-
-
-  <!-- ================= CUSTOMER ================= -->
-
-  <div class="card">
-
-    <h2>To / Customer</h2>
-
-    <div class="grid2">
-
-      <div class="full">
-        <label>Name</label>
-        <input id="custName" placeholder="Customer / company name">
-      </div>
-
-      <div class="full">
-        <label>Email</label>
-        <input id="custEmail" type="email" placeholder="customer@email.com">
-      </div>
-
-      <div class="full">
-        <label>Address</label>
-        <textarea id="custAddress" placeholder="Customer address"></textarea>
-      </div>
-
-      <div class="full">
-        <label>Mobile Number</label>
-        <input id="custPhone" type="tel" placeholder="+61 ...">
-      </div>
-
-    </div>
-
-
-    <!-- MORE DETAILS -->
-
-    <div style="margin-top:13px">
-
-      <div class="rowhead">
-
-        <h2 style="margin:0">
-          More Details
-        </h2>
-
-        <button
-          class="btn secondary small"
-          id="addDetail"
-          type="button">
-          + Add More Detail
-        </button>
-
-      </div>
-
-      <div
-        id="details">
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ================= ITEMS ================= -->
-
-  <div class="card">
-
-    <div class="rowhead">
-
-      <h2 style="margin:0">
-        Quote Items
-      </h2>
-
-      <button
-        class="btn small"
-        id="addItem"
-        type="button">
-        + Add item
-      </button>
-
-    </div>
-
-    <div id="items"></div>
-
-  </div>
-
-
-  <!-- ================= TOTAL ================= -->
-
-  <div class="card">
-
-    <h2>
-      Subtotal / GST
-    </h2>
-
-    <label class="toggle">
-
-      <input
-        id="showSubtotal"
-        type="checkbox">
-
-      Show subtotal section on quote
-
-    </label>
-
-
-    <label class="toggle">
-
-      <input
-        id="showGstSummary"
-        type="checkbox">
-
-      Show GST summary (10%)
-
-    </label>
-
-
-    <div
-      class="sub"
-      style="margin:8px 0 0;color:#999">
-
-      Each item can have its own
-      “+ GST” checkbox.
-
-    </div>
-
-  </div>
-
-
-  <!-- ================= DESIGN ================= -->
-
-  <div class="card">
-
-    <h2>
-      Design Options
-    </h2>
-
-    <div class="option-row">
-
-      <div>
-
-        <label>
-          Theme Colour
-        </label>
-
-        <select id="themeColor">
-
-          <option value="#d0832d">
-            TM Eleven Gold
-          </option>
-
-          <option value="#1d4ed8">
-            Professional Blue
-          </option>
-
-          <option value="#15803d">
-            Business Green
-          </option>
-
-          <option value="#111111">
-            Black
-          </option>
-
-          <option value="#b91c1c">
-            Red
-          </option>
-
-          <option value="#7c3aed">
-            Purple
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Font
-        </label>
-
-        <select id="fontChoice">
-
-          <option value="Inter">
-            Inter
-          </option>
-
-          <option value="Montserrat">
-            Montserrat
-          </option>
-
-          <option value="Poppins">
-            Poppins
-          </option>
-
-          <option value="Roboto">
-            Roboto
-          </option>
-
-          <option value="Roboto Condensed">
-            Roboto Condensed
-          </option>
-
-        </select>
-
-      </div>
-
-    </div>
-
-
-    <div
-      class="color-preview"
-      id="colorPreview">
-    </div>
-
-  </div>
-
-
-  <!-- ================= ACTIONS ================= -->
-
-  <div class="card">
-
-    <h2>
-      Actions
-    </h2>
-
-    <div
-      style="display:flex;gap:8px;flex-wrap:wrap">
-
-      <button
-        class="btn"
-        id="printBtn"
-        type="button">
-        Print / Save PDF
-      </button>
-
-      <button
-        class="btn secondary"
-        id="resetBtn"
-        type="button">
-        Reset
-      </button>
-
-    </div>
-
-  </div>
-
-</aside>
-
-
-<!-- =====================================================
-     PREVIEW
-===================================================== -->
-
-<main class="preview-wrap">
-
-  <div class="preview-actions">
-
-    <button
-      class="btn"
-      id="printBtn2"
-      type="button">
-      Print / PDF
-    </button>
-
-  </div>
-
-
-  <section
-    class="paper"
-    id="paper">
-
-
-    <!-- ================= HEADER ================= -->
-
-    <div class="header">
-
-      <img
-        class="logo"
-        id="logo"
-        src="logo.png"
-        alt="TM Eleven Pty Ltd">
-
-
-      <div class="quote-title">
-
-        <div class="big">
-          QUOTE
+    <div class="quote-wrap">
+      <div class="paper" id="quotePaper">
+        <div class="quote-header">
+          <div class="brand">
+            <img src="logo.png" alt="TM Eleven Logo" onerror="this.style.display='none'">
+            <div>
+              <div class="company-name">TM ELEVEN PTY LTD</div>
+              <div class="company-sub">CONCRETING | LANDSCAPING | FENCING</div>
+              <div class="company-acn">ACN : 692 149 045</div>
+            </div>
+          </div>
+          <div class="quote-heading">
+            <h2>QUOTE</h2>
+            <div class="quote-date">Date : <span id="previewDate"></span></div>
+          </div>
         </div>
 
-        <div
-          class="date"
-          id="outDate">
+        <div class="to-box">
+          <div class="to-title">To</div>
+          <div class="to-grid">
+            <div>Name</div><div class="value" id="pName"></div>
+            <div>Email</div><div class="value" id="pEmail"></div>
+            <div>Project</div><div class="value" id="pProject"></div>
+            <div>Address</div><div class="value" id="pAddress"></div>
+          </div>
         </div>
 
-      </div>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th style="width:37%">Description</th>
+              <th style="width:14%">Unit</th>
+              <th style="width:15%">Unit Price</th>
+              <th style="width:13%">Quantity</th>
+              <th style="width:21%">Item Total</th>
+            </tr>
+          </thead>
+          <tbody id="previewItems">
+            <tr><td colspan="5" class="empty-msg">No items added</td></tr>
+          </tbody>
+        </table>
 
+        <div class="totals">
+          <div class="total-row"><span>Subtotal</span><span id="pSubtotal">$0.00</span></div>
+          <div class="total-row"><span>GST</span><span id="pGst">$0.00</span></div>
+          <div class="total-row grand"><span>TOTAL</span><span id="pTotal">$0.00</span></div>
+        </div>
+
+        <div class="footer">
+          <strong>TM ELEVEN PTY LTD</strong><br>
+          <b>CONCRETING | LANDSCAPING | FENCING</b><br>
+          +61 451 160 058<br>
+          tmeleven111@gmail.com<br>
+          tmeleven.com.au
+        </div>
+      </div>
     </div>
-
-
-    <!-- ================= CUSTOMER BOX ================= -->
-
-    <div class="to-box">
-
-      <div class="to-title">
-        To
-      </div>
-
-      <div id="customerOut">
-      </div>
-
-    </div>
-
-
-    <!-- ================= TABLE ================= -->
-
-    <table class="quote-table">
-
-      <colgroup>
-
-        <col style="width:36%">
-        <col style="width:16%">
-        <col style="width:17%">
-        <col style="width:16%">
-        <col style="width:15%">
-
-      </colgroup>
-
-
-      <thead>
-
-        <tr>
-
-          <th>
-            Description
-          </th>
-
-          <th>
-            Unit
-          </th>
-
-          <th>
-            Unit Price
-          </th>
-
-          <th>
-            Quantity
-          </th>
-
-          <th>
-            Item Total
-          </th>
-
-        </tr>
-
-      </thead>
-
-
-      <tbody id="quoteBody">
-      </tbody>
-
-    </table>
-
-
-    <!-- ================= SUMMARY ================= -->
-
-    <div
-      class="summary"
-      id="summary">
-
-      <div class="sumrow">
-
-        <span>
-          Subtotal
-        </span>
-
-        <span id="sumSubtotal">
-        </span>
-
-      </div>
-
-
-      <div
-        class="sumrow"
-        id="gstRow">
-
-        <span>
-          GST (10%)
-        </span>
-
-        <span id="sumGst">
-        </span>
-
-      </div>
-
-
-      <div class="sumrow total">
-
-        <span>
-          Total
-        </span>
-
-        <span id="sumTotal">
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <!-- ================= FOOTER ================= -->
-
-    <div class="footer">
-
-      <div class="name">
-        TM ELEVEN PTY LTD
-      </div>
-
-      <div class="services">
-        CONCRETING | LANDSCAPING | FENCING
-      </div>
-
-      <div class="contact">
-
-        +61 451 160 058<br>
-
-        tmeleven11@gmail.com<br>
-
-        tmeleven.com.au
-
-      </div>
-
-    </div>
-
-
-  </section>
-
-</main>
-
+  </div>
 </div>
 
-
 <script>
+const defaultItems = [
+  {desc:"", note:"", unit:"", price:"", qty:"", gst:false, gstRate:10},
+  {desc:"", note:"", unit:"", price:"", qty:"", gst:false, gstRate:10},
+  {desc:"", note:"", unit:"", price:"", qty:"", gst:false, gstRate:10}
+];
 
-/* =====================================================
-   BASIC HELPERS
-===================================================== */
+let items = structuredClone(defaultItems);
 
-const $ = id => document.getElementById(id);
-
-
-const money = n =>
-  '$' +
-  Number(n || 0).toLocaleString(
-    'en-AU',
-    {
-      minimumFractionDigits:0,
-      maximumFractionDigits:2
-    }
-  );
-
-
-function esc(v){
-
-  return String(v ?? '')
-    .replace(
-      /[&<>"']/g,
-      m => ({
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#039;'
-      }[m])
-    );
-
+function money(n){
+  return new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:2}).format(Number(n)||0);
 }
-
-
-/* =====================================================
-   DATE
-===================================================== */
-
-const today = new Date();
-
-$('quoteDate').value =
-  new Date(
-    today.getTime() -
-    today.getTimezoneOffset() * 60000
-  )
-  .toISOString()
-  .slice(0,10);
-
-
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+function todayISO(){
+  const d=new Date();
+  const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
+  return local.toISOString().slice(0,10);
+}
 function formatDate(v){
-
-  if(!v) return '';
-
-  const [y,m,d] = v.split('-');
-
-  return `Date : ${d} ${
-    new Date(y,m-1,d).toLocaleString(
-      'en-AU',
-      {month:'long'}
-    )
-  } ${y}`;
-
+  if(!v)return '';
+  const d=new Date(v+'T00:00:00');
+  return d.toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'});
 }
-
-
-/* =====================================================
-   COUNTERS
-===================================================== */
-
-let detailCount = 0;
-let itemCount = 0;
-
-
-/* =====================================================
-   MORE DETAILS
-===================================================== */
-
-function addDetail(
-  label='',
-  value=''
-){
-
-  detailCount++;
-
-  const id = detailCount;
-
-  const el =
-    document.createElement('div');
-
-  el.className = 'detail-row';
-
-  el.dataset.id = id;
-
-
-  el.innerHTML = `
-
-    <input
-      class="detail-label"
-      value="${esc(label)}"
-      placeholder="Label">
-
-
-    <input
-      class="detail-value"
-      value="${esc(value)}"
-      placeholder="Value">
-
-
-    <button
-      class="btn danger small remove-detail"
-      type="button">
-      ×
-    </button>
-
-  `;
-
-
-  el.querySelector(
-    '.remove-detail'
-  ).onclick = () => {
-
-    el.remove();
-
-    render();
-
-  };
-
-
-  el.querySelectorAll('input')
-    .forEach(input => {
-
-      input.addEventListener(
-        'input',
-        render
-      );
-
-    });
-
-
-  $('details').appendChild(el);
-
-  render();
-
+function addItem(){
+  items.push({desc:"",note:"",unit:"",price:"",qty:"",gst:false,gstRate:10});
+  renderEditor(); updatePreview();
 }
-
-
-/* =====================================================
-   GET MORE DETAILS
-===================================================== */
-
-function getDetails(){
-
-  return [
-    ...document.querySelectorAll(
-      '.detail-row'
-    )
-  ]
-  .map(el => ({
-
-    label:
-      el.querySelector(
-        '.detail-label'
-      ).value.trim(),
-
-    value:
-      el.querySelector(
-        '.detail-value'
-      ).value.trim()
-
-  }))
-  .filter(x => x.value);
-
+function removeItem(i){
+  items.splice(i,1);
+  if(!items.length) items.push({desc:"",note:"",unit:"",price:"",qty:"",gst:false,gstRate:10});
+  renderEditor(); updatePreview();
 }
-
-
-/* =====================================================
-   ITEMS
-===================================================== */
-
-function addItem(data={}){
-
-  itemCount++;
-
-  const id = itemCount;
-
-  const el =
-    document.createElement('div');
-
-  el.className =
-    'item-editor';
-
-  el.dataset.id = id;
-
-
-  el.innerHTML = `
-
-    <div class="item-top">
-
-      <span class="item-num">
-        Item ${id}
-      </span>
-
-      <button
-        class="btn danger small remove-item"
-        type="button">
-        Remove
-      </button>
-
+function updateItem(i,key,value){
+  if(key==='gst') items[i][key]=value;
+  else if(key==='price'||key==='qty'||key==='gstRate') items[i][key]=value;
+  else items[i][key]=value;
+  updatePreview();
+}
+function renderEditor(){
+  const box=document.getElementById('itemsEditor');
+  box.innerHTML=items.map((it,i)=>`
+    <div class="item-editor">
+      <div class="item-top">
+        <b style="font-size:12px">Item ${i+1}</b>
+        <button class="btn btn-danger" style="padding:5px 8px" onclick="removeItem(${i})">Remove</button>
+      </div>
+      <label>Description</label>
+      <input value="${esc(it.desc)}" placeholder="e.g. Fencing" oninput="updateItem(${i},'desc',this.value)">
+      <label>Small note (optional)</label>
+      <input value="${esc(it.note)}" placeholder="e.g. Gate charges will be applied for extra posts" oninput="updateItem(${i},'note',this.value)">
+      <div class="item-fields">
+        <div class="mini wide"><label>Unit</label><input value="${esc(it.unit)}" placeholder="1m / One Gate" oninput="updateItem(${i},'unit',this.value)"></div>
+        <div class="mini"><label>Unit Price</label><input type="number" min="0" step="0.01" value="${esc(it.price)}" placeholder="0" oninput="updateItem(${i},'price',this.value)"></div>
+        <div class="mini"><label>Quantity</label><input type="number" min="0" step="0.01" value="${esc(it.qty)}" placeholder="0" oninput="updateItem(${i},'qty',this.value)"></div>
+      </div>
+      <div class="gst-row">
+        <input type="checkbox" ${it.gst?'checked':''} onchange="updateItem(${i},'gst',this.checked)">
+        <span>+GST</span>
+        <input class="gst-rate" type="number" min="0" step="0.01" value="${it.gstRate ?? 10}" title="GST rate %" oninput="updateItem(${i},'gstRate',this.value)">
+        <span>%</span>
+      </div>
     </div>
-
-
-    <div class="grid2">
-
-      <div>
-
-        <label>
-          Description
-        </label>
-
-        <input
-          class="i-desc"
-          value="${esc(data.desc || '')}"
-          placeholder="e.g. Fencing">
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Unit
-        </label>
-
-        <input
-          class="i-unit"
-          value="${esc(data.unit || '')}"
-          placeholder="1m / One Gate">
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Unit Price
-        </label>
-
-        <input
-          class="i-price"
-          type="number"
-          min="0"
-          step="0.01"
-          value="${data.price ?? ''}"
-          placeholder="0">
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Quantity
-        </label>
-
-        <input
-          class="i-qty"
-          type="number"
-          min="0"
-          step="0.01"
-          value="${data.qty ?? ''}"
-          placeholder="0">
-
-      </div>
-
-
-      <div class="full">
-
-        <label>
-          Small note under description
-        </label>
-
-        <input
-          class="i-note"
-          value="${esc(data.note || '')}"
-          placeholder="e.g. Including all materials">
-
-      </div>
-
-    </div>
-
-
-    <label class="gstline">
-
-      <input
-        class="i-gst"
-        type="checkbox"
-        ${data.gst ? 'checked' : ''}>
-
-      + GST for this item
-
-    </label>
-
-  `;
-
-
-  $('items').appendChild(el);
-
-
-  el.querySelector(
-    '.remove-item'
-  ).onclick = () => {
-
-    el.remove();
-
-    renumber();
-
-    render();
-
-  };
-
-
-  el.querySelectorAll('input')
-    .forEach(input => {
-
-      input.addEventListener(
-        'input',
-        render
-      );
-
-    });
-
-
-  render();
-
+  `).join('');
 }
-
-
-/* =====================================================
-   RENUMBER
-===================================================== */
-
-function renumber(){
-
-  document
-    .querySelectorAll(
-      '.item-editor'
-    )
-    .forEach((e,i) => {
-
-      e.querySelector(
-        '.item-num'
-      ).textContent =
-        'Item ' + (i + 1);
-
-    });
-
+function getExtra(){
+  const amount=Number(document.getElementById('extraAmount').value)||0;
+  const gst=document.getElementById('extraGst').checked;
+  const rate=Number(document.getElementById('extraGstRate').value)||0;
+  return {desc:document.getElementById('extraDesc').value.trim(),amount,gst,rate};
 }
+function updatePreview(){
+  document.getElementById('previewDate').textContent=formatDate(document.getElementById('quoteDate').value);
+  document.getElementById('pName').textContent=document.getElementById('customerName').value;
+  document.getElementById('pEmail').textContent=document.getElementById('customerEmail').value;
+  document.getElementById('pProject').textContent=document.getElementById('project').value;
+  document.getElementById('pAddress').textContent=document.getElementById('customerAddress').value;
 
+  const tbody=document.getElementById('previewItems');
+  let subtotal=0, gstTotal=0;
+  const rows=[];
 
-/* =====================================================
-   GET ITEMS
-===================================================== */
-
-function getItems(){
-
-  return [
-    ...document.querySelectorAll(
-      '.item-editor'
-    )
-  ]
-  .map(e => {
-
-    const price =
-      Number(
-        e.querySelector(
-          '.i-price'
-        ).value
-      ) || 0;
-
-
-    const qty =
-      Number(
-        e.querySelector(
-          '.i-qty'
-        ).value
-      ) || 0;
-
-
-    const gst =
-      e.querySelector(
-        '.i-gst'
-      ).checked;
-
-
-    const base =
-      price * qty;
-
-
-    const gstAmt =
-      gst
-        ? base * 0.10
-        : 0;
-
-
-    return {
-
-      desc:
-        e.querySelector(
-          '.i-desc'
-        ).value.trim(),
-
-      unit:
-        e.querySelector(
-          '.i-unit'
-        ).value.trim(),
-
-      price,
-      qty,
-
-      note:
-        e.querySelector(
-          '.i-note'
-        ).value.trim(),
-
-      gst,
-      base,
-      gstAmt,
-
-      total:
-        base + gstAmt
-
-    };
-
+  items.forEach(it=>{
+    const price=Number(it.price)||0, qty=Number(it.qty)||0;
+    const base=price*qty;
+    if(!it.desc && !it.unit && !it.price && !it.qty) return;
+    subtotal+=base;
+    const gstAmount=it.gst ? base*(Number(it.gstRate)||0)/100 : 0;
+    gstTotal+=gstAmount;
+    rows.push(`
+      <tr>
+        <td class="desc">${esc(it.desc || '—')} ${it.note?`<span class="item-note">${esc(it.note)}</span>`:''}</td>
+        <td>${esc(it.unit || '—')}</td>
+        <td>${money(price)}</td>
+        <td>${esc(it.qty || '—')}</td>
+        <td>${money(base)}${it.gst?' + GST':''}</td>
+      </tr>`);
   });
 
+  const ex=getExtra();
+  if(ex.amount || ex.desc){
+    subtotal+=ex.amount;
+    const eg=ex.gst ? ex.amount*ex.rate/100 : 0;
+    gstTotal+=eg;
+    rows.push(`
+      <tr>
+        <td class="desc">${esc(ex.desc || 'Additional Charge')}<span class="item-note optional-preview">Optional extra</span></td>
+        <td>—</td>
+        <td>${money(ex.amount)}</td>
+        <td>1</td>
+        <td>${money(ex.amount)}${ex.gst?' + GST':''}</td>
+      </tr>`);
+  }
+
+  tbody.innerHTML=rows.length?rows.join(''):`<tr><td colspan="5" class="empty-msg">No items added</td></tr>`;
+  document.getElementById('pSubtotal').textContent=money(subtotal);
+  document.getElementById('pGst').textContent=money(gstTotal);
+  document.getElementById('pTotal').textContent=money(subtotal+gstTotal);
 }
-
-
-/* =====================================================
-   RENDER CUSTOMER
-===================================================== */
-
-function renderCustomer(){
-
-  const details =
-    getDetails();
-
-
-  const fields = [
-
-    [
-      'Name',
-      $('custName').value
-    ],
-
-    [
-      'Email',
-      $('custEmail').value
-    ],
-
-    [
-      'Mobile',
-      $('custPhone').value
-    ],
-
-    [
-      'Project',
-      $('project').value
-    ],
-
-    ...details.map(
-      x => [
-        x.label || 'Detail',
-        x.value
-      ]
-    ),
-
-    [
-      'Address',
-      $('custAddress').value
-    ]
-
-  ];
-
-
-  $('customerOut').innerHTML =
-
-    fields
-      .filter(x => x[1])
-      .map(
-        x => `
-
-          <div class="customer-line">
-
-            <span class="label">
-              ${esc(x[0])}
-            </span>
-
-            <span class="colon">
-              :
-            </span>
-
-            <span class="value">
-              ${esc(x[1]).replace(
-                /\n/g,
-                '<br>'
-              )}
-            </span>
-
-          </div>
-
-        `
-      )
-      .join('')
-
-      ||
-
-      `
-
-        <div class="customer-line">
-
-          <span class="label">
-            Name
-          </span>
-
-          <span class="colon">
-            :
-          </span>
-
-          <span class="value">
-          </span>
-
-        </div>
-
-      `;
-
-}
-
-
-/* =====================================================
-   RENDER ITEMS
-===================================================== */
-
-function renderItems(){
-
-  const items =
-    getItems();
-
-
-  $('quoteBody').innerHTML =
-
-    items.length
-
-      ?
-
-      items
-        .map(i => `
-
-          <tr>
-
-            <td>
-
-              <div class="desc-main">
-
-                ${esc(i.desc)}
-
-              </div>
-
-
-              ${
-                i.note
-
-                ?
-
-                `<div class="desc-note">
-                  ${esc(i.note)}
-                </div>`
-
-                :
-
-                ''
-              }
-
-            </td>
-
-
-            <td>
-              ${esc(i.unit)}
-            </td>
-
-
-            <td>
-              ${money(i.price)}
-            </td>
-
-
-            <td>
-              ${i.qty || ''}
-            </td>
-
-
-            <td class="total-cell">
-
-              ${money(i.base)}
-
-              ${
-                i.gst
-                ? ' + GST'
-                : ''
-              }
-
-            </td>
-
-          </tr>
-
-        `)
-        .join('')
-
-      :
-
-      `
-
-        <tr>
-
-          <td
-            colspan="5"
-            class="empty">
-
-            Add quote items
-            from the left panel.
-
-          </td>
-
-        </tr>
-
-      `;
-
-}
-
-
-/* =====================================================
-   RENDER TOTAL
-===================================================== */
-
-function renderTotals(){
-
-  const items =
-    getItems();
-
-
-  const subtotal =
-    items.reduce(
-      (a,i) => a + i.base,
-      0
-    );
-
-
-  const gst =
-    items.reduce(
-      (a,i) => a + i.gstAmt,
-      0
-    );
-
-
-  const total =
-    subtotal + gst;
-
-
-  const show =
-    $('showSubtotal').checked;
-
-
-  $('summary')
-    .classList
-    .toggle(
-      'show',
-      show
-    );
-
-
-  $('sumSubtotal')
-    .textContent =
-      money(subtotal);
-
-
-  $('sumGst')
-    .textContent =
-      money(gst);
-
-
-  $('sumTotal')
-    .textContent =
-      money(total);
-
-
-  $('gstRow').style.display =
-    $('showGstSummary').checked
-      ? 'flex'
-      : 'none';
-
-}
-
-
-/* =====================================================
-   MAIN RENDER
-===================================================== */
-
-function render(){
-
-  $('outDate')
-    .textContent =
-      formatDate(
-        $('quoteDate').value
-      );
-
-
-  renderCustomer();
-
-  renderItems();
-
-  renderTotals();
-
-}
-
-
-/* =====================================================
-   THEME COLOUR
-===================================================== */
-
-function applyTheme(){
-
-  const color =
-    $('themeColor').value;
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      '--gold',
-      color
-    );
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      '--line',
-      color
-    );
-
-
-  $('colorPreview')
-    .style
-    .background =
-      color;
-
-}
-
-
-/* =====================================================
-   FONT
-===================================================== */
-
-function applyFont(){
-
-  const font =
-    $('fontChoice').value;
-
-
-  document.body.style
-    .fontFamily =
-      `"${font}", Arial, sans-serif`;
-
-}
-
-
-/* =====================================================
-   EVENTS
-===================================================== */
-
-[
-  'quoteDate',
-  'project',
-  'custName',
-  'custEmail',
-  'custAddress',
-  'custPhone',
-  'showSubtotal',
-  'showGstSummary'
-]
-.forEach(id => {
-
-  $(id).addEventListener(
-    'input',
-    render
-  );
-
-});
-
-
-$('addDetail')
-  .onclick = () => {
-
-    addDetail(
-      'Reference',
-      ''
-    );
-
+function getState(){
+  return {
+    date:document.getElementById('quoteDate').value,
+    name:document.getElementById('customerName').value,
+    email:document.getElementById('customerEmail').value,
+    address:document.getElementById('customerAddress').value,
+    project:document.getElementById('project').value,
+    items,
+    extraDesc:document.getElementById('extraDesc').value,
+    extraAmount:document.getElementById('extraAmount').value,
+    extraGst:document.getElementById('extraGst').checked,
+    extraGstRate:document.getElementById('extraGstRate').value
   };
-
-
-$('addItem')
-  .onclick = () => {
-
-    addItem();
-
-  };
-
-
-$('themeColor')
-  .addEventListener(
-    'change',
-    () => {
-
-      applyTheme();
-
-      render();
-
-    }
-  );
-
-
-$('fontChoice')
-  .addEventListener(
-    'change',
-    () => {
-
-      applyFont();
-
-      render();
-
-    }
-  );
-
-
-$('printBtn')
-  .onclick =
-    () => window.print();
-
-
-$('printBtn2')
-  .onclick =
-    () => window.print();
-
-
-/* =====================================================
-   RESET
-===================================================== */
-
-$('resetBtn')
-  .onclick = () => {
-
-    if(
-      !confirm(
-        'Reset this quote?'
-      )
-    ){
-      return;
-    }
-
-
-    $('custName').value = '';
-
-    $('custEmail').value = '';
-
-    $('custAddress').value = '';
-
-    $('custPhone').value = '';
-
-    $('project').value = '';
-
-
-    $('details').innerHTML = '';
-
-    $('items').innerHTML = '';
-
-
-    detailCount = 0;
-
-    itemCount = 0;
-
-
-    $('showSubtotal').checked =
-      false;
-
-
-    $('showGstSummary').checked =
-      false;
-
-
-    $('themeColor').value =
-      '#d0832d';
-
-
-    $('fontChoice').value =
-      'Inter';
-
-
-    applyTheme();
-
-    applyFont();
-
-
-    const now =
-      new Date();
-
-
-    $('quoteDate').value =
-      new Date(
-        now.getTime() -
-        now.getTimezoneOffset() *
-        60000
-      )
-      .toISOString()
-      .slice(0,10);
-
-
-    addItem({
-
-      desc:'Fencing',
-
-      unit:'1m',
-
-      price:120,
-
-      qty:160,
-
-      note:
-        'Extra charges will be applied for extra slippers',
-
-      gst:true
-
-    });
-
-
-    addItem({
-
-      desc:'Gates',
-
-      unit:'One Gate',
-
-      price:750,
-
-      qty:8,
-
-      note:'with standard lock',
-
-      gst:true
-
-    });
-
-
-    addItem({
-
-      desc:'Decking',
-
-      unit:'One Step',
-
-      price:3500,
-
-      qty:5,
-
-      note:'Including all materials',
-
-      gst:true
-
-    });
-
-
-    render();
-
-  };
-
-
-/* =====================================================
-   START DEFAULT DATA
-===================================================== */
-
-addItem({
-
-  desc:'Fencing',
-
-  unit:'1m',
-
-  price:120,
-
-  qty:160,
-
-  note:
-    'Extra charges will be applied for extra slippers',
-
-  gst:true
-
+}
+function setState(s){
+  document.getElementById('quoteDate').value=s.date||todayISO();
+  document.getElementById('customerName').value=s.name||'';
+  document.getElementById('customerEmail').value=s.email||'';
+  document.getElementById('customerAddress').value=s.address||'';
+  document.getElementById('project').value=s.project||'';
+  items=s.items||structuredClone(defaultItems);
+  document.getElementById('extraDesc').value=s.extraDesc||'';
+  document.getElementById('extraAmount').value=s.extraAmount||0;
+  document.getElementById('extraGst').checked=!!s.extraGst;
+  document.getElementById('extraGstRate').value=s.extraGstRate??10;
+  renderEditor();updatePreview();
+}
+function saveDraft(){
+  localStorage.setItem('tmElevenQuoteDraft',JSON.stringify(getState()));
+  alert('Draft saved on this device.');
+}
+function loadDraft(){
+  const raw=localStorage.getItem('tmElevenQuoteDraft');
+  if(!raw){alert('No saved draft found.');return}
+  try{setState(JSON.parse(raw));alert('Draft loaded.')}catch(e){alert('Could not load the draft.')}
+}
+function clearDraft(){
+  if(confirm('Clear the saved draft?')){
+    localStorage.removeItem('tmElevenQuoteDraft');
+    alert('Saved draft cleared.');
+  }
+}
+function convertPDF(){
+  updatePreview();
+  window.print();
+}
+document.querySelectorAll('input,textarea').forEach(el=>{
+  el.addEventListener('input',updatePreview);
+  el.addEventListener('change',updatePreview);
 });
 
-
-addItem({
-
-  desc:'Gates',
-
-  unit:'One Gate',
-
-  price:750,
-
-  qty:8,
-
-  note:'with standard lock',
-
-  gst:true
-
-});
-
-
-addItem({
-
-  desc:'Decking',
-
-  unit:'One Step',
-
-  price:3500,
-
-  qty:5,
-
-  note:'Including all materials',
-
-  gst:true
-
-});
-
-
-applyTheme();
-
-applyFont();
-
-render();
-
+document.getElementById('quoteDate').value=todayISO();
+renderEditor();
+updatePreview();
 </script>
-
 </body>
 </html>
