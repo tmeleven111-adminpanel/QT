@@ -6,7 +6,16 @@
 
 <title>TM Eleven Letter Generator</title>
 
+<!-- PDF Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
+
+/* =========================================================
+   DARK EDITOR UI
+========================================================= */
+
 :root {
     --bg: #0b1017;
     --panel: #121a24;
@@ -39,7 +48,7 @@ body {
     top: 0;
     z-index: 100;
     padding: 20px 30px;
-    background: rgba(11,16,23,.96);
+    background: rgba(11,16,23,.97);
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(10px);
 }
@@ -56,15 +65,16 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
     padding: 25px;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(400px, 1fr) minmax(600px, 1fr);
     gap: 22px;
+    align-items: start;
 }
 
 .panel {
@@ -76,7 +86,7 @@ body {
 }
 
 .panel h2 {
-    margin-top: 0;
+    margin: 0 0 18px;
     color: var(--gold-light);
     font-size: 17px;
 }
@@ -114,6 +124,7 @@ textarea {
     padding: 11px 12px;
     font-size: 14px;
     outline: none;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 input:focus,
@@ -123,21 +134,9 @@ textarea:focus {
 }
 
 textarea {
-    min-height: 350px;
+    min-height: 400px;
     resize: vertical;
-    line-height: 1.6;
-}
-
-.voice-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-}
-
-.voice-status {
-    color: var(--muted);
-    font-size: 12px;
+    line-height: 1.7;
 }
 
 button {
@@ -147,6 +146,11 @@ button {
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
 }
 
 .btn {
@@ -166,8 +170,22 @@ button {
     background: #692b2b;
 }
 
+.voice-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.voice-status {
+    color: var(--muted);
+    font-size: 12px;
+}
+
 .recording {
     background: var(--red) !important;
+    color: white !important;
     animation: pulse 1s infinite;
 }
 
@@ -179,114 +197,205 @@ button {
 
 .preview-wrap {
     overflow: auto;
+    padding-bottom: 10px;
 }
 
-/* =================================================
-   LETTER PDF / PREVIEW
-================================================= */
+
+/* =========================================================
+   LETTER PREVIEW / PDF
+========================================================= */
 
 #letterPreview {
     width: 210mm;
     min-height: 297mm;
-    background: white;
+    background: #FFFFFF !important;
+    background-color: rgb(255, 255, 255) !important;
+    background-image: none !important;
     color: #1e2933;
     padding: 16mm 15mm;
     position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+
     font-family: Arial, Helvetica, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
 }
+
+
+/* =========================================================
+   LETTER HEADER
+========================================================= */
 
 .letter-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 20px;
     border-bottom: 2px solid #c58a2a;
     padding-bottom: 15px;
 }
 
 .company-area {
     display: flex;
-    gap: 12px;
-    align-items: flex-start;
+    gap: 14px;
+    align-items: center;
 }
 
 .logo {
     width: 65px;
-    height: auto;
+    max-height: 75px;
     object-fit: contain;
+    display: block;
 }
 
 .company-name {
-    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 900;
-    color: #bd8027;
-    margin-bottom: 5px;
+    color: #a96e1d;
+    margin-bottom: 7px;
+    letter-spacing: 1px;
+    white-space: nowrap;
 }
 
 .company-services {
-    font-size: 9px;
-    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    line-height: 1.5;
+    font-weight: 700;
+    color: #26323c;
+    letter-spacing: .3px;
+    word-spacing: 1px;
+    white-space: nowrap;
 }
 
 .company-acn {
-    margin-top: 5px;
-    font-size: 8px;
+    margin-top: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #52606c;
+    letter-spacing: .2px;
 }
 
 .letter-title-area {
     text-align: right;
+    flex-shrink: 0;
 }
 
 .letter-title {
-    color: #d3ae73;
-    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #bd8b48;
+    font-size: 38px;
+    line-height: 1;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
 }
 
 .date {
-    margin-top: 8px;
-    font-size: 11px;
-    font-weight: bold;
+    margin-top: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 700;
+    color: #27323c;
 }
+
+
+/* =========================================================
+   LETTER CONTENT
+========================================================= */
 
 .recipient {
     margin-top: 30px;
-    line-height: 1.6;
-    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    letter-spacing: 0;
+    word-spacing: 0;
+    color: #27323c;
+}
+
+.recipient strong {
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .subject {
-    margin-top: 25px;
-    font-weight: bold;
-    font-size: 13px;
+    margin-top: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: .3px;
+    word-spacing: 0;
+    color: #27323c;
     text-transform: uppercase;
 }
 
 .letter-body {
-    margin-top: 22px;
-    font-size: 12px;
-    line-height: 1.8;
+    margin-top: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.85;
+    letter-spacing: 0;
+    word-spacing: 0;
+    color: #27323c;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .signature {
-    margin-top: 35px;
-    font-size: 12px;
-    line-height: 1.7;
+    margin-top: 38px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.85;
+    letter-spacing: 0;
+    word-spacing: 0;
+    color: #27323c;
 }
+
+.signature strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .footer {
     position: absolute;
     left: 15mm;
-    bottom: 14mm;
     right: 15mm;
-    border-top: 1px solid #ddd;
-    padding-top: 8px;
+    bottom: 14mm;
+    border-top: 1px solid #dedede;
+    padding-top: 9px;
+
     display: flex;
     justify-content: space-between;
+    gap: 15px;
+
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 9px;
-    color: #555;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: #5a6570;
 }
+
+.footer-right {
+    text-align: right;
+}
+
+
+/* =========================================================
+   FIXED ACTION BUTTONS
+========================================================= */
 
 .actions {
     position: fixed;
@@ -294,26 +403,41 @@ button {
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 12px;
+
+    padding: 12px 20px;
+
     display: flex;
     justify-content: center;
     gap: 10px;
+
     background: rgba(10,15,22,.97);
     border-top: 1px solid var(--border);
     backdrop-filter: blur(12px);
 }
 
 .actions button {
-    min-width: 140px;
+    min-width: 150px;
 }
 
-@media (max-width: 1000px) {
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1250px) {
+
     .grid {
         grid-template-columns: 1fr;
     }
+
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+
+    .header {
+        padding: 16px;
+    }
+
     .container {
         padding: 10px;
     }
@@ -326,139 +450,254 @@ button {
         grid-column: span 1;
     }
 
+    .panel {
+        padding: 14px;
+    }
+
+    .actions {
+        padding: 10px;
+    }
+
     .actions button {
         min-width: auto;
         flex: 1;
         font-size: 11px;
         padding: 12px 5px;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
 <div class="header">
+
     <h1>TM ELEVEN — Letter Generator</h1>
-    <p>Create professional letters with voice typing.</p>
+
+    <p>
+        Create professional letters with live preview and voice typing.
+    </p>
+
 </div>
+
 
 <div class="container">
 
     <div class="grid">
 
-        <!-- EDITOR -->
+
+        <!-- =================================================
+             LEFT SIDE — EDITOR
+        ================================================== -->
+
         <div>
 
+
+            <!-- LETTER DETAILS -->
+
             <div class="panel">
+
                 <h2>Letter Details</h2>
 
                 <div class="form-grid">
 
                     <div class="form-group">
+
                         <label>Recipient Name</label>
-                        <input type="text" id="recipientName"
-                               placeholder="Makray Homes">
+
+                        <input
+                            type="text"
+                            id="recipientName"
+                            placeholder="Recipient Name"
+                        >
+
                     </div>
+
 
                     <div class="form-group">
+
                         <label>Date</label>
-                        <input type="date" id="letterDate">
+
+                        <input
+                            type="date"
+                            id="letterDate"
+                        >
+
                     </div>
 
+
                     <div class="form-group full">
+
                         <label>Recipient Address</label>
-                        <input type="text" id="recipientAddress"
-                               placeholder="Address">
+
+                        <input
+                            type="text"
+                            id="recipientAddress"
+                            placeholder="Recipient Address"
+                        >
+
                     </div>
 
+
                     <div class="form-group full">
+
                         <label>Subject</label>
-                        <input type="text" id="letterSubject"
-                               placeholder="Letter subject">
+
+                        <input
+                            type="text"
+                            id="letterSubject"
+                            placeholder="Letter Subject"
+                        >
+
                     </div>
 
                 </div>
+
             </div>
 
 
+
+            <!-- LETTER BODY -->
+
             <div class="panel">
+
                 <h2>Letter Body</h2>
+
 
                 <div class="voice-bar">
 
-                    <button id="voiceBtn"
-                            class="btn btn-gold"
-                            onclick="toggleVoice()">
+                    <button
+                        id="voiceBtn"
+                        class="btn btn-gold"
+                        type="button"
+                    >
                         🎤 Start Voice Typing
                     </button>
 
-                    <span class="voice-status" id="voiceStatus">
-                        Click microphone and start speaking.
+
+                    <span
+                        class="voice-status"
+                        id="voiceStatus"
+                    >
+                        Click the microphone and start speaking.
                     </span>
 
                 </div>
 
-                <textarea id="letterBody"
-placeholder="Type your letter here or use voice typing..."></textarea>
+
+                <textarea
+                    id="letterBody"
+                    placeholder="Type your letter here or use voice typing..."
+                ></textarea>
 
             </div>
 
 
+
+            <!-- SIGNATURE -->
+
             <div class="panel">
+
                 <h2>Signature</h2>
 
                 <div class="form-grid">
 
                     <div class="form-group">
+
                         <label>Sender Name</label>
-                        <input type="text" id="senderName"
-                               value="TM Eleven">
+
+                        <input
+                            type="text"
+                            id="senderName"
+                            value="TM Eleven"
+                        >
+
                     </div>
 
+
                     <div class="form-group">
+
                         <label>Position</label>
-                        <input type="text" id="senderPosition"
-                               value="Director">
+
+                        <input
+                            type="text"
+                            id="senderPosition"
+                            value="Director"
+                        >
+
                     </div>
 
                 </div>
+
             </div>
+
 
         </div>
 
 
-        <!-- PREVIEW -->
+
+        <!-- =================================================
+             RIGHT SIDE — LIVE PREVIEW
+        ================================================== -->
+
         <div class="preview-wrap">
 
             <div class="panel">
+
                 <h2>Live Preview</h2>
+
+
+                <!-- =========================================
+                     A4 LETTER
+                ========================================== -->
 
                 <div id="letterPreview">
 
+
+                    <!-- HEADER -->
+
                     <div class="letter-top">
+
 
                         <div class="company-area">
 
-                            <img src="logo.png"
-                                 class="logo"
-                                 alt="TM Eleven Logo">
+
+                            <img
+                                src="logo.png"
+                                class="logo"
+                                alt="TM Eleven Logo"
+                                onerror="this.style.display='none'"
+                            >
+
 
                             <div>
+
                                 <div class="company-name">
                                     TM ELEVEN PTY LTD
                                 </div>
 
+
                                 <div class="company-services">
-                                    CONCRETING     |     LANDSCAPING     |     FENCING
+                                    CONCRETING | LANDSCAPING | FENCING
                                 </div>
+
 
                                 <div class="company-acn">
-                                    ACN : 692149045
+                                    ACN : 692 149 045
                                 </div>
+
                             </div>
 
+
                         </div>
+
 
 
                         <div class="letter-title-area">
@@ -467,14 +706,22 @@ placeholder="Type your letter here or use voice typing..."></textarea>
                                 LETTER
                             </div>
 
+
                             <div class="date">
-                                Date: <span id="previewDate"></span>
+
+                                Date :
+                                <span id="previewDate"></span>
+
                             </div>
 
                         </div>
 
+
                     </div>
 
+
+
+                    <!-- RECIPIENT -->
 
                     <div class="recipient">
 
@@ -491,17 +738,30 @@ placeholder="Type your letter here or use voice typing..."></textarea>
                     </div>
 
 
-                    <div class="subject"
-                         id="previewSubject">
+
+                    <!-- SUBJECT -->
+
+                    <div
+                        class="subject"
+                        id="previewSubject"
+                    >
                         SUBJECT
                     </div>
 
 
-                    <div class="letter-body"
-                         id="previewBody">
+
+                    <!-- LETTER BODY -->
+
+                    <div
+                        class="letter-body"
+                        id="previewBody"
+                    >
 Your letter content will appear here.
                     </div>
 
+
+
+                    <!-- SIGNATURE -->
 
                     <div class="signature">
 
@@ -522,137 +782,175 @@ Your letter content will appear here.
                     </div>
 
 
+
+                    <!-- FOOTER -->
+
                     <div class="footer">
 
-                        <span>
-                            TM   ELEVEN   PTY   LTD
-                        </span>
+                        <div>
+                            <strong>TM ELEVEN PTY LTD</strong>
+                        </div>
 
-                        <span>
+
+                        <div class="footer-right">
+
                             +61 451 160 058
+
                             &nbsp; | &nbsp;
+
                             tmeleven111@gmail.com
+
                             &nbsp; | &nbsp;
+
                             tmeleven.com.au
-                        </span>
+
+                        </div>
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
         </div>
+
 
     </div>
 
 </div>
 
 
-<!-- FIXED BUTTONS -->
+
+<!-- =========================================================
+     FIXED BUTTONS
+========================================================= -->
 
 <div class="actions">
 
-    <button class="btn"
-            onclick="saveDraft()">
+    <button
+        class="btn"
+        type="button"
+        onclick="saveDraft()"
+    >
         💾 Save Draft
     </button>
 
-    <button class="btn btn-red"
-            onclick="clearDraft()">
+
+    <button
+        class="btn btn-red"
+        type="button"
+        onclick="clearDraft()"
+    >
         🗑 Clear
     </button>
 
-    <button class="btn btn-green"
-            onclick="downloadPDF()">
+
+    <button
+        class="btn btn-green"
+        type="button"
+        onclick="downloadPDF()"
+    >
         📄 Convert PDF
     </button>
 
 </div>
 
 
-<!-- PDF LIBRARIES -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 
 <script>
 
-/* =============================================
-   DATE
-============================================= */
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const $ = (id) => document.getElementById(id);
+
+
+/* =========================================================
+   DEFAULT DATE
+========================================================= */
 
 const today = new Date();
 
-document.getElementById("letterDate").value =
+$("letterDate").value =
     today.toISOString().split("T")[0];
 
 
-/* =============================================
-   UPDATE PREVIEW
-============================================= */
+/* =========================================================
+   FORMAT DATE
+========================================================= */
 
 function formatDate(value) {
 
     if (!value) return "";
 
-    return new Date(value + "T00:00:00")
-        .toLocaleDateString("en-AU", {
+    const date =
+        new Date(value + "T00:00:00");
+
+    return date.toLocaleDateString(
+        "en-AU",
+        {
             day: "2-digit",
             month: "long",
             year: "numeric"
-        });
+        }
+    );
 
 }
 
 
+/* =========================================================
+   UPDATE LIVE PREVIEW
+========================================================= */
+
 function updatePreview() {
 
-    document.getElementById("previewDate").textContent =
+    $("previewDate").textContent =
         formatDate(
-            document.getElementById("letterDate").value
+            $("letterDate").value
         );
 
 
-    document.getElementById("previewRecipientName").textContent =
-        document.getElementById("recipientName").value ||
+    $("previewRecipientName").textContent =
+        $("recipientName").value ||
         "Recipient Name";
 
 
-    document.getElementById("previewRecipientAddress").textContent =
-        document.getElementById("recipientAddress").value ||
+    $("previewRecipientAddress").textContent =
+        $("recipientAddress").value ||
         "Recipient Address";
 
 
-    document.getElementById("previewSubject").textContent =
-        document.getElementById("letterSubject").value ||
+    $("previewSubject").textContent =
+        $("letterSubject").value ||
         "SUBJECT";
 
 
-    document.getElementById("previewBody").textContent =
-        document.getElementById("letterBody").value ||
+    $("previewBody").textContent =
+        $("letterBody").value ||
         "Your letter content will appear here.";
 
 
-    document.getElementById("previewSenderName").textContent =
-        document.getElementById("senderName").value ||
+    $("previewSenderName").textContent =
+        $("senderName").value ||
         "TM Eleven";
 
 
-    document.getElementById("previewSenderPosition").textContent =
-        document.getElementById("senderPosition").value ||
+    $("previewSenderPosition").textContent =
+        $("senderPosition").value ||
         "Director";
 
 }
 
 
-/* =============================================
-   LIVE UPDATE
-============================================= */
+/* =========================================================
+   LIVE INPUT EVENTS
+========================================================= */
 
-document.querySelectorAll("input, textarea")
+document
+    .querySelectorAll("input, textarea")
     .forEach(element => {
 
         element.addEventListener(
@@ -668,21 +966,13 @@ document.querySelectorAll("input, textarea")
     });
 
 
-/* =============================================
+/* =========================================================
    VOICE TYPING
-============================================= */
+========================================================= */
 
-let recognition;
+let recognition = null;
+
 let isRecording = false;
-
-const voiceBtn =
-    document.getElementById("voiceBtn");
-
-const voiceStatus =
-    document.getElementById("voiceStatus");
-
-const letterBody =
-    document.getElementById("letterBody");
 
 
 const SpeechRecognition =
@@ -690,26 +980,46 @@ const SpeechRecognition =
     window.webkitSpeechRecognition;
 
 
+const voiceBtn =
+    $("voiceBtn");
+
+
+const voiceStatus =
+    $("voiceStatus");
+
+
+const letterBody =
+    $("letterBody");
+
+
 if (SpeechRecognition) {
 
     recognition =
         new SpeechRecognition();
 
+
     recognition.continuous = true;
 
-    recognition.interimResults = true;
+
+    recognition.interimResults = false;
+
 
     recognition.lang = "en-AU";
 
 
-    recognition.onstart = function() {
+    recognition.onstart = function () {
 
         isRecording = true;
 
-        voiceBtn.classList.add("recording");
 
-        voiceBtn.innerHTML =
+        voiceBtn.classList.add(
+            "recording"
+        );
+
+
+        voiceBtn.textContent =
             "🔴 Stop Voice Typing";
+
 
         voiceStatus.textContent =
             "Listening... Speak now.";
@@ -717,9 +1027,10 @@ if (SpeechRecognition) {
     };
 
 
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
 
         let finalTranscript = "";
+
 
         for (
             let i = event.resultIndex;
@@ -727,12 +1038,13 @@ if (SpeechRecognition) {
             i++
         ) {
 
-            const transcript =
-                event.results[i][0].transcript;
+            if (
+                event.results[i].isFinal
+            ) {
 
-            if (event.results[i].isFinal) {
-
-                finalTranscript += transcript;
+                finalTranscript +=
+                    event.results[i][0]
+                        .transcript;
 
             }
 
@@ -741,9 +1053,15 @@ if (SpeechRecognition) {
 
         if (finalTranscript) {
 
-            letterBody.value +=
-                (letterBody.value ? " " : "") +
-                finalTranscript;
+            const currentText =
+                letterBody.value.trim();
+
+
+            letterBody.value =
+                currentText
+                    ? currentText + " " + finalTranscript
+                    : finalTranscript;
+
 
             updatePreview();
 
@@ -752,7 +1070,7 @@ if (SpeechRecognition) {
     };
 
 
-    recognition.onerror = function(event) {
+    recognition.onerror = function (event) {
 
         voiceStatus.textContent =
             "Voice typing error: " +
@@ -761,77 +1079,102 @@ if (SpeechRecognition) {
     };
 
 
-    recognition.onend = function() {
+    recognition.onend = function () {
 
         isRecording = false;
 
-        voiceBtn.classList.remove("recording");
 
-        voiceBtn.innerHTML =
+        voiceBtn.classList.remove(
+            "recording"
+        );
+
+
+        voiceBtn.textContent =
             "🎤 Start Voice Typing";
 
-        voiceStatus.textContent =
-            "Voice typing stopped.";
+
+        if (
+            voiceStatus.textContent ===
+            "Listening... Speak now."
+        ) {
+
+            voiceStatus.textContent =
+                "Voice typing stopped.";
+
+        }
 
     };
 
+
+    voiceBtn.addEventListener(
+        "click",
+        function () {
+
+            if (isRecording) {
+
+                recognition.stop();
+
+            } else {
+
+                try {
+
+                    recognition.start();
+
+                } catch (error) {
+
+                    console.log(error);
+
+                }
+
+            }
+
+        }
+    );
+
+} else {
+
+    voiceBtn.addEventListener(
+        "click",
+        function () {
+
+            alert(
+                "Voice typing is not supported in this browser. Please use Google Chrome or Microsoft Edge."
+            );
+
+        }
+    );
+
 }
 
 
-function toggleVoice() {
-
-    if (!SpeechRecognition) {
-
-        alert(
-            "Voice typing is not supported in this browser. Please use Google Chrome or Microsoft Edge."
-        );
-
-        return;
-
-    }
-
-
-    if (isRecording) {
-
-        recognition.stop();
-
-    } else {
-
-        recognition.start();
-
-    }
-
-}
-
-
-/* =============================================
+/* =========================================================
    SAVE DRAFT
-============================================= */
+========================================================= */
 
 function saveDraft() {
 
     const data = {
 
         recipientName:
-            document.getElementById("recipientName").value,
+            $("recipientName").value,
 
         recipientAddress:
-            document.getElementById("recipientAddress").value,
+            $("recipientAddress").value,
 
         letterDate:
-            document.getElementById("letterDate").value,
+            $("letterDate").value,
 
         letterSubject:
-            document.getElementById("letterSubject").value,
+            $("letterSubject").value,
 
         letterBody:
-            document.getElementById("letterBody").value,
+            $("letterBody").value,
 
         senderName:
-            document.getElementById("senderName").value,
+            $("senderName").value,
 
         senderPosition:
-            document.getElementById("senderPosition").value
+            $("senderPosition").value
 
     };
 
@@ -842,14 +1185,16 @@ function saveDraft() {
     );
 
 
-    alert("Letter draft saved successfully!");
+    alert(
+        "Letter draft saved successfully!"
+    );
 
 }
 
 
-/* =============================================
+/* =========================================================
    LOAD DRAFT
-============================================= */
+========================================================= */
 
 function loadDraft() {
 
@@ -868,44 +1213,58 @@ function loadDraft() {
     }
 
 
-    const data =
-        JSON.parse(saved);
+    try {
+
+        const data =
+            JSON.parse(saved);
 
 
-    Object.keys(data)
-        .forEach(key => {
+        Object.keys(data)
+            .forEach(key => {
 
-            const element =
-                document.getElementById(key);
-
-            if (element) {
-
-                element.value =
-                    data[key];
-
-            }
-
-        });
+                const element =
+                    $(key);
 
 
-    updatePreview();
+                if (element) {
+
+                    element.value =
+                        data[key];
+
+                }
+
+            });
+
+
+        updatePreview();
+
+    } catch (error) {
+
+        console.error(
+            "Draft loading error:",
+            error
+        );
+
+        updatePreview();
+
+    }
 
 }
 
 
-/* =============================================
-   CLEAR
-============================================= */
+/* =========================================================
+   CLEAR LETTER
+========================================================= */
 
 function clearDraft() {
 
-    if (
-        !confirm(
+    const confirmed =
+        confirm(
             "Are you sure you want to clear this letter?"
-        )
-    ) {
-        return;
-    }
+        );
+
+
+    if (!confirmed) return;
 
 
     localStorage.removeItem(
@@ -913,101 +1272,276 @@ function clearDraft() {
     );
 
 
-    location.reload();
+    $("recipientName").value = "";
+    $("recipientAddress").value = "";
+    $("letterSubject").value = "";
+    $("letterBody").value = "";
+
+    $("senderName").value =
+        "TM Eleven";
+
+    $("senderPosition").value =
+        "Director";
+
+
+    $("letterDate").value =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    updatePreview();
 
 }
 
 
-/* =============================================
-   DOWNLOAD PDF
-============================================= */
+/* =========================================================
+   CONVERT TO PURE WHITE PDF
+========================================================= */
 
 async function downloadPDF() {
 
     updatePreview();
 
+
     const letter =
-        document.getElementById(
-            "letterPreview"
+        $("letterPreview");
+
+
+    /*
+       Save current inline styles
+    */
+
+    const originalBackground =
+        letter.style.background;
+
+    const originalBackgroundColor =
+        letter.style.backgroundColor;
+
+    const originalBackgroundImage =
+        letter.style.backgroundImage;
+
+
+    /*
+       FORCE PURE WHITE
+    */
+
+    letter.style.background =
+        "#FFFFFF";
+
+    letter.style.backgroundColor =
+        "#FFFFFF";
+
+    letter.style.backgroundImage =
+        "none";
+
+
+    try {
+
+        const canvas =
+            await html2canvas(
+                letter,
+                {
+
+                    scale: 3,
+
+                    useCORS: true,
+
+                    allowTaint: false,
+
+                    backgroundColor: "#FFFFFF",
+
+                    logging: false,
+
+                    onclone: function (
+                        documentClone
+                    ) {
+
+                        /*
+                           Force clone background
+                           to 100% PURE WHITE
+                        */
+
+                        documentClone
+                            .documentElement
+                            .style
+                            .background =
+                            "#FFFFFF";
+
+
+                        documentClone
+                            .body
+                            .style
+                            .background =
+                            "#FFFFFF";
+
+
+                        const clonedLetter =
+                            documentClone
+                                .getElementById(
+                                    "letterPreview"
+                                );
+
+
+                        if (clonedLetter) {
+
+                            clonedLetter.style.background =
+                                "#FFFFFF";
+
+                            clonedLetter.style.backgroundColor =
+                                "#FFFFFF";
+
+                            clonedLetter.style.backgroundImage =
+                                "none";
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+        /*
+           Create PDF
+        */
+
+        const {
+            jsPDF
+        } = window.jspdf;
+
+
+        const pdf =
+            new jsPDF(
+                {
+                    orientation: "portrait",
+                    unit: "mm",
+                    format: "a4",
+                    compress: true
+                }
+            );
+
+
+        /*
+           FORCE ENTIRE PDF PAGE WHITE
+        */
+
+        pdf.setFillColor(
+            255,
+            255,
+            255
         );
 
 
-    const canvas =
-        await html2canvas(letter, {
-
-            scale: 2,
-
-            useCORS: true,
-
-            backgroundColor: "#ffffff"
-
-        });
-
-
-    const image =
-        canvas.toDataURL(
-            "image/png"
+        pdf.rect(
+            0,
+            0,
+            210,
+            297,
+            "F"
         );
 
 
-    const { jsPDF } =
-        window.jspdf;
+        /*
+           Canvas image dimensions
+        */
+
+        const pageWidth = 210;
+
+        const imgWidth =
+            pageWidth;
+
+        const imgHeight =
+            (
+                canvas.height *
+                imgWidth
+            )
+            /
+            canvas.width;
 
 
-    const pdf =
-        new jsPDF({
+        /*
+           Add high quality PNG
+        */
 
-            orientation: "portrait",
-
-            unit: "mm",
-
-            format: "a4"
-
-        });
-
-
-    const pageWidth =
-        pdf.internal.pageSize.getWidth();
+        const imgData =
+            canvas.toDataURL(
+                "image/png",
+                1.0
+            );
 
 
-    const imageHeight =
-        canvas.height *
-        pageWidth /
-        canvas.width;
-
-
-    pdf.addImage(
-        image,
-        "PNG",
-        0,
-        0,
-        pageWidth,
-        imageHeight
-    );
-
-
-    const recipient =
-        document.getElementById(
-            "recipientName"
-        )
-        .value
-        .trim()
-        .replace(
-            /[^a-z0-9]/gi,
-            "_"
+        pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            0,
+            imgWidth,
+            imgHeight,
+            undefined,
+            "FAST"
         );
 
 
-    pdf.save(
-        `TM11_Letter_${recipient || "Draft"}.pdf`
-    );
+        /*
+           Create file name
+        */
+
+        const recipient =
+            $("recipientName")
+                .value
+                .trim()
+                .replace(
+                    /[^a-z0-9]/gi,
+                    "_"
+                );
+
+
+        pdf.save(
+            `TM11_Letter_${
+                recipient || "Draft"
+            }.pdf`
+        );
+
+    } catch (error) {
+
+        console.error(
+            "PDF generation error:",
+            error
+        );
+
+
+        alert(
+            "Error generating PDF. Please try again."
+        );
+
+    } finally {
+
+        /*
+           Restore preview styles
+        */
+
+        letter.style.background =
+            originalBackground;
+
+        letter.style.backgroundColor =
+            originalBackgroundColor;
+
+        letter.style.backgroundImage =
+            originalBackgroundImage;
+
+    }
 
 }
 
 
-/* START */
+/* =========================================================
+   START APP
+========================================================= */
 
 loadDraft();
+
+updatePreview();
 
 </script>
 
