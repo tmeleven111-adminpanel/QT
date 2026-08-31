@@ -266,6 +266,7 @@ button:hover {
     position: relative;
     width: 46px;
     height: 25px;
+    flex-shrink: 0;
 }
 
 .switch input {
@@ -317,7 +318,7 @@ button:hover {
     padding: 15mm 12mm;
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .quote-watermark {
@@ -493,9 +494,8 @@ button:hover {
 }
 
 .quote-footer {
-    position: absolute;
-    left: 12mm;
-    bottom: 16mm;
+    margin-top: 45px;
+    padding-top: 15px;
 }
 
 .footer-company {
@@ -533,6 +533,158 @@ button:hover {
 
 .fixed-actions button {
     min-width: 140px;
+}
+
+/* =========================================================
+   EXTRA SECTIONS (editor)
+========================================================= */
+
+.section-card {
+    background: #0d151e;
+    border: 1px solid #263646;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.section-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-card-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--gold2);
+}
+
+.section-card-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-btn {
+    background: #273544;
+    color: white;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.section-card-body {
+    margin-top: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-card-body.show {
+    display: flex;
+}
+
+.align-btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+.align-btn {
+    flex: 1;
+    padding: 8px;
+    background: #273544;
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+.align-btn.active {
+    background: linear-gradient(135deg, #b8791f, #dfa84e);
+    color: #111;
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.mini-grid-table {
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.mini-grid-table td {
+    padding: 2px;
+}
+
+.mini-grid-table input {
+    width: 100px;
+    padding: 6px;
+    font-size: 12px;
+}
+
+/* =========================================================
+   PREVIEW - EXTRA SECTIONS
+========================================================= */
+
+.pv-notes {
+    margin-top: 25px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.pv-simple-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    font-size: 12px;
+}
+
+.pv-simple-table td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+}
+
+.pv-split-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 14px;
+    border: 1px solid #bd8a48;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.pv-bank-box {
+    margin-top: 25px;
+    border: 1px solid #bd8a48;
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.pv-bank-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #bd8027;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.pv-bank-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.pv-bank-label {
+    font-weight: 800;
 }
 
 @media (max-width: 1100px) {
@@ -580,6 +732,10 @@ button:hover {
 
     #quotePreview {
         transform-origin: top left;
+    }
+
+    .two-col {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -654,6 +810,17 @@ button:hover {
                 </div>
             </div>
 
+
+            <!-- EXTRA SECTIONS -->
+            <div class="panel">
+                <h2>Extra Sections</h2>
+                <p style="color:var(--muted); font-size:12px; margin-top:-10px; margin-bottom:15px;">
+                    Turn on the sections you need. Use the arrows to change the order they appear on the document.
+                </p>
+
+                <div id="extraSectionsContainer"></div>
+            </div>
+
         </div>
 
 
@@ -664,6 +831,14 @@ button:hover {
                 <h2>Quote Options</h2>
 
                 <div class="option-box">
+
+                    <div class="option-row">
+                        <span>Document Type: Invoice (off = Quote)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="isInvoice">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
 
                     <div class="option-row">
                         <span>Show All Total</span>
@@ -782,7 +957,7 @@ button:hover {
                     </div>
 
                     <div class="quote-title-area">
-                        <div class="quote-title">QUOTE</div>
+                        <div class="quote-title" id="previewDocTitle">QUOTE</div>
 
                         <div class="quote-date">
                             Date :
@@ -863,6 +1038,9 @@ button:hover {
 
                 </div>
 
+                <!-- EXTRA SECTIONS RENDER TARGET -->
+                <div id="previewExtraSections"></div>
+
             </div>
 
 
@@ -921,6 +1099,312 @@ const $ = id => document.getElementById(id);
 
 const today = new Date();
 $("quoteDate").value = today.toISOString().split("T")[0];
+
+
+/* =========================================================
+   EXTRA SECTIONS CONFIG
+========================================================= */
+
+const defaultSections = [
+    {
+        id: "notes",
+        title: "1. Description / Notes",
+        enabled: false,
+        data: { text: "", align: "left" }
+    },
+    {
+        id: "emptytable",
+        title: "2. Extra Table",
+        enabled: false,
+        data: { rows: 3, cols: 3, cells: {} }
+    },
+    {
+        id: "deposit",
+        title: "3. Deposit Note",
+        enabled: true,
+        data: { label: "25% Deposit for Materials", percent: 25, manual: false, manualAmount: 0 }
+    },
+    {
+        id: "advance",
+        title: "4. Advance Payment",
+        enabled: false,
+        data: { label: "Advance Payment Required", percent: 50, manual: false, manualAmount: 0 }
+    },
+    {
+        id: "bank",
+        title: "5. Bank Details",
+        enabled: true,
+        data: {
+            name: "TM ELEVEN PTY LTD",
+            bsb: "033501",
+            account: "410148"
+        }
+    }
+];
+
+// deep clone so edits don't touch the default template
+let sections = JSON.parse(JSON.stringify(defaultSections));
+
+
+function renderSectionEditors() {
+
+    const container = $("extraSectionsContainer");
+    container.innerHTML = "";
+
+    sections.forEach((section, index) => {
+
+        const card = document.createElement("div");
+        card.className = "section-card";
+
+        card.innerHTML = `
+            <div class="section-card-head">
+
+                <div class="section-card-title">${escapeHTML(section.title)}</div>
+
+                <div class="section-card-controls">
+
+                    <button class="order-btn" data-move="up" ${index === 0 ? "disabled" : ""}>&uarr;</button>
+                    <button class="order-btn" data-move="down" ${index === sections.length - 1 ? "disabled" : ""}>&darr;</button>
+
+                    <label class="switch">
+                        <input type="checkbox" class="section-toggle" ${section.enabled ? "checked" : ""}>
+                        <span class="slider"></span>
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="section-card-body ${section.enabled ? "show" : ""}">
+                ${sectionBodyHTML(section)}
+            </div>
+        `;
+
+        container.appendChild(card);
+
+        // toggle enable/disable
+        card.querySelector(".section-toggle")
+            .addEventListener("change", function() {
+                section.enabled = this.checked;
+                card.querySelector(".section-card-body")
+                    .classList.toggle("show", this.checked);
+                updatePreview();
+            });
+
+        // move up / down
+        card.querySelectorAll("[data-move]").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const dir = this.getAttribute("data-move");
+                const from = sections.indexOf(section);
+                const to = dir === "up" ? from - 1 : from + 1;
+                if (to < 0 || to >= sections.length) return;
+                sections.splice(from, 1);
+                sections.splice(to, 0, section);
+                renderSectionEditors();
+                updatePreview();
+            });
+        });
+
+        bindSectionBodyEvents(card, section);
+
+    });
+
+}
+
+
+function sectionBodyHTML(section) {
+
+    if (section.id === "notes") {
+        return `
+            <div class="align-btn-group">
+                <button type="button" class="align-btn ${section.data.align === "left" ? "active" : ""}" data-align="left">Left</button>
+                <button type="button" class="align-btn ${section.data.align === "center" ? "active" : ""}" data-align="center">Center</button>
+                <button type="button" class="align-btn ${section.data.align === "right" ? "active" : ""}" data-align="right">Right</button>
+            </div>
+            <textarea class="notes-text" placeholder="Type any additional description here...">${escapeHTML(section.data.text)}</textarea>
+        `;
+    }
+
+    if (section.id === "emptytable") {
+        return `
+            <div class="two-col">
+                <div class="form-group">
+                    <label>Rows</label>
+                    <input type="number" min="1" max="15" class="table-rows" value="${section.data.rows}">
+                </div>
+                <div class="form-group">
+                    <label>Columns</label>
+                    <input type="number" min="1" max="8" class="table-cols" value="${section.data.cols}">
+                </div>
+            </div>
+            <div class="mini-grid-wrap"></div>
+        `;
+    }
+
+    if (section.id === "deposit" || section.id === "advance") {
+        return `
+            <div class="two-col">
+                <div class="form-group">
+                    <label>Left Label</label>
+                    <input type="text" class="split-label" value="${escapeHTML(section.data.label)}">
+                </div>
+                <div class="form-group">
+                    <label>Percentage %</label>
+                    <input type="number" min="0" max="100" class="split-percent" value="${section.data.percent}">
+                </div>
+            </div>
+
+            <label class="check-label">
+                <input type="checkbox" class="split-manual" ${section.data.manual ? "checked" : ""}>
+                Override amount manually (ignore % calculation)
+            </label>
+
+            <div class="form-group split-manual-amount-wrap" style="${section.data.manual ? "" : "display:none;"}">
+                <label>Manual Amount ($)</label>
+                <input type="number" min="0" step="0.01" class="split-manual-amount" value="${section.data.manualAmount}">
+            </div>
+        `;
+    }
+
+    if (section.id === "bank") {
+        return `
+            <div class="form-group">
+                <label>Account Name</label>
+                <input type="text" class="bank-name" value="${escapeHTML(section.data.name)}">
+            </div>
+            <div class="two-col">
+                <div class="form-group">
+                    <label>BSB</label>
+                    <input type="text" class="bank-bsb" value="${escapeHTML(section.data.bsb)}">
+                </div>
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" class="bank-account" value="${escapeHTML(section.data.account)}">
+                </div>
+            </div>
+        `;
+    }
+
+    return "";
+}
+
+
+function bindSectionBodyEvents(card, section) {
+
+    if (section.id === "notes") {
+
+        card.querySelectorAll(".align-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+                section.data.align = this.getAttribute("data-align");
+                card.querySelectorAll(".align-btn").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                updatePreview();
+            });
+        });
+
+        card.querySelector(".notes-text").addEventListener("input", function() {
+            section.data.text = this.value;
+            updatePreview();
+        });
+
+    }
+
+    if (section.id === "emptytable") {
+
+        const rowsInput = card.querySelector(".table-rows");
+        const colsInput = card.querySelector(".table-cols");
+        const wrap = card.querySelector(".mini-grid-wrap");
+
+        function renderGrid() {
+            wrap.innerHTML = "";
+            const table = document.createElement("table");
+            table.className = "mini-grid-table";
+
+            for (let r = 0; r < section.data.rows; r++) {
+                const tr = document.createElement("tr");
+                for (let c = 0; c < section.data.cols; c++) {
+                    const td = document.createElement("td");
+                    const key = r + "_" + c;
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.value = section.data.cells[key] || "";
+                    input.addEventListener("input", function() {
+                        section.data.cells[key] = this.value;
+                        updatePreview();
+                    });
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            wrap.appendChild(table);
+        }
+
+        rowsInput.addEventListener("input", function() {
+            section.data.rows = Math.max(1, Math.min(15, parseInt(this.value) || 1));
+            renderGrid();
+            updatePreview();
+        });
+
+        colsInput.addEventListener("input", function() {
+            section.data.cols = Math.max(1, Math.min(8, parseInt(this.value) || 1));
+            renderGrid();
+            updatePreview();
+        });
+
+        renderGrid();
+
+    }
+
+    if (section.id === "deposit" || section.id === "advance") {
+
+        card.querySelector(".split-label").addEventListener("input", function() {
+            section.data.label = this.value;
+            updatePreview();
+        });
+
+        card.querySelector(".split-percent").addEventListener("input", function() {
+            section.data.percent = parseFloat(this.value) || 0;
+            updatePreview();
+        });
+
+        const manualCheckbox = card.querySelector(".split-manual");
+        const manualWrap = card.querySelector(".split-manual-amount-wrap");
+
+        manualCheckbox.addEventListener("change", function() {
+            section.data.manual = this.checked;
+            manualWrap.style.display = this.checked ? "" : "none";
+            updatePreview();
+        });
+
+        card.querySelector(".split-manual-amount").addEventListener("input", function() {
+            section.data.manualAmount = parseFloat(this.value) || 0;
+            updatePreview();
+        });
+
+    }
+
+    if (section.id === "bank") {
+
+        card.querySelector(".bank-name").addEventListener("input", function() {
+            section.data.name = this.value;
+            updatePreview();
+        });
+
+        card.querySelector(".bank-bsb").addEventListener("input", function() {
+            section.data.bsb = this.value;
+            updatePreview();
+        });
+
+        card.querySelector(".bank-account").addEventListener("input", function() {
+            section.data.account = this.value;
+            updatePreview();
+        });
+
+    }
+
+}
 
 
 /* =========================================================
@@ -1173,10 +1657,99 @@ function escapeHTML(value) {
 
 
 /* =========================================================
+   RENDER EXTRA SECTIONS INTO PREVIEW
+========================================================= */
+
+function renderExtraSectionsPreview(grandTotal) {
+
+    const target = $("previewExtraSections");
+    target.innerHTML = "";
+
+    sections.forEach(section => {
+
+        if (!section.enabled) return;
+
+        if (section.id === "notes") {
+
+            if (!section.data.text.trim()) return;
+
+            const div = document.createElement("div");
+            div.className = "pv-notes";
+            div.style.textAlign = section.data.align;
+            div.textContent = section.data.text;
+            target.appendChild(div);
+
+        }
+
+        if (section.id === "emptytable") {
+
+            const table = document.createElement("table");
+            table.className = "pv-simple-table";
+
+            for (let r = 0; r < section.data.rows; r++) {
+                const tr = document.createElement("tr");
+                for (let c = 0; c < section.data.cols; c++) {
+                    const td = document.createElement("td");
+                    td.textContent = section.data.cells[r + "_" + c] || "";
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            target.appendChild(table);
+
+        }
+
+        if (section.id === "deposit" || section.id === "advance") {
+
+            const amount = section.data.manual
+                ? section.data.manualAmount
+                : grandTotal * (section.data.percent / 100);
+
+            const div = document.createElement("div");
+            div.className = "pv-split-line";
+
+            div.innerHTML = `
+                <span>${escapeHTML(section.data.label)} (${section.data.manual ? "Fixed" : section.data.percent + "%"})</span>
+                <span>${money(amount)}</span>
+            `;
+
+            target.appendChild(div);
+
+        }
+
+        if (section.id === "bank") {
+
+            const div = document.createElement("div");
+            div.className = "pv-bank-box";
+
+            div.innerHTML = `
+                <div class="pv-bank-title">Bank Details</div>
+                <div class="pv-bank-row"><div class="pv-bank-label">Account</div><div>${escapeHTML(section.data.name)}</div></div>
+                <div class="pv-bank-row"><div class="pv-bank-label">BSB</div><div>${escapeHTML(section.data.bsb)}</div></div>
+                <div class="pv-bank-row"><div class="pv-bank-label">Account No.</div><div>${escapeHTML(section.data.account)}</div></div>
+            `;
+
+            target.appendChild(div);
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
    UPDATE PREVIEW
 ========================================================= */
 
 function updatePreview() {
+
+    /* DOC TYPE */
+
+    $("previewDocTitle").textContent =
+        $("isInvoice").checked ? "INVOICE" : "QUOTE";
+
 
     /* CLIENT */
 
@@ -1422,6 +1995,11 @@ function updatePreview() {
     $("previewGrandTotal").textContent =
         money(grandTotal);
 
+
+    /* EXTRA SECTIONS (deposit/advance % is based on the grand total above) */
+
+    renderExtraSectionsPreview(grandTotal);
+
 }
 
 
@@ -1513,6 +2091,9 @@ function saveDraft() {
         companyWebsite:
             $("companyWebsite").value,
 
+        isInvoice:
+            $("isInvoice").checked,
+
         showGrandTotal:
             $("showGrandTotal").checked,
 
@@ -1526,7 +2107,8 @@ function saveDraft() {
             $("watermarkText").value,
 
         items,
-        extraFields
+        extraFields,
+        sections
 
     };
 
@@ -1553,6 +2135,7 @@ function loadDraft() {
     if (!saved) {
 
         addItem();
+        renderSectionEditors();
 
         return;
 
@@ -1585,6 +2168,9 @@ function loadDraft() {
 
     });
 
+
+    $("isInvoice").checked =
+        !!data.isInvoice;
 
     $("showGrandTotal").checked =
         !!data.showGrandTotal;
@@ -1623,6 +2209,13 @@ function loadDraft() {
         );
 
     }
+
+
+    if (data.sections && Array.isArray(data.sections) && data.sections.length) {
+        sections = data.sections;
+    }
+
+    renderSectionEditors();
 
 
     updatePreview();
@@ -1731,8 +2324,11 @@ async function downloadPDF() {
             .trim()
             .replace(/[^a-z0-9]/gi, "_");
 
+        const docLabel =
+            $("isInvoice").checked ? "Invoice" : "Quote";
+
         pdf.save(
-            `TM11_Quote_${clientName || "Draft"}.pdf`
+            `TM11_${docLabel}_${clientName || "Draft"}.pdf`
         );
 
     } catch (error) {
