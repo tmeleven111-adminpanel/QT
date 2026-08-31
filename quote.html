@@ -666,6 +666,7 @@ button:hover {
     border: 1px solid #bd8a48;
     border-radius: 10px;
     padding: 16px 20px;
+    box-sizing: border-box;
 }
 
 .pv-bank-title {
@@ -674,13 +675,16 @@ button:hover {
     color: #bd8027;
     margin-bottom: 8px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .pv-bank-row {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 100px auto;
+    column-gap: 14px;
     font-size: 12px;
     margin-bottom: 4px;
+    white-space: nowrap;
 }
 
 .pv-bank-label {
@@ -1137,7 +1141,9 @@ const defaultSections = [
         data: {
             name: "TM ELEVEN PTY LTD",
             bsb: "033501",
-            account: "410148"
+            account: "410148",
+            widthMode: "auto",
+            widthPercent: 45
         }
     }
 ];
@@ -1282,6 +1288,20 @@ function sectionBodyHTML(section) {
                     <input type="text" class="bank-account" value="${escapeHTML(section.data.account)}">
                 </div>
             </div>
+
+            <div class="two-col">
+                <div class="form-group">
+                    <label>Box Width</label>
+                    <select class="bank-width-mode">
+                        <option value="auto" ${section.data.widthMode !== "custom" ? "selected" : ""}>Fit To Text</option>
+                        <option value="custom" ${section.data.widthMode === "custom" ? "selected" : ""}>Custom Width %</option>
+                    </select>
+                </div>
+                <div class="form-group bank-width-percent-wrap" style="${section.data.widthMode === "custom" ? "" : "display:none;"}">
+                    <label>Width % of Page</label>
+                    <input type="number" min="20" max="100" class="bank-width-percent" value="${section.data.widthPercent || 45}">
+                </div>
+            </div>
         `;
     }
 
@@ -1399,6 +1419,20 @@ function bindSectionBodyEvents(card, section) {
 
         card.querySelector(".bank-account").addEventListener("input", function() {
             section.data.account = this.value;
+            updatePreview();
+        });
+
+        const widthModeSelect = card.querySelector(".bank-width-mode");
+        const widthPercentWrap = card.querySelector(".bank-width-percent-wrap");
+
+        widthModeSelect.addEventListener("change", function() {
+            section.data.widthMode = this.value;
+            widthPercentWrap.style.display = this.value === "custom" ? "" : "none";
+            updatePreview();
+        });
+
+        card.querySelector(".bank-width-percent").addEventListener("input", function() {
+            section.data.widthPercent = parseFloat(this.value) || 45;
             updatePreview();
         });
 
@@ -1723,6 +1757,14 @@ function renderExtraSectionsPreview(grandTotal) {
             const div = document.createElement("div");
             div.className = "pv-bank-box";
 
+            if (section.data.widthMode === "custom") {
+                div.style.width = (section.data.widthPercent || 45) + "%";
+                div.style.display = "block";
+            } else {
+                div.style.width = "fit-content";
+                div.style.display = "inline-block";
+            }
+
             div.innerHTML = `
                 <div class="pv-bank-title">Bank Details</div>
                 <div class="pv-bank-row"><div class="pv-bank-label">Account</div><div>${escapeHTML(section.data.name)}</div></div>
@@ -1886,9 +1928,10 @@ function updatePreview() {
             let displayTotal =
                 baseTotal;
 
-            let gstText = "";
-
             let itemGST = 0;
+
+            let displayText =
+                money(baseTotal);
 
 
             if (gstEnabled) {
@@ -1901,13 +1944,13 @@ function updatePreview() {
                     displayTotal =
                         baseTotal + itemGST;
 
-                    gstText =
-                        ` + GST (${gstRate}%)`;
+                    displayText =
+                        `${money(baseTotal)} + GST (${gstRate}%) = ${money(displayTotal)}`;
 
                 } else {
 
-                    gstText =
-                        " + GST";
+                    displayText =
+                        `${money(baseTotal)} + GST`;
 
                 }
 
@@ -1942,7 +1985,7 @@ function updatePreview() {
                     </td>
 
                     <td>
-                        ${money(displayTotal)}${gstText}
+                        ${displayText}
                     </td>
 
                 </tr>
@@ -1951,7 +1994,7 @@ function updatePreview() {
 
 
             item.querySelector(".item-preview").textContent =
-                `Item Total: ${money(displayTotal)}${gstText}`;
+                `Item Total: ${displayText}`;
 
         });
 
@@ -2213,6 +2256,14 @@ function loadDraft() {
 
     if (data.sections && Array.isArray(data.sections) && data.sections.length) {
         sections = data.sections;
+
+        // backfill width fields for drafts saved before this feature existed
+        sections.forEach(s => {
+            if (s.id === "bank") {
+                if (s.data.widthMode === undefined) s.data.widthMode = "auto";
+                if (s.data.widthPercent === undefined) s.data.widthPercent = 45;
+            }
+        });
     }
 
     renderSectionEditors();
