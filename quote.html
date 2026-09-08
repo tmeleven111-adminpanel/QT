@@ -1145,6 +1145,17 @@ const defaultSections = [
             widthMode: "auto",
             widthPercent: 45
         }
+    },
+    {
+        id: "paidamount",
+        title: "6. Paid Amount / Balance Due",
+        enabled: false,
+        data: {
+            label: "Paid Amount",
+            amount: 0,
+            manual: false,
+            manualRemaining: 0
+        }
     }
 ];
 
@@ -1305,6 +1316,31 @@ function sectionBodyHTML(section) {
         `;
     }
 
+    if (section.id === "paidamount") {
+        return `
+            <div class="two-col">
+                <div class="form-group">
+                    <label>Left Label</label>
+                    <input type="text" class="paid-label" value="${escapeHTML(section.data.label)}">
+                </div>
+                <div class="form-group">
+                    <label>Paid Amount ($)</label>
+                    <input type="number" min="0" step="0.01" class="paid-amount" value="${section.data.amount}">
+                </div>
+            </div>
+
+            <label class="check-label">
+                <input type="checkbox" class="paid-manual" ${section.data.manual ? "checked" : ""}>
+                Override balance due manually (ignore auto calculation)
+            </label>
+
+            <div class="form-group paid-manual-amount-wrap" style="${section.data.manual ? "" : "display:none;"}">
+                <label>Manual Balance Due ($)</label>
+                <input type="number" min="0" step="0.01" class="paid-manual-amount" value="${section.data.manualRemaining}">
+            </div>
+        `;
+    }
+
     return "";
 }
 
@@ -1433,6 +1469,34 @@ function bindSectionBodyEvents(card, section) {
 
         card.querySelector(".bank-width-percent").addEventListener("input", function() {
             section.data.widthPercent = parseFloat(this.value) || 45;
+            updatePreview();
+        });
+
+    }
+
+    if (section.id === "paidamount") {
+
+        card.querySelector(".paid-label").addEventListener("input", function() {
+            section.data.label = this.value;
+            updatePreview();
+        });
+
+        card.querySelector(".paid-amount").addEventListener("input", function() {
+            section.data.amount = parseFloat(this.value) || 0;
+            updatePreview();
+        });
+
+        const manualCheckbox = card.querySelector(".paid-manual");
+        const manualWrap = card.querySelector(".paid-manual-amount-wrap");
+
+        manualCheckbox.addEventListener("change", function() {
+            section.data.manual = this.checked;
+            manualWrap.style.display = this.checked ? "" : "none";
+            updatePreview();
+        });
+
+        card.querySelector(".paid-manual-amount").addEventListener("input", function() {
+            section.data.manualRemaining = parseFloat(this.value) || 0;
             updatePreview();
         });
 
@@ -1776,6 +1840,34 @@ function renderExtraSectionsPreview(grandTotal) {
 
         }
 
+        if (section.id === "paidamount") {
+
+            const remaining = section.data.manual
+                ? section.data.manualRemaining
+                : Math.max(0, grandTotal - section.data.amount);
+
+            const paidDiv = document.createElement("div");
+            paidDiv.className = "pv-split-line";
+
+            paidDiv.innerHTML = `
+                <span>${escapeHTML(section.data.label)}</span>
+                <span>${money(section.data.amount)}</span>
+            `;
+
+            target.appendChild(paidDiv);
+
+            const balanceDiv = document.createElement("div");
+            balanceDiv.className = "pv-split-line";
+
+            balanceDiv.innerHTML = `
+                <span>Balance Due${section.data.manual ? " (Manual)" : ""}</span>
+                <span>${money(remaining)}</span>
+            `;
+
+            target.appendChild(balanceDiv);
+
+        }
+
     });
 
 }
@@ -2039,7 +2131,7 @@ function updatePreview() {
         money(grandTotal);
 
 
-    /* EXTRA SECTIONS (deposit/advance % is based on the grand total above) */
+    /* EXTRA SECTIONS (deposit/advance % and paid/balance are based on the grand total above) */
 
     renderExtraSectionsPreview(grandTotal);
 
@@ -2257,13 +2349,20 @@ function loadDraft() {
     if (data.sections && Array.isArray(data.sections) && data.sections.length) {
         sections = data.sections;
 
-        // backfill width fields for drafts saved before this feature existed
+        // backfill fields for drafts saved before newer features existed
         sections.forEach(s => {
             if (s.id === "bank") {
                 if (s.data.widthMode === undefined) s.data.widthMode = "auto";
                 if (s.data.widthPercent === undefined) s.data.widthPercent = 45;
             }
         });
+
+        // add the new "Paid Amount" section to older drafts that don't have it yet
+        if (!sections.some(s => s.id === "paidamount")) {
+            sections.push(JSON.parse(JSON.stringify(
+                defaultSections.find(s => s.id === "paidamount")
+            )));
+        }
     }
 
     renderSectionEditors();
